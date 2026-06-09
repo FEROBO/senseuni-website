@@ -1,0 +1,2087 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SenseUni solutions for modern retail — Autonomous Retail, Smart Product Experience, Retail Media, and AI Software Platform. One ecosystem for the connected store." />
+  <title>Solutions — SenseUni</title>
+  <link rel="icon" type="image/webp" href="assets/images/logomini.webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════ */
+    :root {
+      --color-bg:              #14101F;
+      --color-bg-footer:       #0F0C18;
+      --color-brand:           #2C2069;
+      --color-accent:          #7435FD;
+      --color-highlight:       #8B71FF;
+      --color-cyan:            #5EEBFF;
+      --color-nav-bg:          rgba(20, 16, 31, 0.55);
+      --color-nav-bg-scrolled: rgba(20, 16, 31, 0.72);
+      --color-nav-border:      rgba(255, 255, 255, 0.08);
+      --color-footer-border:   rgba(255, 255, 255, 0.06);
+      --color-border:          rgba(255, 255, 255, 0.10);
+      --color-border-glow:     rgba(116, 53, 253, 0.40);
+      --color-surface:         rgba(255, 255, 255, 0.04);
+      --color-text-primary:    #FFFFFF;
+      --color-text-secondary:  #C8C8D4;
+      --color-text-muted:      #7A7A8C;
+      --gradient-btn:  linear-gradient(135deg, var(--color-accent), var(--color-highlight));
+      --gradient-card: linear-gradient(135deg, rgba(44, 32, 105, 0.20) 0%, rgba(116, 53, 253, 0.06) 100%);
+      --font-heading: 'Sora', sans-serif;
+      --font-body:    'Inter', sans-serif;
+      --font-data:    'Space Grotesk', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --nav-height: 80px;
+      --ease-out:        cubic-bezier(0.22, 1, 0.36, 1);
+      --transition-base: 0.3s;
+      --transition-slow: 0.5s;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-highlight) rgba(20, 16, 31, 0.4);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: var(--color-bg);
+      color: var(--color-text-primary);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; }
+
+    ::-webkit-scrollbar        { width: 6px; }
+    ::-webkit-scrollbar-track  { background: rgba(20, 16, 31, 0.4); }
+    ::-webkit-scrollbar-thumb  { background: linear-gradient(to bottom, var(--color-accent), var(--color-highlight)); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--color-highlight); }
+
+    /* ── Ambient glow ── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 90vh;
+      background: radial-gradient(ellipse 160% 65% at 50% -8%, rgba(116,53,253,0.28) 0%, rgba(116,53,253,0.10) 42%, rgba(116,53,253,0.03) 68%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -10%; left: -15%;
+      width: 70vw; height: 70vh;
+      background: radial-gradient(ellipse at center, rgba(139,113,255,0.10) 0%, rgba(116,53,253,0.04) 50%, transparent 75%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .grain-overlay {
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      opacity: 0.035;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes navSlideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes iconFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes lineDot {
+      0%   { left: 0;    opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { left: 100%; opacity: 0; }
+    }
+    @keyframes flowDot {
+      0%   { top: -4px;   opacity: 0; }
+      8%   { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { top: 100%;   opacity: 0; }
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .nav, .footer__main > * { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .back-to-top { transition: opacity 0.2s ease !important; }
+    }
+
+    /* ═══════════════════════════════════════
+       NAVIGATION
+    ═══════════════════════════════════════ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000; height: var(--nav-height);
+      background: var(--color-nav-bg);
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      border-bottom: 1px solid var(--color-nav-border);
+      box-shadow: 0 1px 0 0 rgba(116,53,253,0.18), 0 4px 32px rgba(0,0,0,0.30);
+      transition: transform 0.4s var(--ease-out), background 0.4s var(--ease-out), border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+      animation: navSlideDown 0.7s var(--ease-out) both;
+    }
+    .nav.is-scrolled { background: var(--color-nav-bg-scrolled); border-bottom-color: rgba(255,255,255,0.12); box-shadow: 0 1px 0 0 rgba(116,53,253,0.22), 0 8px 48px rgba(0,0,0,0.50); }
+    .nav.is-hidden   { transform: translateY(-100%); pointer-events: none; }
+
+    .nav__inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; height: 100%; display: flex; align-items: center; position: relative; }
+    .nav__logo  { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    .nav__links {
+      display: flex; align-items: center; gap: 6px; list-style: none;
+      position: absolute; left: 50%; transform: translateX(-50%); z-index: 1;
+    }
+    .nav__link {
+      position: relative; display: inline-block; padding: 6px 13px;
+      font-family: var(--font-body); font-size: 14px; font-weight: 500;
+      color: var(--color-text-secondary); border-radius: var(--radius-sm);
+      transition: color var(--transition-base) var(--ease-out), background var(--transition-base) var(--ease-out);
+      white-space: nowrap;
+    }
+    .nav__link::after {
+      content: ''; position: absolute; bottom: 0; left: 13px; right: 13px;
+      height: 1.5px; background: var(--gradient-btn); border-radius: 2px;
+      transform: scaleX(0); transform-origin: center;
+      transition: transform var(--transition-base) var(--ease-out);
+    }
+    .nav__link:hover             { color: var(--color-text-primary); background: rgba(255,255,255,0.05); }
+    .nav__link:hover::after      { transform: scaleX(1); }
+    .nav__link.is-active         { color: var(--color-text-primary); }
+    .nav__link.is-active::after  { transform: scaleX(1); }
+    .nav__cta { flex-shrink: 0; margin-left: auto; }
+
+    .btn--primary {
+      display: inline-flex; align-items: center; gap: 6px; padding: 10px 22px;
+      border-radius: var(--radius-sm); font-family: var(--font-heading); font-size: 14px; font-weight: 600;
+      color: var(--color-text-primary); background: var(--gradient-btn); border: none; cursor: pointer;
+      box-shadow: 0 2px 12px rgba(116,53,253,0.28);
+      transition: transform var(--transition-base) var(--ease-out), box-shadow var(--transition-base) var(--ease-out);
+      position: relative; overflow: hidden; white-space: nowrap;
+    }
+    .btn--primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 55%); opacity: 0; transition: opacity var(--transition-base) var(--ease-out); }
+    .btn--primary:hover         { transform: translateY(-2px); box-shadow: 0 0 20px rgba(116,53,253,0.55), 0 6px 24px rgba(116,53,253,0.32); }
+    .btn--primary:hover::before { opacity: 1; }
+    .btn--primary:active        { transform: translateY(0); }
+
+    .nav__hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 36px; height: 36px; padding: 6px; background: none; border: none; cursor: pointer;
+      margin-left: auto; border-radius: var(--radius-sm);
+      transition: background var(--transition-base) var(--ease-out);
+    }
+    .nav__hamburger:hover { background: rgba(255,255,255,0.06); }
+    .nav__hamburger-line {
+      display: block; width: 100%; height: 1.5px; background: var(--color-text-secondary);
+      border-radius: 2px; transform-origin: center;
+      transition: transform var(--transition-base) var(--ease-out), opacity var(--transition-base) var(--ease-out);
+    }
+    .nav.is-open .nav__hamburger-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav.is-open .nav__hamburger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav.is-open .nav__hamburger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .nav__drawer {
+      display: none; position: fixed; top: var(--nav-height); left: 0; right: 0;
+      background: rgba(15,12,24,0.97); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--color-nav-border); padding: 16px 24px 24px;
+      transform: translateY(-8px); opacity: 0; pointer-events: none;
+      transition: transform var(--transition-slow) var(--ease-out), opacity var(--transition-slow) var(--ease-out);
+      z-index: 999;
+    }
+    .nav__drawer.is-open { transform: translateY(0); opacity: 1; pointer-events: all; }
+    .nav__drawer-links   { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .nav__drawer-link    { display: block; padding: 12px 8px; font-family: var(--font-body); font-size: 15px; font-weight: 500; color: var(--color-text-secondary); border-bottom: 1px solid rgba(255,255,255,0.05); transition: color var(--transition-base) var(--ease-out); }
+    .nav__drawer-link:hover { color: var(--color-text-primary); }
+    .nav__drawer-cta        { margin-top: 20px; width: 100%; justify-content: center; }
+
+    @media (max-width: 900px) { .nav__links { display: none; } .nav__cta { display: none; } .nav__hamburger { display: flex; } .nav__drawer { display: block; } }
+    @media (max-width: 480px) { .nav__inner { padding: 0 20px; } }
+
+    /* ═══════════════════════════════════════
+       PAGE LAYOUT
+    ═══════════════════════════════════════ */
+    main { flex: 1 0 auto; position: relative; z-index: 3; }
+
+    .section-wrap  { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+    @media (max-width: 640px) { .section-wrap { padding: 0 20px; } }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--color-text-primary) 45%, var(--color-highlight));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gradient-text-cyan {
+      background: linear-gradient(135deg, var(--color-text-primary) 45%, var(--color-cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .section-label {
+      display: block; font-family: var(--font-data); font-size: 13px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase; text-align: center; margin-bottom: 16px;
+    }
+
+    .section-divider {
+      display: block; height: 1px; max-width: 1280px; margin: 0 auto; border: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), var(--color-accent), rgba(255,255,255,0.08), transparent);
+    }
+
+    [data-reveal] {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    [data-reveal].in-view { opacity: 1; transform: translateY(0); }
+
+    /* Directional column reveals */
+    [data-reveal-dir] {
+      opacity: 0;
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    [data-reveal-dir="left"]  { transform: translateX(-24px); }
+    [data-reveal-dir="right"] { transform: translateX(24px); transition-delay: 0.15s; }
+    [data-reveal-dir].in-view { opacity: 1; transform: translateX(0); }
+
+    /* ═══════════════════════════════════════
+       STARFIELD CANVAS
+    ═══════════════════════════════════════ */
+    #home-starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* ═══════════════════════════════════════
+       S1 — HERO
+    ═══════════════════════════════════════ */
+    .sol-hero {
+      position: relative; z-index: 3;
+      padding: 148px 60px 80px;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+    }
+
+    .sol-hero__label {
+      font-family: var(--font-data); font-size: 13px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--color-cyan);
+      margin-bottom: 20px;
+      animation: fadeUp 0.7s var(--ease-out) 0.15s both;
+    }
+
+    .sol-hero__headline {
+      font-family: var(--font-heading);
+      font-size: clamp(36px, 5.5vw, 60px);
+      font-weight: 700; line-height: 1.1; letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      animation: fadeUp 0.8s var(--ease-out) 0.28s both;
+    }
+
+    .sol-hero__sub {
+      font-family: var(--font-body); font-size: 18px; line-height: 1.75;
+      color: var(--color-text-secondary); max-width: 600px;
+      margin-bottom: 64px;
+      animation: fadeUp 0.8s var(--ease-out) 0.42s both;
+    }
+
+    /* ── Sol Hero Ecosystem Diagram ── */
+    .sol-hero__ecosystem {
+      width: 100%; max-width: 1040px;
+      animation: fadeUp 0.9s var(--ease-out) 0.56s both;
+    }
+
+    .ecosystem-svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+    /* Center hexagon pulse rings */
+    .eco-pulse { transform-origin: 500px 260px; opacity: 0; }
+    .eco-pulse--a { animation: ecoPulse 3s ease-out 0.2s infinite; }
+    .eco-pulse--b { animation: ecoPulse 3s ease-out 1.7s infinite; }
+    @keyframes ecoPulse {
+      0%   { transform: scale(1);   opacity: 0.55; }
+      100% { transform: scale(2.1); opacity: 0; }
+    }
+
+    /* Connection lines — draw-in */
+    .eco-line {
+      stroke-dasharray: 400; stroke-dashoffset: 400;
+      transition: stroke 0.3s ease, opacity 0.3s ease;
+    }
+    .eco-line.is-drawn {
+      animation: ecoDrawLine 0.65s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    @keyframes ecoDrawLine { to { stroke-dashoffset: 0; } }
+    .eco-line.is-bright { stroke: rgba(94,235,255,0.8) !important; }
+
+    /* Traveling dots */
+    .eco-dot { opacity: 0; offset-rotate: 0deg; }
+    .eco-dot--top    { offset-path: path('M 500,122 L 500,202'); }
+    .eco-dot--right  { offset-path: path('M 724,260 L 550,260'); }
+    .eco-dot--bottom { offset-path: path('M 500,402 L 500,318'); }
+    .eco-dot--left   { offset-path: path('M 276,260 L 450,260'); }
+    .eco-dot.is-flowing { animation: ecoDotFlow 3s linear infinite; }
+    .eco-dot--right  { animation-delay: 0.75s; }
+    .eco-dot--bottom { animation-delay: 1.5s; }
+    .eco-dot--left   { animation-delay: 2.25s; }
+    @keyframes ecoDotFlow {
+      0%   { offset-distance: 0%;   opacity: 0; }
+      8%   { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+
+    /* Solution nodes */
+    .eco-node { opacity: 0; cursor: pointer; transition: opacity 0.4s ease; }
+    .eco-node.is-visible { opacity: 1; }
+    .eco-node.is-dimmed  { opacity: 0.28; }
+    .eco-node .eco-card  { transition: stroke 0.3s ease, fill 0.3s ease; }
+    .eco-node.is-hovered .eco-card {
+      stroke: rgba(94,235,255,0.75) !important;
+      fill: rgba(116,53,253,0.24) !important;
+    }
+    .eco-node .eco-icon-group {
+      transition: transform 0.3s ease;
+      transform-box: fill-box; transform-origin: center;
+    }
+    .eco-node.is-hovered .eco-icon-group { transform: scale(1.08); }
+
+    /* Mobile fallback grid */
+    @media (max-width: 640px) {
+      .ecosystem-svg { display: none; }
+      .eco-mobile-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;
+      }
+      .eco-mobile-center {
+        grid-column: 1 / -1;
+        background: rgba(116,53,253,0.15); border: 1px solid rgba(116,53,253,0.55);
+        border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 4px;
+      }
+      .eco-mobile-center__name {
+        font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: #8B71FF;
+      }
+      .eco-mobile-node {
+        background: rgba(116,53,253,0.10); border: 1px solid rgba(139,113,255,0.30);
+        border-radius: 12px; padding: 14px 10px; text-align: center;
+      }
+      .eco-mobile-node__name {
+        font-family: var(--font-heading); font-size: 11px; font-weight: 600; color: #e2e8f0;
+        margin-top: 4px;
+      }
+    }
+    @media (min-width: 641px) { .eco-mobile-grid { display: none; } }
+
+    @media (max-width: 768px) { .sol-hero { padding: 120px 32px 60px; } }
+    @media (max-width: 480px) { .sol-hero { padding: 100px 20px 48px; } .sol-hero__sub { font-size: 16px; } }
+
+    /* ═══════════════════════════════════════
+       S2/S3/S4 — TWO-COLUMN SOLUTION SECTIONS
+    ═══════════════════════════════════════ */
+    .sol-section {
+      position: relative; z-index: 3;
+      padding: 120px 60px;
+    }
+
+    .sol-section--tinted { background: rgba(44,32,105,0.05); }
+
+    .sol-wrap { max-width: 1200px; margin: 0 auto; }
+
+    .sol-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+
+    .sol-two-col--reversed { direction: rtl; }
+    .sol-two-col--reversed > * { direction: ltr; }
+
+    .sol-col__label {
+      display: block; font-family: var(--font-data); font-size: 12px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;
+    }
+
+    .sol-col__headline {
+      font-family: var(--font-heading);
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+
+    .sol-col__outcome {
+      font-family: var(--font-body); font-size: 15px; line-height: 1.65;
+      color: var(--color-text-secondary); margin-bottom: 32px;
+    }
+
+    .sol-points { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+
+    .sol-point { display: flex; gap: 14px; align-items: flex-start; }
+
+    .sol-point__icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border-radius: 50%;
+      background: rgba(116,53,253,0.10);
+      border: 1px solid rgba(116,53,253,0.20);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .sol-point__body strong {
+      display: block; font-family: var(--font-body); font-size: 15px;
+      font-weight: 600; color: var(--color-text-primary); margin-bottom: 2px;
+    }
+    .sol-point__body span {
+      display: block; font-family: var(--font-body); font-size: 13px;
+      color: var(--color-text-muted); line-height: 1.5;
+    }
+
+    .sol-cta-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-heading); font-size: 15px; font-weight: 600;
+      color: var(--color-highlight);
+      padding: 12px 24px;
+      border: 1px solid rgba(116,53,253,0.30);
+      border-radius: 10px;
+      transition: background var(--transition-base) var(--ease-out),
+                  border-color var(--transition-base) var(--ease-out),
+                  transform var(--transition-base) var(--ease-out);
+    }
+    .sol-cta-link:hover { background: rgba(116,53,253,0.08); border-color: var(--color-accent); transform: translateY(-1px); }
+    .sol-cta-link__arrow { display: inline-block; transition: transform var(--transition-base) var(--ease-out); }
+    .sol-cta-link:hover .sol-cta-link__arrow { transform: translateX(4px); }
+
+    .sol-img-placeholder {
+      width: 100%; aspect-ratio: 4 / 3;
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      box-shadow: 0 4px 40px rgba(116,53,253,0.08);
+      display: flex; align-items: center; justify-content: center; padding: 32px;
+    }
+
+    .sol-img-placeholder span {
+      font-family: var(--font-data); font-size: 12px; color: var(--color-text-muted);
+      line-height: 1.8; text-align: center; white-space: pre-line;
+    }
+
+    .sol-img-wrap {
+      width: 100%; border-radius: 20px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 8px 60px rgba(116,53,253,0.14);
+      line-height: 0;
+    }
+    .sol-img-wrap img { width: 100%; height: auto; display: block; }
+
+    @media (max-width: 900px) {
+      .sol-two-col { grid-template-columns: 1fr; gap: 40px; direction: ltr !important; }
+      .sol-two-col > * { direction: ltr !important; }
+      [data-reveal-dir="right"] { transition-delay: 0s; }
+    }
+    @media (max-width: 640px) { .sol-section { padding: 88px 24px; } }
+
+    /* ═══════════════════════════════════════
+       S5 — SOFTWARE & AI
+    ═══════════════════════════════════════ */
+    .sol-software {
+      position: relative; z-index: 3;
+      padding: 120px 60px;
+    }
+
+    .sol-software__headline {
+      font-family: var(--font-heading);
+      font-size: clamp(30px, 4vw, 44px);
+      font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
+      text-align: center; margin-bottom: 16px;
+    }
+
+    .sol-software__sub {
+      font-family: var(--font-body); font-size: 17px; line-height: 1.7;
+      color: var(--color-text-secondary); text-align: center;
+      max-width: 560px; margin: 0 auto 72px;
+    }
+
+    .sw-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 1080px; margin: 0 auto;
+    }
+
+    .sw-card {
+      position: relative;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 44px;
+      overflow: hidden;
+      transition: border-color 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+      opacity: 0; transform: translateY(28px);
+    }
+    .sw-card.in-view { opacity: 1; transform: translateY(0); }
+    .sw-card.in-view:hover { transform: translateY(-4px); }
+    .sw-card:hover { border-color: var(--color-accent); }
+
+    /* Top gradient line on hover */
+    .sw-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-highlight));
+      opacity: 0; transition: opacity 0.35s var(--ease-out);
+    }
+    .sw-card:hover::before { opacity: 1; }
+
+    /* Orb */
+    .sw-card::after {
+      content: ''; position: absolute; top: -60px; right: -60px;
+      width: 220px; height: 220px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(116,53,253,0.12) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+    .sw-card--b::after {
+      background: radial-gradient(circle, rgba(94,235,255,0.08) 0%, transparent 70%);
+    }
+
+    .sw-card > * { position: relative; z-index: 1; }
+
+    .sw-card__icon-box {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: rgba(116,53,253,0.12);
+      border: 1px solid rgba(116,53,253,0.24);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+      transition: transform 0.3s var(--ease-out);
+    }
+    .sw-card--b .sw-card__icon-box {
+      background: rgba(94,235,255,0.08);
+      border-color: rgba(94,235,255,0.18);
+    }
+    .sw-card:hover .sw-card__icon-box { animation: iconFloat 2s ease-in-out infinite; }
+
+    .sw-card__title {
+      font-family: var(--font-heading); font-size: 22px; font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .sw-card__sub {
+      font-family: var(--font-body); font-size: 14px; color: var(--color-text-muted);
+      line-height: 1.5; margin-bottom: 32px;
+    }
+
+    .sw-caps { display: flex; flex-direction: column; gap: 0; }
+
+    .sw-cap {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .sw-cap:last-child { border-bottom: none; }
+
+    .sw-cap__dot {
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+      background: var(--color-highlight);
+      box-shadow: 0 0 6px var(--color-highlight);
+    }
+    .sw-card--b .sw-cap__dot {
+      background: var(--color-cyan);
+      box-shadow: 0 0 6px var(--color-cyan);
+    }
+
+    .sw-cap__text {
+      font-family: var(--font-body); font-size: 14px; color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+    .sw-cap__text strong { font-weight: 600; color: var(--color-text-primary); margin-right: 4px; }
+
+    .sw-cards__footnote {
+      text-align: center;
+      font-family: var(--font-body); font-size: 14px;
+      color: var(--color-text-muted);
+      font-style: italic; margin-top: 32px;
+      max-width: 1080px; margin-left: auto; margin-right: auto;
+    }
+
+    @media (max-width: 900px) { .sw-cards { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .sol-software { padding: 88px 24px; } .sw-card { padding: 32px; } }
+
+    /* ═══════════════════════════════════════
+       S6 — ECOSYSTEM FLYWHEEL
+    ═══════════════════════════════════════ */
+    .sol-ecosystem {
+      position: relative; z-index: 3;
+      padding: 120px 60px;
+      background: rgba(44,32,105,0.05);
+    }
+
+    .sol-ecosystem__headline {
+      font-family: var(--font-heading);
+      font-size: clamp(30px, 4vw, 44px);
+      font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
+      text-align: center; margin-bottom: 16px;
+    }
+
+    .sol-ecosystem__sub {
+      font-family: var(--font-body); font-size: 17px; line-height: 1.7;
+      color: var(--color-text-secondary); text-align: center;
+      max-width: 560px; margin: 0 auto 80px;
+    }
+
+    .eco-layout {
+      display: flex; gap: 80px; align-items: flex-start;
+      max-width: 1080px; margin: 0 auto;
+    }
+
+    .eco-flow-wrap {
+      flex: 0 0 340px;
+      position: relative;
+    }
+
+    /* Dashed return arc on the left */
+    .eco-flow-wrap::before {
+      content: '';
+      position: absolute;
+      left: -20px; top: 28px; bottom: 28px;
+      width: 1.5px;
+      border-left: 1.5px dashed rgba(116,53,253,0.22);
+      border-radius: 1px;
+    }
+
+    .eco-return-label {
+      position: absolute;
+      left: -56px; top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+      font-family: var(--font-data); font-size: 10px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(116,53,253,0.45);
+      white-space: nowrap;
+    }
+
+    .eco-flow { display: flex; flex-direction: column; align-items: stretch; }
+
+    .eco-node {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+      opacity: 0; transform: translateX(-16px);
+    }
+    .eco-node.in-view { opacity: 1; transform: translateX(0); }
+    .eco-node:hover   { border-color: var(--color-accent); transform: translateX(4px); }
+
+    .eco-node__num {
+      flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(116,53,253,0.15); border: 1px solid rgba(116,53,253,0.30);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-data); font-size: 11px; font-weight: 700;
+      color: var(--color-highlight);
+    }
+
+    .eco-node__icon { flex-shrink: 0; color: var(--color-highlight); }
+    .eco-node__label { font-family: var(--font-heading); font-size: 14px; font-weight: 600; }
+    .eco-node__desc  { font-family: var(--font-body); font-size: 12px; color: var(--color-text-muted); margin-top: 2px; }
+
+    .eco-connector {
+      position: relative; width: 2px; height: 44px;
+      background: linear-gradient(to bottom, var(--color-accent), var(--color-highlight));
+      opacity: 0.35; margin-left: 34px;
+      transform: scaleY(0); transform-origin: top;
+      transition: transform 0.45s var(--ease-out);
+    }
+    .eco-connector.in-view { transform: scaleY(1); }
+
+    .eco-dot {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--color-highlight);
+      box-shadow: 0 0 8px var(--color-highlight);
+      animation: flowDot 2.4s linear infinite;
+    }
+
+    .eco-connector:nth-child(4)  .eco-dot { animation-delay: 0.40s; }
+    .eco-connector:nth-child(6)  .eco-dot { animation-delay: 0.80s; }
+    .eco-connector:nth-child(8)  .eco-dot { animation-delay: 1.20s; }
+    .eco-connector:nth-child(10) .eco-dot { animation-delay: 1.60s; }
+    .eco-connector:nth-child(12) .eco-dot { animation-delay: 2.00s; }
+
+    /* Right side: value proposition list */
+    .eco-props { flex: 1; padding-top: 8px; }
+
+    .eco-props__title {
+      font-family: var(--font-heading); font-size: 22px; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .eco-props__sub {
+      font-family: var(--font-body); font-size: 15px; color: var(--color-text-secondary);
+      line-height: 1.65; margin-bottom: 40px;
+    }
+
+    .eco-prop-list { display: flex; flex-direction: column; gap: 20px; }
+
+    .eco-prop {
+      display: flex; gap: 16px; align-items: flex-start;
+      opacity: 0; transform: translateX(20px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .eco-prop.in-view { opacity: 1; transform: translateX(0); }
+
+    .eco-prop__icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      border-radius: 12px;
+      background: rgba(116,53,253,0.10);
+      border: 1px solid rgba(116,53,253,0.20);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .eco-prop__body strong { display: block; font-family: var(--font-body); font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .eco-prop__body span   { display: block; font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); line-height: 1.5; }
+
+    @media (max-width: 1024px) {
+      .eco-layout { flex-direction: column; gap: 56px; }
+      .eco-flow-wrap { flex: none; width: 100%; }
+      .eco-flow-wrap::before { display: none; }
+      .eco-return-label { display: none; }
+    }
+    @media (max-width: 640px) { .sol-ecosystem { padding: 88px 24px; } }
+
+    /* ═══════════════════════════════════════
+       S7 — PLATFORM NODES
+    ═══════════════════════════════════════ */
+    .sol-platform {
+      position: relative; z-index: 3;
+      padding: 120px 60px;
+    }
+
+    .sol-platform__headline {
+      font-family: var(--font-heading);
+      font-size: clamp(30px, 4vw, 44px);
+      font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
+      text-align: center; margin-bottom: 16px;
+    }
+
+    .sol-platform__sub {
+      font-family: var(--font-body); font-size: 17px; line-height: 1.7;
+      color: var(--color-text-secondary); text-align: center;
+      max-width: 520px; margin: 0 auto;
+    }
+
+    .platform__row {
+      display: flex; align-items: center; justify-content: center; gap: 0;
+      margin-top: 72px;
+    }
+
+    .platform__node {
+      flex-shrink: 0; width: 140px; height: 140px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: transform var(--transition-base) var(--ease-out),
+                  border-color var(--transition-base) var(--ease-out),
+                  box-shadow var(--transition-base) var(--ease-out);
+      opacity: 0; transform: translateY(20px);
+    }
+    .platform__node.in-view { opacity: 1; transform: translateY(0); }
+    .platform__node.in-view:hover { transform: scale(1.05); border-color: var(--color-accent); box-shadow: 0 0 24px rgba(116,53,253,0.30); }
+
+    .platform__node-label {
+      font-family: var(--font-data); font-size: 12px;
+      color: var(--color-text-secondary); text-align: center;
+    }
+
+    .platform__line {
+      flex: 1 1 64px; height: 2px; max-width: 96px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-highlight));
+      opacity: 0.2;
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.7s var(--ease-out);
+      position: relative; overflow: visible;
+    }
+    .platform__line.in-view { transform: scaleX(1); }
+    .platform__line .platform__dot {
+      position: absolute; top: 50%; left: 0;
+      width: 3px; height: 3px; border-radius: 50%;
+      background: var(--color-highlight); box-shadow: 0 0 6px var(--color-highlight);
+      transform: translateY(-50%); opacity: 0;
+    }
+    .platform__line.dots-on .platform__dot { animation: lineDot 3s linear infinite; }
+
+    .platform__statement {
+      font-family: var(--font-heading); font-size: 18px; font-weight: 500;
+      color: var(--color-text-secondary); text-align: center;
+      max-width: 640px; margin: 48px auto 0;
+    }
+
+    @media (max-width: 900px) { .platform__row { flex-wrap: wrap; gap: 16px; } .platform__line { display: none; } }
+    @media (max-width: 640px) { .sol-platform { padding: 88px 24px; } }
+
+    /* ═══════════════════════════════════════
+       S8 — FINAL CTA
+    ═══════════════════════════════════════ */
+    .final-cta {
+      position: relative; z-index: 3; overflow: hidden;
+      background: linear-gradient(to bottom, transparent, rgba(44,32,105,0.20));
+    }
+
+    #final-cta-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+
+    .final-cta__inner {
+      position: relative; z-index: 1;
+      max-width: 680px; margin: 0 auto;
+      padding: 120px 60px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+
+    .final-cta__label { color: var(--color-cyan); }
+
+    .final-cta__headline {
+      font-family: var(--font-heading);
+      font-size: clamp(34px, 6vw, 52px);
+      font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .final-cta__sub {
+      font-family: var(--font-body); font-size: 18px; line-height: 1.7;
+      color: var(--color-text-secondary); max-width: 480px; margin-bottom: 48px;
+    }
+
+    .final-cta__ctas { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+    .hero__cta--primary {
+      background: var(--gradient-btn); color: #fff;
+      font-family: var(--font-heading); font-size: 16px; font-weight: 600;
+      padding: 16px 36px; border-radius: 14px;
+      transition: transform var(--transition-base) var(--ease-out), box-shadow var(--transition-base) var(--ease-out);
+    }
+    .hero__cta--primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(116,53,253,0.30); }
+
+    .hero__cta--secondary {
+      background: transparent; border: 1px solid rgba(255,255,255,0.15);
+      color: var(--color-text-primary);
+      font-family: var(--font-heading); font-size: 16px; font-weight: 600;
+      padding: 16px 36px; border-radius: 14px;
+      transition: border-color var(--transition-base) var(--ease-out), background var(--transition-base) var(--ease-out);
+    }
+    .hero__cta--secondary:hover { border-color: var(--color-highlight); background: rgba(255,255,255,0.05); }
+
+    @media (max-width: 640px) { .final-cta__inner { padding: 88px 24px; } }
+
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    .footer {
+      flex-shrink: 0;
+      background: linear-gradient(to bottom, rgba(116,53,253,0.12) 0%, transparent 60%), var(--color-bg-footer);
+      border-top: 1px solid var(--color-footer-border);
+      position: relative; z-index: 1;
+    }
+    .footer__main {
+      max-width: 1200px; margin: 0 auto; padding: 72px 32px 56px;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px;
+    }
+    .footer__main > * { opacity: 0; transform: translateY(16px); }
+    .footer__main > *.is-visible { animation: fadeUp 0.7s var(--ease-out) both; }
+    .footer__main > *:nth-child(1) { animation-delay: 0ms; }
+    .footer__main > *:nth-child(2) { animation-delay: 60ms; }
+    .footer__main > *:nth-child(3) { animation-delay: 120ms; }
+    .footer__main > *:nth-child(4) { animation-delay: 180ms; }
+    .footer__main > *:nth-child(5) { animation-delay: 240ms; }
+
+    .footer__logo     { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+
+    .footer__tagline { font-family: var(--font-body); font-size: 16px; color: rgba(255, 255, 255, 0.6); line-height: 1.6; max-width: 220px; }
+    .footer__col-title { font-family: var(--font-data); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-primary); margin-bottom: 20px; }
+    .footer__col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer__col-link  { font-family: var(--font-body); font-size: 14px; color: var(--color-text-muted); transition: color var(--transition-base) var(--ease-out); }
+    .footer__col-link:hover { color: var(--color-text-secondary); }
+    .footer__contact-item  { display: flex; flex-direction: column; gap: 2px; }
+    .footer__contact-label { font-family: var(--font-data); font-size: 10px; font-weight: 500; letter-spacing: 0.10em; text-transform: uppercase; color: rgba(122,122,140,0.55); }
+
+    .footer__position-line {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.4);
+      line-height: 1.6;
+      max-width: 220px;
+      margin-top: 8px;
+    }
+    .footer__bottom {
+      border-top: 1px solid var(--color-footer-border); max-width: 1200px; margin: 0 auto;
+      padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    }
+    .footer__copy { font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); }
+    .footer__social { display: flex; align-items: center; gap: 10px; list-style: none; }
+    .footer__social-link {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
+      display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);
+      transition: color var(--transition-base) var(--ease-out), border-color var(--transition-base) var(--ease-out),
+                  background var(--transition-base) var(--ease-out), box-shadow var(--transition-base) var(--ease-out),
+                  transform var(--transition-base) var(--ease-out);
+    }
+    .footer__social-link:hover { color: var(--color-highlight); border-color: var(--color-highlight); background: rgba(116,53,253,0.12); box-shadow: 0 0 16px rgba(116,53,253,0.40); transform: translateY(-2px); }
+    .footer__legal       { display: flex; align-items: center; gap: 20px; list-style: none; }
+    .footer__legal-link  { font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); transition: color var(--transition-base) var(--ease-out); }
+    .footer__legal-link:hover { color: var(--color-text-secondary); }
+
+    @media (max-width: 1024px) { .footer__main { grid-template-columns: 2fr 1fr 1fr; } }
+    @media (max-width: 900px)  { .footer__main { grid-template-columns: 1fr 1fr 1fr; gap: 36px; padding: 56px 24px 48px; } .footer__logo-col { grid-column: 1 / -1; } }
+    @media (max-width: 600px)  { .footer__main { grid-template-columns: 1fr 1fr; gap: 32px; padding: 48px 20px 40px; } .footer__logo-col { grid-column: 1 / -1; } }
+    @media (max-width: 440px)  { .footer__main { grid-template-columns: 1fr; } .footer__bottom { flex-direction: column; align-items: flex-start; gap: 16px; padding: 20px; } }
+
+    /* ── Back-to-top ── */
+    .back-to-top {
+      position: fixed; bottom: 32px; right: 20px;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--gradient-btn); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-text-primary); box-shadow: 0 4px 16px rgba(116,53,253,0.28);
+      z-index: 500; opacity: 0; transform: scale(0.75) translateY(8px); pointer-events: none;
+      transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+    }
+    .back-to-top.is-visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: all; }
+    .back-to-top:hover      { transform: scale(1) translateY(-2px); box-shadow: 0 0 20px rgba(116,53,253,0.50), 0 6px 20px rgba(116,53,253,0.28); }
+    .back-to-top:active     { transform: scale(0.94) translateY(0); }
+
+    /* ── Cookie Banner ── */
+    .cookie-banner {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      z-index: 9999; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 16px 32px;
+      background: rgba(20, 16, 31, 0.94);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(116, 53, 253, 0.3);
+      box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .cookie-banner.is-visible { transform: translateY(0); }
+    .cookie-banner p { font-family: var(--font-body); font-size: 14px; color: rgba(255,255,255,0.80); line-height: 1.5; flex: 1; }
+    .cookie-banner a { color: var(--color-highlight); text-decoration: underline; }
+    .cookie-accept-btn {
+      flex-shrink: 0; padding: 8px 20px; border-radius: var(--radius-sm);
+      background: var(--color-accent); color: var(--color-text-primary);
+      font-family: var(--font-body); font-size: 13px; font-weight: 600;
+      border: none; cursor: pointer; white-space: nowrap;
+      transition: background var(--transition-base) var(--ease-out), transform var(--transition-base) var(--ease-out);
+    }
+    .cookie-accept-btn:hover { background: var(--color-highlight); transform: translateY(-1px); }
+    @media (max-width: 640px) {
+      .cookie-banner { flex-direction: column; align-items: flex-start; padding: 16px 20px; }
+      .cookie-accept-btn { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- ── NAV ── -->
+  <nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="SenseUni home">
+        <img src="assets/images/logo.webp" alt="SenseUni" height="32" width="auto" style="display:block;" />
+      </a>
+      <ul class="nav__links" role="list">
+        <li><a href="index.html"            class="nav__link">Home</a></li>
+        <li><a href="ai-smart-cabinet.html" class="nav__link">AI Smart Cabinet</a></li>
+        <li><a href="solutions.html"        class="nav__link is-active">Solutions</a></li>
+        <li><a href="technology.html"       class="nav__link">Technology</a></li>
+        <li><a href="case-studies.html"     class="nav__link">Case Studies</a></li>
+        <li><a href="company.html"          class="nav__link">Company</a></li>
+      </ul>
+      <div class="nav__cta">
+        <a href="get-a-demo.html" class="btn--primary">Get a Demo</a>
+      </div>
+      <button class="nav__hamburger" id="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-drawer">
+        <span class="nav__hamburger-line"></span>
+        <span class="nav__hamburger-line"></span>
+        <span class="nav__hamburger-line"></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav__drawer" id="nav-drawer" aria-hidden="true">
+    <ul class="nav__drawer-links" role="list">
+      <li><a href="index.html"            class="nav__drawer-link">Home</a></li>
+      <li><a href="ai-smart-cabinet.html" class="nav__drawer-link">AI Smart Cabinet</a></li>
+      <li><a href="solutions.html"        class="nav__drawer-link">Solutions</a></li>
+      <li><a href="technology.html"       class="nav__drawer-link">Technology</a></li>
+      <li><a href="case-studies.html"     class="nav__drawer-link">Case Studies</a></li>
+      <li><a href="company.html"          class="nav__drawer-link">Company</a></li>
+    </ul>
+    <a href="get-a-demo.html" class="btn--primary nav__drawer-cta">Get a Demo</a>
+  </div>
+
+  <main id="main">
+
+    <canvas id="home-starfield" aria-hidden="true"></canvas>
+
+    <!-- ══════════════════════════════════
+         S1 — HERO
+    ══════════════════════════════════ -->
+    <section class="sol-hero" id="hero" aria-labelledby="sol-hero-headline">
+      <p class="sol-hero__label">Solutions</p>
+      <h1 class="sol-hero__headline" id="sol-hero-headline">
+        Solutions for <span class="gradient-text">Modern Retail.</span>
+      </h1>
+      <p class="sol-hero__sub">
+        From autonomous cabinets to AI-driven media networks — one connected platform for the entire retail experience.
+      </p>
+      <div class="sol-hero__ecosystem" id="ecosystem-diagram">
+
+        <!-- Mobile fallback 2×2 grid (≤640px) -->
+        <div class="eco-mobile-grid" aria-hidden="true">
+          <div class="eco-mobile-center">
+            <div class="eco-mobile-center__name">SenseUni Platform</div>
+          </div>
+          <div class="eco-mobile-node"><div class="eco-mobile-node__name">Autonomous Retail</div></div>
+          <div class="eco-mobile-node"><div class="eco-mobile-node__name">Smart Experience</div></div>
+          <div class="eco-mobile-node"><div class="eco-mobile-node__name">Retail Media</div></div>
+          <div class="eco-mobile-node"><div class="eco-mobile-node__name">Connected Operations</div></div>
+        </div>
+
+        <!-- Desktop SVG ecosystem diagram -->
+        <svg class="ecosystem-svg" viewBox="0 0 1000 520"
+             preserveAspectRatio="xMidYMid meet"
+             aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#7435FD"/>
+              <stop offset="100%" stop-color="#8B71FF"/>
+            </linearGradient>
+            <radialGradient id="hexFill" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="#7435FD" stop-opacity="0.30"/>
+              <stop offset="100%" stop-color="#7435FD" stop-opacity="0.04"/>
+            </radialGradient>
+            <radialGradient id="centerAmbient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="#7435FD" stop-opacity="0.20"/>
+              <stop offset="100%" stop-color="#7435FD" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="dotGlow" x="-200%" y="-200%" width="500%" height="500%">
+              <feGaussianBlur stdDeviation="2.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Ambient center glow -->
+          <ellipse cx="500" cy="260" rx="145" ry="125" fill="url(#centerAmbient)"/>
+
+          <!-- ── Connection lines (drawn in by JS) ── -->
+          <line class="eco-line eco-line--top"
+                x1="500" y1="202" x2="500" y2="122"
+                stroke="rgba(94,235,255,0.28)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="eco-line eco-line--right"
+                x1="550" y1="260" x2="724" y2="260"
+                stroke="rgba(94,235,255,0.28)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="eco-line eco-line--bottom"
+                x1="500" y1="318" x2="500" y2="402"
+                stroke="rgba(94,235,255,0.28)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="eco-line eco-line--left"
+                x1="450" y1="260" x2="276" y2="260"
+                stroke="rgba(94,235,255,0.28)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- ── Traveling dots (data flowing toward center) ── -->
+          <circle class="eco-dot eco-dot--top"    r="3" fill="#5EEBFF" filter="url(#dotGlow)"/>
+          <circle class="eco-dot eco-dot--right"  r="3" fill="#5EEBFF" filter="url(#dotGlow)"/>
+          <circle class="eco-dot eco-dot--bottom" r="3" fill="#5EEBFF" filter="url(#dotGlow)"/>
+          <circle class="eco-dot eco-dot--left"   r="3" fill="#5EEBFF" filter="url(#dotGlow)"/>
+
+          <!-- ── Center hexagon node ── -->
+          <g class="eco-center-group">
+            <!-- Pulse rings -->
+            <path class="eco-pulse eco-pulse--a"
+                  d="M 500,202 L 550,231 L 550,289 L 500,318 L 450,289 L 450,231 Z"
+                  fill="none" stroke="#7435FD" stroke-width="1.2"/>
+            <path class="eco-pulse eco-pulse--b"
+                  d="M 500,202 L 550,231 L 550,289 L 500,318 L 450,289 L 450,231 Z"
+                  fill="none" stroke="#8B71FF" stroke-width="0.6"/>
+            <!-- Hexagon body -->
+            <path d="M 500,202 L 550,231 L 550,289 L 500,318 L 450,289 L 450,231 Z"
+                  fill="url(#hexFill)" stroke="url(#hexGrad)" stroke-width="1.5"/>
+            <!-- Label -->
+            <text x="500" y="255" text-anchor="middle" fill="#ffffff"
+                  font-family="Sora, sans-serif" font-size="11" font-weight="700" letter-spacing="0.8">SenseUni</text>
+            <text x="500" y="271" text-anchor="middle" fill="#8B71FF"
+                  font-family="Sora, sans-serif" font-size="9" font-weight="500" letter-spacing="1.5">PLATFORM</text>
+          </g>
+
+          <!-- ── TOP: Autonomous Retail ── -->
+          <g class="eco-node eco-node--top" data-line="top">
+            <rect class="eco-card" x="415" y="32" width="170" height="90" rx="12"
+                  fill="rgba(116,53,253,0.10)" stroke="rgba(139,113,255,0.30)" stroke-width="1"/>
+            <g class="eco-icon-group">
+              <!-- AI Smart Cabinet: body + door split + shelves + product dots -->
+              <rect x="488" y="44" width="24" height="30" rx="2"
+                    fill="none" stroke="#8B71FF" stroke-width="1.5"/>
+              <line x1="500" y1="44" x2="500" y2="74" stroke="#8B71FF" stroke-width="1"/>
+              <line x1="488" y1="55" x2="512" y2="55" stroke="#8B71FF" stroke-width="0.8"/>
+              <line x1="488" y1="64" x2="512" y2="64" stroke="#8B71FF" stroke-width="0.8"/>
+              <circle cx="494" cy="50" r="1.5" fill="#7435FD"/>
+              <circle cx="498" cy="50" r="1.5" fill="#8B71FF"/>
+              <circle cx="506" cy="50" r="1.5" fill="#7435FD"/>
+            </g>
+            <text x="500" y="108" text-anchor="middle" fill="#e2e8f0"
+                  font-family="Sora, sans-serif" font-size="9.5" font-weight="600" letter-spacing="0.4">Autonomous Retail</text>
+          </g>
+
+          <!-- ── RIGHT: Smart Experience ── -->
+          <g class="eco-node eco-node--right" data-line="right">
+            <rect class="eco-card" x="724" y="217" width="170" height="90" rx="12"
+                  fill="rgba(116,53,253,0.10)" stroke="rgba(139,113,255,0.30)" stroke-width="1"/>
+            <g class="eco-icon-group">
+              <!-- Smart display: screen + stand + touch ripple -->
+              <rect x="793" y="234" width="32" height="20" rx="2"
+                    fill="none" stroke="#8B71FF" stroke-width="1.5"/>
+              <line x1="809" y1="254" x2="809" y2="261" stroke="#8B71FF" stroke-width="1.5"/>
+              <line x1="803" y1="261" x2="815" y2="261" stroke="#8B71FF" stroke-width="1.5"/>
+              <circle cx="809" cy="244" r="4.5" fill="none" stroke="#5EEBFF" stroke-width="1"/>
+              <circle cx="809" cy="244" r="7.5" fill="none" stroke="#5EEBFF" stroke-width="0.5" opacity="0.4"/>
+            </g>
+            <text x="809" y="292" text-anchor="middle" fill="#e2e8f0"
+                  font-family="Sora, sans-serif" font-size="9.5" font-weight="600" letter-spacing="0.4">Smart Experience</text>
+          </g>
+
+          <!-- ── BOTTOM: Retail Media ── -->
+          <g class="eco-node eco-node--bottom" data-line="bottom">
+            <rect class="eco-card" x="415" y="402" width="170" height="90" rx="12"
+                  fill="rgba(116,53,253,0.10)" stroke="rgba(139,113,255,0.30)" stroke-width="1"/>
+            <g class="eco-icon-group">
+              <!-- Wide-format ad screen + play + signal arcs -->
+              <rect x="479" y="418" width="42" height="24" rx="2"
+                    fill="none" stroke="#8B71FF" stroke-width="1.5"/>
+              <polygon points="488,423 488,436 499,430" fill="#8B71FF" opacity="0.85"/>
+              <path d="M 505,424 Q 510,430 505,436" fill="none" stroke="#5EEBFF" stroke-width="1.2"/>
+              <path d="M 509,421 Q 516,430 509,439" fill="none" stroke="#5EEBFF" stroke-width="0.7" opacity="0.55"/>
+            </g>
+            <text x="500" y="478" text-anchor="middle" fill="#e2e8f0"
+                  font-family="Sora, sans-serif" font-size="9.5" font-weight="600" letter-spacing="0.4">Retail Media</text>
+          </g>
+
+          <!-- ── LEFT: Connected Operations ── -->
+          <g class="eco-node eco-node--left" data-line="left">
+            <rect class="eco-card" x="106" y="217" width="170" height="90" rx="12"
+                  fill="rgba(116,53,253,0.10)" stroke="rgba(139,113,255,0.30)" stroke-width="1"/>
+            <g class="eco-icon-group">
+              <!-- Dashboard: panel + bar chart + trend line -->
+              <rect x="172" y="232" width="38" height="24" rx="2"
+                    fill="none" stroke="#8B71FF" stroke-width="1.5"/>
+              <rect x="177" y="245" width="5" height="9"  rx="0.5" fill="#8B71FF" opacity="0.50"/>
+              <rect x="185" y="241" width="5" height="13" rx="0.5" fill="#8B71FF" opacity="0.75"/>
+              <rect x="193" y="237" width="5" height="17" rx="0.5" fill="#8B71FF"/>
+              <polyline points="177,239 181,235 186,237 191,233 197,235"
+                        fill="none" stroke="#5EEBFF" stroke-width="1" opacity="0.85"/>
+            </g>
+            <text x="191" y="292" text-anchor="middle" fill="#e2e8f0"
+                  font-family="Sora, sans-serif" font-size="9.5" font-weight="600" letter-spacing="0.4">Connected Operations</text>
+          </g>
+
+        </svg>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- ══════════════════════════════════
+         S2 — AUTONOMOUS RETAIL
+    ══════════════════════════════════ -->
+    <section class="sol-section" id="autonomous-retail" aria-labelledby="ar-headline">
+      <div class="sol-wrap">
+        <div class="sol-two-col">
+
+          <div data-reveal-dir="left">
+            <span class="sol-col__label" style="color: var(--color-cyan);">Autonomous Retail</span>
+            <h2 class="sol-col__headline" id="ar-headline">
+              Launch Autonomous Retail <span class="gradient-text">Anywhere.</span>
+            </h2>
+            <p class="sol-col__outcome">
+              AI Smart Cabinets that operate, restock, and transact without staff — built for airports, offices, hospitals, and high-traffic public spaces.
+            </p>
+            <div class="sol-points">
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>Vision-Powered Inventory</strong>
+                  <span>Real-time shelf recognition — no barcodes, no manual counts.</span>
+                </div>
+              </div>
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>24/7 Unattended Operation</strong>
+                  <span>Self-managing hardware with remote monitoring and OTA updates.</span>
+                </div>
+              </div>
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>Multi-Payment Support</strong>
+                  <span>Card, mobile, QR, and contactless — no friction for any customer.</span>
+                </div>
+              </div>
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>Live Sales Analytics</strong>
+                  <span>Per-SKU sell-through, peak-hour reports, and restocking alerts.</span>
+                </div>
+              </div>
+            </div>
+            <a href="ai-smart-cabinet.html" class="sol-cta-link">
+              Explore AI Smart Cabinet <span class="sol-cta-link__arrow">→</span>
+            </a>
+          </div>
+
+          <div data-reveal-dir="right">
+            <div class="sol-img-wrap">
+              <img src="assets/images/stadium.webp"
+                   alt="AI Smart Cabinet deployed in a corporate or public space"
+                   loading="lazy" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- ══════════════════════════════════
+         S3 — SMART PRODUCT EXPERIENCE
+    ══════════════════════════════════ -->
+    <section class="sol-section sol-section--tinted" id="showcase" aria-labelledby="spe-headline">
+      <div class="sol-wrap">
+        <div class="sol-two-col sol-two-col--reversed">
+
+          <div data-reveal-dir="left">
+            <span class="sol-col__label" style="color: var(--color-highlight);">Smart Product Experience</span>
+            <h2 class="sol-col__headline" id="spe-headline">
+              Turn Product Discovery Into <span class="gradient-text">Intelligence.</span>
+            </h2>
+            <p class="sol-col__outcome">
+              Smart Showcases with embedded vision sensors that identify every product on the shelf — replacing manual audits with real-time inventory awareness, and turning sales data into optimized merchandising.
+            </p>
+            <div class="sol-points">
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>Product-Level Recognition</strong>
+                  <span>Vision sensors identify every SKU on the shelf in real time. Know exactly what's displayed, what's missing, and what's misplaced — without manual walkthroughs.</span>
+                </div>
+              </div>
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><polyline points="22 12 18 12"/><polyline points="6 12 2 12"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>Merchandising Optimization</strong>
+                  <span>Combine shelf status with sell-through data to surface what's working. Adjust placement, assortment, and promotions based on evidence, not guesswork.</span>
+                </div>
+              </div>
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>Attention-Triggered Content</strong>
+                  <span>Embedded screens detect customer proximity and surface contextual product stories, pricing, and promotions. Remote CMS updates across all units instantly.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal-dir="right">
+            <div class="sol-img-wrap">
+              <img src="assets/images/display.webp"
+                   alt="Smart Showcase with vision sensors in a flagship retail store"
+                   loading="lazy" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- ══════════════════════════════════
+         S4 — RETAIL MEDIA
+    ══════════════════════════════════ -->
+    <section class="sol-section" id="advertising" aria-labelledby="rm-headline">
+      <div class="sol-wrap">
+        <div class="sol-two-col">
+
+          <div data-reveal-dir="left">
+            <span class="sol-col__label" style="color: var(--color-cyan);">Retail Media</span>
+            <h2 class="sol-col__headline" id="rm-headline">
+              Your Retail Network Is a <span class="gradient-text">Media Channel.</span>
+            </h2>
+            <p class="sol-col__outcome">
+              Monetize screen time across your entire estate. Serve targeted ads, measure real-world performance, and share revenue with location partners.
+            </p>
+            <div class="sol-points">
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>Programmatic Ad Slots</strong>
+                  <span>Sell inventory across your network with built-in brand safety controls.</span>
+                </div>
+              </div>
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>Audience Context Targeting</strong>
+                  <span>Match ads to location type, time-of-day, and behavioral signals — no PII required.</span>
+                </div>
+              </div>
+              <div class="sol-point">
+                <div class="sol-point__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <div class="sol-point__body">
+                  <strong>CPM / CPA Reporting</strong>
+                  <span>Full campaign dashboards: impressions, engagement, and attributed sales lift.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal-dir="right">
+            <div class="sol-img-wrap">
+              <img src="assets/images/ads.webp"
+                   alt="Retail media network with targeted advertising across screens"
+                   loading="lazy" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- ══════════════════════════════════
+         S5 — SOFTWARE & AI
+    ══════════════════════════════════ -->
+    <section class="sol-software sol-section--tinted" id="software" aria-labelledby="sw-headline">
+      <div class="sol-wrap">
+        <p class="section-label" style="color: var(--color-highlight);" data-reveal>Software &amp; AI</p>
+        <h2 class="sol-software__headline" id="sw-headline" data-reveal>
+          The Intelligence Behind <span class="gradient-text">Every Device.</span>
+        </h2>
+        <p class="sol-software__sub" data-reveal>
+          Platform services and AI agents that make your retail network smarter over time — not just connected, but continuously optimizing.
+        </p>
+      </div>
+
+      <div class="sw-cards" data-reveal-group="sw-cards" style="padding: 0 60px; max-width: 1280px; margin: 0 auto;">
+
+        <!-- Card A: Platform Services -->
+        <div class="sw-card" data-reveal>
+          <div class="sw-card__icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <p class="sw-card__title">Platform Services</p>
+          <p class="sw-card__sub">Retail Operating System — the management layer for your entire physical estate.</p>
+          <div class="sw-caps">
+            <div class="sw-cap">
+              <div class="sw-cap__dot"></div>
+              <p class="sw-cap__text"><strong>Fleet Management</strong> Provision, monitor, and update thousands of devices from a single dashboard.</p>
+            </div>
+            <div class="sw-cap">
+              <div class="sw-cap__dot"></div>
+              <p class="sw-cap__text"><strong>Content Management</strong> Schedule and deploy screen content, pricing, and promotions across all locations instantly.</p>
+            </div>
+            <div class="sw-cap">
+              <div class="sw-cap__dot"></div>
+              <p class="sw-cap__text"><strong>Transaction Engine</strong> Unified payment processing, reconciliation, and loyalty integration in one API.</p>
+            </div>
+            <div class="sw-cap">
+              <div class="sw-cap__dot"></div>
+              <p class="sw-cap__text"><strong>Open API &amp; Webhooks</strong> Connect your ERP, WMS, or BI stack without professional services.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card B: AI Agents -->
+        <div class="sw-card sw-card--b" data-reveal>
+          <div class="sw-card__icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+              <circle cx="9" cy="14" r="1" fill="var(--color-cyan)"/><circle cx="15" cy="14" r="1" fill="var(--color-cyan)"/>
+            </svg>
+          </div>
+          <p class="sw-card__title">AI Agents for Retail</p>
+          <p class="sw-card__sub">Autonomous decision-making agents that act on data — so your team focuses on strategy, not operations.</p>
+          <div class="sw-caps">
+            <div class="sw-cap">
+              <div class="sw-cap__dot"></div>
+              <p class="sw-cap__text"><strong>Demand Forecasting</strong> Predicts sell-through by SKU, location, and time window — triggers restocking before stockouts occur.</p>
+            </div>
+            <div class="sw-cap">
+              <div class="sw-cap__dot"></div>
+              <p class="sw-cap__text"><strong>Dynamic Pricing</strong> Adjusts prices in real time based on inventory levels, competitor signals, and margin targets.</p>
+            </div>
+            <div class="sw-cap">
+              <div class="sw-cap__dot"></div>
+              <p class="sw-cap__text"><strong>Anomaly Detection</strong> Flags hardware faults, transaction irregularities, and compliance gaps automatically.</p>
+            </div>
+            <div class="sw-cap">
+              <div class="sw-cap__dot"></div>
+              <p class="sw-cap__text"><strong>Audience Intelligence</strong> Anonymized footfall patterns that refine ad targeting and product placement — no PII collected.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="sw-cards__footnote" data-reveal style="margin-top: 36px; padding: 0 60px;">
+        Works with SenseUni hardware — or your existing infrastructure.
+      </p>
+
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- ══════════════════════════════════
+         S6 — MORE POWERFUL TOGETHER
+    ══════════════════════════════════ -->
+    <section class="sol-ecosystem" id="ecosystem" aria-labelledby="eco-headline">
+      <div class="sol-wrap">
+        <p class="section-label" style="color: var(--color-cyan);" data-reveal>More Powerful Together</p>
+        <h2 class="sol-ecosystem__headline" id="eco-headline" data-reveal>
+          A Flywheel That <span class="gradient-text">Builds Itself.</span>
+        </h2>
+        <p class="sol-ecosystem__sub" data-reveal>
+          Each solution feeds the next. The more your network runs, the smarter and more profitable every node becomes.
+        </p>
+
+        <div class="eco-layout">
+
+          <!-- Left: Animated vertical flow -->
+          <div class="eco-flow-wrap">
+            <div class="eco-return-label">↺ Cycle repeats</div>
+            <div class="eco-flow" id="eco-flow" data-reveal-group="eco-nodes">
+
+              <div class="eco-node" data-reveal>
+                <div class="eco-node__num">1</div>
+                <div>
+                  <div class="eco-node__label">AI Smart Cabinet</div>
+                  <div class="eco-node__desc">Sells autonomously, captures transaction data</div>
+                </div>
+              </div>
+
+              <div class="eco-connector"><div class="eco-dot"></div></div>
+
+              <div class="eco-node" data-reveal>
+                <div class="eco-node__num">2</div>
+                <div>
+                  <div class="eco-node__label">Consumer Signals</div>
+                  <div class="eco-node__desc">Purchase patterns, dwell time, preferences</div>
+                </div>
+              </div>
+
+              <div class="eco-connector"><div class="eco-dot"></div></div>
+
+              <div class="eco-node" data-reveal>
+                <div class="eco-node__num">3</div>
+                <div>
+                  <div class="eco-node__label">Cloud AI Platform</div>
+                  <div class="eco-node__desc">Models train on every transaction and interaction</div>
+                </div>
+              </div>
+
+              <div class="eco-connector"><div class="eco-dot"></div></div>
+
+              <div class="eco-node" data-reveal>
+                <div class="eco-node__num">4</div>
+                <div>
+                  <div class="eco-node__label">Smarter Advertising</div>
+                  <div class="eco-node__desc">Targeted campaigns that convert at higher rates</div>
+                </div>
+              </div>
+
+              <div class="eco-connector"><div class="eco-dot"></div></div>
+
+              <div class="eco-node" data-reveal>
+                <div class="eco-node__num">5</div>
+                <div>
+                  <div class="eco-node__label">Better Experiences</div>
+                  <div class="eco-node__desc">Right product, right price, right moment</div>
+                </div>
+              </div>
+
+              <div class="eco-connector"><div class="eco-dot"></div></div>
+
+              <div class="eco-node" data-reveal>
+                <div class="eco-node__num">6</div>
+                <div>
+                  <div class="eco-node__label">More Revenue</div>
+                  <div class="eco-node__desc">Per-location yield grows with network scale</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right: Value propositions -->
+          <div class="eco-props">
+            <h3 class="eco-props__title">Network Effects That Compound</h3>
+            <p class="eco-props__sub">Every device added makes the entire system smarter. Every data point refines the next decision.</p>
+            <div class="eco-prop-list" data-reveal-group="eco-props">
+
+              <div class="eco-prop" data-reveal>
+                <div class="eco-prop__icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <div class="eco-prop__body">
+                  <strong>Self-Optimizing Operations</strong>
+                  <span>AI continuously rebalances inventory, pricing, and content — reducing manual intervention by up to 70%.</span>
+                </div>
+              </div>
+
+              <div class="eco-prop" data-reveal>
+                <div class="eco-prop__icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <div class="eco-prop__body">
+                  <strong>Unified Data Across Every Channel</strong>
+                  <span>Sales, media, and operations data in one platform — no siloes, no manual reconciliation.</span>
+                </div>
+              </div>
+
+              <div class="eco-prop" data-reveal>
+                <div class="eco-prop__icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+                </div>
+                <div class="eco-prop__body">
+                  <strong>Scale Without Proportional Cost</strong>
+                  <span>Adding 100 locations costs a fraction of location 1 — the platform absorbs complexity so you don't have to.</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- ══════════════════════════════════
+         S7 — PLATFORM NODES (Technology)
+    ══════════════════════════════════ -->
+    <section class="sol-platform" id="platform" aria-labelledby="platform-headline">
+      <div class="sol-wrap">
+        <p class="section-label" style="color: var(--color-highlight);" data-reveal>Technology Foundation</p>
+        <h2 class="sol-platform__headline" id="platform-headline" data-reveal>
+          Built on an <span class="gradient-text">Enterprise-Grade Stack.</span>
+        </h2>
+        <p class="sol-platform__sub" data-reveal>
+          Every layer — from edge hardware to cloud AI — engineered for reliability at scale.
+        </p>
+
+        <div class="platform__row" data-reveal-group="platform-nodes">
+
+          <div class="platform__node" data-reveal>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/>
+              <line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
+            </svg>
+            <p class="platform__node-label">Edge AI<br/>Hardware</p>
+          </div>
+
+          <div class="platform__line"><span class="platform__dot"></span></div>
+
+          <div class="platform__node" data-reveal>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <p class="platform__node-label">Security &amp;<br/>Compliance</p>
+          </div>
+
+          <div class="platform__line"><span class="platform__dot"></span></div>
+
+          <div class="platform__node" data-reveal>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+            </svg>
+            <p class="platform__node-label">Cloud<br/>Platform</p>
+          </div>
+
+          <div class="platform__line"><span class="platform__dot"></span></div>
+
+          <div class="platform__node" data-reveal>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 1 0 0 14.14M12 2v4m0 12v4m-7.07-2.93 2.83-2.83M16.24 7.76l2.83-2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/>
+            </svg>
+            <p class="platform__node-label">AI &amp;<br/>ML Models</p>
+          </div>
+
+          <div class="platform__line"><span class="platform__dot"></span></div>
+
+          <div class="platform__node" data-reveal>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-highlight)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <p class="platform__node-label">Open API<br/>Ecosystem</p>
+          </div>
+
+        </div>
+
+        <p class="platform__statement" data-reveal>
+          99.6% uptime SLA. SOC 2 compliant. Deployable in 47+ countries.
+        </p>
+
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- ══════════════════════════════════
+         S8 — FINAL CTA
+    ══════════════════════════════════ -->
+    <section class="final-cta" id="final-cta" aria-labelledby="final-cta-headline">
+      <canvas id="final-cta-canvas" aria-hidden="true"></canvas>
+      <div class="section-wrap">
+        <div class="final-cta__inner" data-reveal-group="final-cta">
+          <p class="section-label final-cta__label" data-reveal>Get Started</p>
+          <h2 class="final-cta__headline" id="final-cta-headline" data-reveal>
+            Ready to Build Your <span class="gradient-text">Retail Network?</span>
+          </h2>
+          <p class="final-cta__sub" data-reveal>
+            Talk to our team — we'll map the right solution to your locations, scale, and goals.
+          </p>
+          <div class="final-cta__ctas" data-reveal>
+            <a href="get-a-demo.html" class="hero__cta--primary">Get a Demo</a>
+            <a href="ai-smart-cabinet.html" class="hero__cta--secondary">Explore AI Smart Cabinet</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__main" id="footer-main">
+
+      <div class="footer__logo-col">
+        <a href="index.html" class="footer__logo" aria-label="SenseUni home">
+          <img src="assets/images/logo.webp" alt="SenseUni" style="width:160px;height:auto;display:block;" />
+        </a>
+        <p class="footer__tagline">Building Smarter Retail Networks.</p>
+        <p class="footer__position-line">AI-powered retail infrastructure for global markets.</p>
+      </div>
+
+      <div>
+        <p class="footer__col-title">Product</p>
+        <ul class="footer__col-links" role="list">
+          <li><a href="ai-smart-cabinet.html"      class="footer__col-link">AI Smart Cabinet</a></li>
+          <li><a href="solutions.html#showcase"    class="footer__col-link">Smart Showcase</a></li>
+          <li><a href="solutions.html#advertising" class="footer__col-link">Smart Advertising</a></li>
+          <li><a href="technology.html"            class="footer__col-link">AIoT Platform</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer__col-title">Company</p>
+        <ul class="footer__col-links" role="list">
+          <li><a href="company.html"           class="footer__col-link">About SenseUni</a></li>
+          <li><a href="case-studies.html"      class="footer__col-link">Case Studies</a></li>
+          <li><a href="technology.html"        class="footer__col-link">Technology</a></li>
+          <li><a href="company.html#partners"  class="footer__col-link">Partners</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer__col-title">Global Presence</p>
+        <ul class="footer__col-links" role="list">
+          <li><span class="footer__col-link">North America</span></li>
+          <li><span class="footer__col-link">Europe</span></li>
+          <li><span class="footer__col-link">Middle East</span></li>
+          <li><span class="footer__col-link">Asia Pacific</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer__col-title">Contact</p>
+        <ul class="footer__col-links" role="list">
+          <li>
+            <div class="footer__contact-item">
+              <span class="footer__contact-label">General</span>
+              <a href="mailto:hello@senseuni.ai" class="footer__col-link">hello@senseuni.ai</a>
+            </div>
+          </li>
+          <li>
+            <div class="footer__contact-item">
+              <span class="footer__contact-label">Sales</span>
+              <a href="mailto:sales@senseuni.ai" class="footer__col-link">sales@senseuni.ai</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2026 SenseUni. All rights reserved.</p>
+      <ul class="footer__social" role="list" aria-label="Social media links">
+        <li><a href="https://linkedin.com/company/senseuni" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></li>
+        <li><a href="https://tiktok.com/@senseuni"  class="footer__social-link" aria-label="TikTok"    target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.79a8.18 8.18 0 0 0 4.78 1.52V6.85a4.85 4.85 0 0 1-1-.16z"/></svg></a></li>
+        <li><a href="https://youtube.com/@senseuni"  class="footer__social-link" aria-label="YouTube"   target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a></li>
+        <li><a href="https://instagram.com/senseuni" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a></li>
+        <li><a href="https://x.com/senseuni"         class="footer__social-link" aria-label="X (Twitter)" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a></li>
+      </ul>
+      <ul class="footer__legal" role="list">
+        <li><a href="privacy-policy.html" class="footer__legal-link">Privacy Policy</a></li>
+        <li><a href="terms-of-service.html"   class="footer__legal-link">Terms of Service</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+
+  <script>
+    (() => {
+      const nav       = document.getElementById('nav');
+      const hamburger = document.getElementById('nav-hamburger');
+      const drawer    = document.getElementById('nav-drawer');
+      const backToTop = document.getElementById('back-to-top');
+
+      let lastScrollY = 0, ticking = false;
+      const HIDE_THRESHOLD = 120, DELTA = 5;
+
+      function onScroll() {
+        const y = window.scrollY;
+        if (y < HIDE_THRESHOLD) {
+          nav.classList.remove('is-hidden');
+          nav.classList.toggle('is-scrolled', y > 12);
+        } else if (y > lastScrollY + DELTA) {
+          nav.classList.add('is-hidden');
+          nav.classList.add('is-scrolled');
+        } else if (y < lastScrollY - DELTA) {
+          nav.classList.remove('is-hidden');
+        }
+        if (backToTop) backToTop.classList.toggle('is-visible', y > 400);
+        lastScrollY = y; ticking = false;
+      }
+
+      window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(onScroll); ticking = true; } }, { passive: true });
+      document.addEventListener('mousemove', (e) => { if (e.clientY < 80 && window.scrollY >= HIDE_THRESHOLD) nav.classList.remove('is-hidden'); });
+      nav.addEventListener('animationend', () => { nav.style.animation = 'none'; }, { once: true });
+      onScroll();
+
+      const toggleDrawer = (open) => {
+        nav.classList.toggle('is-open', open);
+        drawer.classList.toggle('is-open', open);
+        hamburger.setAttribute('aria-expanded', String(open));
+        drawer.setAttribute('aria-hidden', String(!open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      };
+
+      hamburger.addEventListener('click', () => toggleDrawer(!drawer.classList.contains('is-open')));
+      document.addEventListener('click', (e) => { if (drawer.classList.contains('is-open') && !nav.contains(e.target) && !drawer.contains(e.target)) toggleDrawer(false); });
+      window.addEventListener('resize', () => { if (window.innerWidth > 900) toggleDrawer(false); });
+      drawer.querySelectorAll('a').forEach(l => l.addEventListener('click', () => toggleDrawer(false)));
+
+      if (backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      /* ── Footer columns ── */
+      const footerCols = document.querySelectorAll('#footer-main > *');
+      if ('IntersectionObserver' in window) {
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); obs.unobserve(entry.target); } });
+        }, { threshold: 0.15 });
+        footerCols.forEach(col => obs.observe(col));
+      } else {
+        footerCols.forEach(col => col.classList.add('is-visible'));
+      }
+
+      /* ════════════════════════════════════
+         GLOBAL STARFIELD
+      ════════════════════════════════════ */
+      (function initGlobalStarfield() {
+        const canvas = document.getElementById('home-starfield');
+        if (!canvas) return;
+        const ctx     = canvas.getContext('2d');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isMobile = () => window.innerWidth < 768;
+        const COUNT = 70;
+        let stars = [], mouse = { x: 0, y: 0 }, target = { x: 0, y: 0 };
+        const LERP = 0.02;
+        function rand(a, b) { return a + Math.random() * (b - a); }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        function spawn() {
+          stars = [];
+          for (let i = 0; i < COUNT; i++) {
+            stars.push({ x: rand(0, canvas.width), y: rand(0, canvas.height), r: rand(0.6, 1.8), vx: rand(-0.08, 0.08), vy: rand(-0.08, 0.08), alpha: rand(0.3, 0.9), dAlpha: rand(0.003, 0.008) * (Math.random() < 0.5 ? 1 : -1), px: 0, py: 0, depth: rand(0.3, 1.0) });
+          }
+        }
+        function draw() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          for (const s of stars) { ctx.beginPath(); ctx.arc(s.x + s.px, s.y + s.py, s.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(139,113,255,${s.alpha.toFixed(3)})`; ctx.fill(); }
+        }
+        function update() {
+          if (!isMobile()) { mouse.x += (target.x - mouse.x) * LERP; mouse.y += (target.y - mouse.y) * LERP; }
+          for (const s of stars) {
+            s.x += s.vx; s.y += s.vy;
+            if (s.x < -2)                s.x = canvas.width  + 2;
+            if (s.x > canvas.width  + 2) s.x = -2;
+            if (s.y < -2)                s.y = canvas.height + 2;
+            if (s.y > canvas.height + 2) s.y = -2;
+            s.alpha += s.dAlpha;
+            if (s.alpha > 0.9 || s.alpha < 0.15) s.dAlpha *= -1;
+            if (!isMobile()) { s.px = mouse.x * s.depth * 4; s.py = mouse.y * s.depth * 4; }
+          }
+        }
+        function loop() { update(); draw(); requestAnimationFrame(loop); }
+        window.addEventListener('mousemove', (e) => { if (isMobile()) return; target.x = (e.clientX / window.innerWidth - 0.5) * 2; target.y = (e.clientY / window.innerHeight - 0.5) * 2; }, { passive: true });
+        resize(); spawn();
+        if (reduced) draw(); else requestAnimationFrame(loop);
+        let resizeTimer;
+        window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { resize(); spawn(); if (reduced) draw(); }, 200); }, { passive: true });
+      }());
+
+      /* ════════════════════════════════════
+         SCROLL REVEAL
+      ════════════════════════════════════ */
+      (function initScrollReveal() {
+        const GROUP_DELAYS = {
+          'sw-cards':      [0, 150],
+          'eco-nodes':     [0, 120, 240, 360, 480, 600],
+          'eco-props':     [80, 200, 320],
+          'platform-nodes':[0, 100, 200, 300, 400],
+          'final-cta':     [0, 80, 160, 240],
+        };
+
+        const groups  = document.querySelectorAll('[data-reveal-group]');
+        const lone    = document.querySelectorAll('[data-reveal]:not([data-reveal-group] [data-reveal]):not([data-reveal-group])');
+        const dirEls  = document.querySelectorAll('[data-reveal-dir]');
+        const connectors = document.querySelectorAll('.eco-connector');
+
+        const reveal = (el, delay) => setTimeout(() => el && el.classList.add('in-view'), delay);
+
+        if (!('IntersectionObserver' in window)) {
+          document.querySelectorAll('[data-reveal], [data-reveal-dir]').forEach(el => el.classList.add('in-view'));
+          connectors.forEach(c => c.classList.add('in-view'));
+          return;
+        }
+
+        const obs = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const t = entry.target;
+
+            if (t.hasAttribute('data-reveal-group')) {
+              const key      = t.dataset.revealGroup;
+              const delays   = GROUP_DELAYS[key] || [];
+              const children = t.matches('[data-reveal]')
+                ? [t]
+                : t.querySelectorAll(':scope > [data-reveal], :scope > * > [data-reveal]');
+              children.forEach((child, i) => reveal(child, delays[i] != null ? delays[i] : i * 80));
+
+              /* Platform lines — draw in then start dots */
+              if (key === 'platform-nodes') {
+                const lines = t.querySelectorAll('.platform__line');
+                lines.forEach((line, i) => {
+                  setTimeout(() => {
+                    line.classList.add('in-view');
+                    setTimeout(() => {
+                      line.classList.add('dots-on');
+                      if (!line.querySelector('.platform__dot')) {
+                        const dot = document.createElement('span');
+                        dot.className = 'platform__dot';
+                        line.appendChild(dot);
+                      }
+                    }, 600);
+                  }, 200 + i * 120);
+                });
+              }
+
+              /* Eco-nodes group — also trigger connectors in sequence */
+              if (key === 'eco-nodes') {
+                connectors.forEach((c, i) => {
+                  setTimeout(() => c.classList.add('in-view'), 80 + i * 120);
+                });
+              }
+            } else {
+              reveal(t, 0);
+            }
+
+            observer.unobserve(t);
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+
+        groups.forEach(g => obs.observe(g));
+        lone.forEach(el => obs.observe(el));
+        dirEls.forEach(el => obs.observe(el));
+      }());
+
+      /* ════════════════════════════════════
+         FINAL CTA PARTICLES
+      ════════════════════════════════════ */
+      (function initFinalCtaParticles() {
+        const canvas = document.getElementById('final-cta-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const PARTICLE_COUNT = 30, CONNECT_DIST = 140;
+        let particles = [], rafId = null;
+
+        function resize() { const s = canvas.parentElement; canvas.width = s.offsetWidth; canvas.height = s.offsetHeight; }
+        function rand(min, max) { return min + Math.random() * (max - min); }
+        function spawn() {
+          particles = [];
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push({ x: rand(0, canvas.width), y: rand(0, canvas.height), r: rand(1.2, 2.2), vx: reduced ? 0 : rand(-0.12, 0.12), vy: reduced ? 0 : rand(-0.12, 0.12) });
+          }
+        }
+        function draw() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+              const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+              const dist = Math.sqrt(dx*dx + dy*dy);
+              if (dist < CONNECT_DIST) {
+                const alpha = (1 - dist / CONNECT_DIST) * 0.18;
+                ctx.beginPath(); ctx.strokeStyle = `rgba(139,113,255,${alpha.toFixed(3)})`; ctx.lineWidth = 0.5;
+                ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+              }
+            }
+          }
+          for (const p of particles) { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = 'rgba(139,113,255,0.30)'; ctx.fill(); }
+        }
+        function update() {
+          for (const p of particles) {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < p.r || p.x > canvas.width  - p.r) { p.vx *= -1; p.x = Math.max(p.r, Math.min(canvas.width  - p.r, p.x)); }
+            if (p.y < p.r || p.y > canvas.height - p.r) { p.vy *= -1; p.y = Math.max(p.r, Math.min(canvas.height - p.r, p.y)); }
+          }
+        }
+        function loop() { update(); draw(); rafId = requestAnimationFrame(loop); }
+        resize(); spawn();
+        if (reduced) draw(); else loop();
+        let rt;
+        window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } resize(); spawn(); if (reduced) draw(); else loop(); }, 200); }, { passive: true });
+      }());
+
+      /* ── Ecosystem Diagram Animation & Hover ── */
+      (function() {
+        var diagram = document.getElementById('ecosystem-diagram');
+        if (!diagram) return;
+
+        var lines   = diagram.querySelectorAll('.eco-line');
+        var nodes   = diagram.querySelectorAll('.eco-node');
+        var dots    = diagram.querySelectorAll('.eco-dot');
+        var started = false;
+
+        function startAnimation() {
+          if (started) return;
+          started = true;
+          // Draw lines with stagger
+          lines.forEach(function(line, i) {
+            setTimeout(function() { line.classList.add('is-drawn'); }, 350 + i * 120);
+          });
+          // Show nodes with stagger
+          nodes.forEach(function(node, i) {
+            setTimeout(function() { node.classList.add('is-visible'); }, 850 + i * 130);
+          });
+          // Start dot flow after nodes appear
+          setTimeout(function() {
+            dots.forEach(function(dot) { dot.classList.add('is-flowing'); });
+          }, 1700);
+        }
+
+        // Trigger on scroll-into-view
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+              if (e.isIntersecting) { startAnimation(); io.unobserve(e.target); }
+            });
+          }, { threshold: 0.25 });
+          io.observe(diagram);
+        } else {
+          startAnimation();
+        }
+
+        // Hover: highlight one node + matching line, dim the rest
+        nodes.forEach(function(node) {
+          var lineKey  = node.getAttribute('data-line');
+          var matchLine = diagram.querySelector('.eco-line--' + lineKey);
+
+          node.addEventListener('mouseenter', function() {
+            nodes.forEach(function(n) {
+              n.classList.toggle('is-dimmed',  n !== node);
+              n.classList.toggle('is-hovered', n === node);
+            });
+            lines.forEach(function(l) { l.classList.remove('is-bright'); });
+            if (matchLine) matchLine.classList.add('is-bright');
+          });
+
+          node.addEventListener('mouseleave', function() {
+            nodes.forEach(function(n) {
+              n.classList.remove('is-dimmed');
+              n.classList.remove('is-hovered');
+            });
+            lines.forEach(function(l) { l.classList.remove('is-bright'); });
+          });
+        });
+      }());
+
+      /* ── Cookie Banner ── */
+      (function() {
+        var banner = document.getElementById('cookie-banner');
+        var btn    = document.getElementById('cookie-accept');
+        if (!banner || !btn) return;
+        if (!localStorage.getItem('senseuni_cookie_accepted')) {
+          banner.style.display = 'flex';
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() { banner.classList.add('is-visible'); });
+          });
+        }
+        btn.addEventListener('click', function() {
+          banner.classList.remove('is-visible');
+          setTimeout(function() { banner.style.display = 'none'; }, 400);
+          localStorage.setItem('senseuni_cookie_accepted', 'true');
+        });
+      }());
+
+    })();
+  </script>
+
+  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Cookie notice">
+    <p>We use essential cookies to ensure our website functions properly. No tracking or advertising cookies are used.
+      <a href="privacy-policy.html#cookies">Learn more</a>
+    </p>
+    <button id="cookie-accept" class="cookie-accept-btn">Got It</button>
+  </div>
+
+</body>
+</html>

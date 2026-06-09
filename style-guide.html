@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SenseUni — Design System Style Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─────────────────────────────────────────
+       DESIGN TOKENS
+    ───────────────────────────────────────── */
+    :root {
+      /* Brand Colors */
+      --color-bg:          #1A1A1C;
+      --color-brand:       #2C2069;
+      --color-accent:      #7435FD;
+      --color-highlight:   #8B71FF;
+
+      /* Extended palette */
+      --color-surface:       rgba(255, 255, 255, 0.04);
+      --color-surface-hover: rgba(255, 255, 255, 0.08);
+      --color-border:        rgba(255, 255, 255, 0.10);
+      --color-border-glow:   rgba(116, 53, 253, 0.40);
+
+      --color-text-primary:   #FFFFFF;
+      --color-text-secondary: #C8C8D4;
+      --color-text-muted:     #7A7A8C;
+
+      /* Gradients */
+      --gradient-brand: linear-gradient(135deg, var(--color-brand), var(--color-accent));
+      --gradient-glow:  radial-gradient(ellipse 120% 55% at 50% -5%,
+                          rgba(116, 53, 253, 0.15) 0%,
+                          rgba(116, 53, 253, 0.05) 50%,
+                          transparent 75%);
+      --gradient-card:  linear-gradient(135deg, rgba(44, 32, 105, 0.20) 0%, rgba(116, 53, 253, 0.06) 100%);
+      --gradient-btn:   linear-gradient(135deg, var(--color-accent), var(--color-highlight));
+
+      /* Typography */
+      --font-heading: 'Sora', sans-serif;
+      --font-body:    'Inter', sans-serif;
+      --font-data:    'Space Grotesk', sans-serif;
+
+      /* Radii */
+      --radius-sm:  8px;
+      --radius-md:  16px;
+      --radius-lg:  24px;
+      --radius-xl:  32px;
+
+      /* Spacing */
+      --space-xs:  8px;
+      --space-sm:  16px;
+      --space-md:  32px;
+      --space-lg:  64px;
+      --space-xl:  96px;
+
+      /* Transitions */
+      --transition-base: 0.25s ease;
+      --transition-slow: 0.45s ease;
+    }
+
+    /* ─────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Purple ambient glow — center-top */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60vh;
+      background: var(--gradient-glow);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Grain / noise texture overlay — above glow, below content */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      opacity: 0.035;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ─────────────────────────────────────────
+       LAYOUT
+    ───────────────────────────────────────── */
+    .page-wrap {
+      position: relative;
+      z-index: 3;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-md);
+    }
+
+    .section { margin-bottom: var(--space-xl); }
+
+    .section-label {
+      font-family: var(--font-data);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-highlight);
+      margin-bottom: var(--space-sm);
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-md);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    /* ─────────────────────────────────────────
+       PAGE HEADER
+    ───────────────────────────────────────── */
+    .page-header {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+      padding-top: var(--space-md);
+    }
+
+    .page-header__eyebrow {
+      font-family: var(--font-data);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-highlight);
+      margin-bottom: 24px;
+    }
+
+    /* Logo + wordmark lockup in header */
+    .page-header__logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .page-header__title {
+      font-family: var(--font-heading);
+      font-size: clamp(44px, 7vw, 88px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      background: linear-gradient(135deg, var(--color-text-primary) 40%, var(--color-highlight));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0;
+    }
+
+    .page-header__sub {
+      font-size: 17px;
+      color: var(--color-text-secondary);
+      max-width: 520px;
+      margin: 28px auto 0;
+      line-height: 1.65;
+    }
+
+    /* ─────────────────────────────────────────
+       TYPOGRAPHY CLASSES
+    ───────────────────────────────────────── */
+    /* Display — hero headlines */
+    .t-display {
+      font-family: var(--font-heading);
+      font-size: clamp(44px, 7vw, 88px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--color-text-primary);
+    }
+
+    .t-h1 { font-family: var(--font-heading); font-size: clamp(36px, 5vw, 60px); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: var(--color-text-primary); }
+    .t-h2 { font-family: var(--font-heading); font-size: clamp(26px, 3.5vw, 42px); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; color: var(--color-text-primary); }
+    .t-h3 { font-family: var(--font-heading); font-size: clamp(20px, 2.5vw, 28px); font-weight: 600; line-height: 1.25; color: var(--color-text-primary); }
+    .t-h4 { font-family: var(--font-heading); font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--color-text-primary); }
+    .t-body    { font-family: var(--font-body); font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--color-text-secondary); }
+    .t-caption { font-family: var(--font-data); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--color-text-muted); }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--color-text-primary) 30%, var(--color-highlight));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─────────────────────────────────────────
+       TYPOGRAPHY SCALE TABLE
+    ───────────────────────────────────────── */
+    .type-scale { display: flex; flex-direction: column; }
+
+    .type-row {
+      display: grid;
+      grid-template-columns: 110px 1fr 190px;
+      gap: var(--space-sm);
+      align-items: center;
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .type-row__label {
+      font-family: var(--font-data);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      align-self: start;
+      padding-top: 4px;
+    }
+
+    .type-row__meta {
+      font-family: var(--font-data);
+      font-size: 11px;
+      color: var(--color-text-muted);
+      text-align: right;
+      align-self: start;
+      padding-top: 6px;
+      line-height: 1.7;
+    }
+
+    /* ─────────────────────────────────────────
+       COLOR SWATCHES
+    ───────────────────────────────────────── */
+    .swatches { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+
+    .swatch { display: flex; flex-direction: column; gap: 10px; min-width: 140px; flex: 1; }
+
+    .swatch__block {
+      height: 88px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      transition: transform var(--transition-base);
+    }
+    .swatch__block:hover { transform: translateY(-3px); }
+
+    .swatch__block--bg        { background-color: var(--color-bg); box-shadow: inset 0 0 0 2px rgba(255,255,255,0.12); }
+    .swatch__block--brand     { background-color: var(--color-brand); }
+    .swatch__block--accent    { background-color: var(--color-accent); box-shadow: 0 0 24px rgba(116,53,253,0.45); }
+    .swatch__block--highlight { background: linear-gradient(135deg, var(--color-highlight), var(--color-accent)); }
+    .swatch__block--surface   { background-color: var(--color-surface); border: 1px solid var(--color-border); }
+    .swatch__block--gradient  { background: var(--gradient-brand); }
+
+    .swatch__name { font-family: var(--font-data); font-size: 13px; font-weight: 600; color: var(--color-text-primary); }
+    .swatch__hex  { font-family: var(--font-data); font-size: 12px; color: var(--color-text-muted); margin-top: 2px; }
+    .swatch__role { font-size: 11px; color: var(--color-text-muted); }
+
+    /* ─────────────────────────────────────────
+       BUTTONS
+    ───────────────────────────────────────── */
+    .btn-group { display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      outline: none;
+      transition: transform var(--transition-base),
+                  box-shadow var(--transition-base),
+                  border-color var(--transition-base);
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .btn--primary {
+      background: var(--gradient-btn);
+      color: var(--color-text-primary);
+      box-shadow: 0 2px 12px rgba(116, 53, 253, 0.30);
+    }
+    .btn--primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+    .btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(116, 53, 253, 0.50), 0 6px 24px rgba(116, 53, 253, 0.30);
+    }
+    .btn--primary:hover::before { opacity: 1; }
+    .btn--primary:active { transform: translateY(0); }
+
+    .btn--secondary {
+      background: transparent;
+      color: var(--color-text-primary);
+      border: 1.5px solid var(--color-border);
+    }
+    .btn--secondary:hover {
+      border-color: var(--color-highlight);
+      color: var(--color-highlight);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(139, 113, 255, 0.15);
+    }
+    .btn--secondary:active { transform: translateY(0); }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--color-accent);
+      padding-left: 0;
+      padding-right: 4px;
+    }
+    .btn--ghost:hover { color: var(--color-highlight); }
+    .btn--ghost .arrow { transition: transform var(--transition-base); }
+    .btn--ghost:hover .arrow { transform: translateX(4px); }
+
+    .btn--sm { padding: 10px 20px; font-size: 13px; }
+
+    /* ─────────────────────────────────────────
+       GLASSMORPHISM CARD
+    ───────────────────────────────────────── */
+    .glass-card {
+      background: var(--gradient-card);
+      border: 1px solid rgba(116, 53, 253, 0.30);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 0 24px rgba(116, 53, 253, 0.08);
+      transition: border-color var(--transition-base),
+                  box-shadow var(--transition-base),
+                  transform var(--transition-slow);
+      max-width: 360px;
+      position: relative;
+      overflow: hidden;
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139, 113, 255, 0.60), transparent);
+      opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+    .glass-card:hover {
+      border-color: rgba(116, 53, 253, 0.50);
+      box-shadow: 0 0 40px rgba(116, 53, 253, 0.20), 0 12px 40px rgba(0, 0, 0, 0.30);
+      transform: translateY(-4px);
+    }
+    .glass-card:hover::before { opacity: 1; }
+
+    .glass-card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--color-brand), var(--color-accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-sm);
+      color: var(--color-text-primary);
+    }
+
+    .glass-card__title { font-family: var(--font-heading); font-size: 18px; font-weight: 600; color: var(--color-text-primary); margin-bottom: 10px; }
+    .glass-card__body  { font-size: 15px; line-height: 1.65; color: var(--color-text-secondary); }
+
+    .glass-card__tag {
+      display: inline-block;
+      margin-top: var(--space-sm);
+      font-family: var(--font-data);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-highlight);
+      background: rgba(139, 113, 255, 0.10);
+      border: 1px solid rgba(139, 113, 255, 0.20);
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-sm);
+    }
+
+    /* ─────────────────────────────────────────
+       STAT BLOCK
+    ───────────────────────────────────────── */
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-sm); }
+
+    .stat-block {
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-sm) var(--space-md);
+      text-align: center;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+    }
+    .stat-block:hover {
+      border-color: var(--color-border-glow);
+      box-shadow: 0 8px 32px rgba(116, 53, 253, 0.15);
+      transform: translateY(-3px);
+    }
+
+    .stat-block__number {
+      font-family: var(--font-data);
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--color-text-primary);
+      text-shadow: 0 0 28px rgba(116, 53, 253, 0.35);
+      margin-bottom: 8px;
+    }
+    .stat-block__label {
+      font-family: var(--font-data);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+
+    /* ─────────────────────────────────────────
+       BADGES
+    ───────────────────────────────────────── */
+    .badge-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    .badge {
+      font-family: var(--font-data);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 20px;
+      padding: 5px 14px;
+    }
+    .badge--accent    { color: var(--color-accent);         background: rgba(116, 53, 253, 0.12); border: 1px solid rgba(116, 53, 253, 0.25); }
+    .badge--highlight { color: var(--color-highlight);      background: rgba(139, 113, 255, 0.10); border: 1px solid rgba(139, 113, 255, 0.20); }
+    .badge--neutral   { color: var(--color-text-secondary); background: rgba(255, 255, 255, 0.06); border: 1px solid var(--color-border); }
+
+    /* ─────────────────────────────────────────
+       DIVIDER
+    ───────────────────────────────────────── */
+    .divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+      margin: var(--space-lg) 0;
+    }
+
+    /* ─────────────────────────────────────────
+       ANIMATION DEMO BANNER
+    ───────────────────────────────────────── */
+    .anim-banner {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: var(--gradient-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 20px var(--space-md);
+      overflow: hidden;
+      position: relative;
+    }
+    .anim-banner__glow {
+      position: absolute;
+      right: -60px; top: 50%;
+      transform: translateY(-50%);
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(116,53,253,0.35) 0%, transparent 70%);
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
+      50%       { opacity: 1;   transform: translateY(-50%) scale(1.15); }
+    }
+    .anim-banner__text { font-family: var(--font-heading); font-size: 15px; font-weight: 500; color: var(--color-text-secondary); }
+    .anim-banner__text strong { color: var(--color-text-primary); font-weight: 600; }
+
+    /* ─────────────────────────────────────────
+       ICON SYSTEM — section 09
+    ───────────────────────────────────────── */
+    .icon-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 20px;
+      background: var(--gradient-card);
+      border: 1px solid rgba(116, 53, 253, 0.25);
+      border-radius: var(--radius-md);
+      min-width: 100px;
+      flex: 1;
+      transition: border-color var(--transition-base),
+                  box-shadow var(--transition-base),
+                  transform var(--transition-base);
+      color: var(--color-highlight);
+    }
+    .icon-item:hover {
+      border-color: rgba(116, 53, 253, 0.50);
+      box-shadow: 0 0 24px rgba(116, 53, 253, 0.15);
+      transform: translateY(-3px);
+      color: var(--color-text-primary);
+    }
+    .icon-item__label {
+      font-family: var(--font-data);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+
+    /* ─────────────────────────────────────────
+       LOGO SECTION — section 10
+    ───────────────────────────────────────── */
+    .logo-lockups {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .logo-lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-wordmark {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .logo-lockup--lg .logo-wordmark { font-size: 32px; }
+    .logo-lockup--md .logo-wordmark { font-size: 20px; }
+    .logo-lockup--sm .logo-wordmark { font-size: 14px; }
+
+    .logo-lockup--lg svg { width: 36px; height: 36px; }
+    .logo-lockup--md svg { width: 24px; height: 24px; }
+    .logo-lockup--sm svg { width: 16px; height: 16px; }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .type-row { grid-template-columns: 80px 1fr; }
+      .type-row__meta { display: none; }
+      .card-grid { grid-template-columns: 1fr; }
+      .glass-card { max-width: 100%; }
+      .icon-grid { gap: 10px; }
+      .icon-item { min-width: 80px; padding: 18px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ── PAGE HEADER ── -->
+  <header class="page-header">
+    <p class="page-header__eyebrow">SenseUni · Design System</p>
+
+    <!-- Logo mark + wordmark lockup -->
+    <div class="page-header__logo">
+      <!-- Orbital logo mark — placeholder to be replaced with final brand file -->
+      <svg width="48" height="48" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#7435FD"/>
+            <stop offset="100%" stop-color="#8B71FF"/>
+          </linearGradient>
+        </defs>
+        <!-- Orbit ring 1 — tilted 30° -->
+        <ellipse cx="14" cy="14" rx="11" ry="5"
+          stroke="#8B71FF" stroke-width="1.2" stroke-opacity="0.55" fill="none"
+          transform="rotate(30 14 14)"/>
+        <!-- Orbit ring 2 — tilted -30° -->
+        <ellipse cx="14" cy="14" rx="11" ry="5"
+          stroke="#8B71FF" stroke-width="1.2" stroke-opacity="0.35" fill="none"
+          transform="rotate(-30 14 14)"/>
+        <!-- Central node -->
+        <circle cx="14" cy="14" r="3.5" fill="url(#nodeGrad)"/>
+        <!-- Outer ring of node -->
+        <circle cx="14" cy="14" r="5.5" stroke="#7435FD" stroke-width="0.8" stroke-opacity="0.40" fill="none"/>
+      </svg>
+
+      <h1 class="page-header__title">Style Guide</h1>
+    </div>
+
+    <p class="page-header__sub">Visual inventory of all UI components, tokens, and patterns used across the SenseUni website.</p>
+  </header>
+
+  <hr class="divider" />
+
+  <!-- ── 1. COLOR SYSTEM ── -->
+  <section class="section">
+    <p class="section-label">01 — Color System</p>
+    <h2 class="section-title">Brand Colors</h2>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch__block swatch__block--bg"></div>
+        <div>
+          <div class="swatch__name">Background</div>
+          <div class="swatch__hex">--color-bg · #1A1A1C</div>
+          <div class="swatch__role">Primary page background</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__block swatch__block--brand"></div>
+        <div>
+          <div class="swatch__name">Brand</div>
+          <div class="swatch__hex">--color-brand · #2C2069</div>
+          <div class="swatch__role">Large-area brand color</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__block swatch__block--accent"></div>
+        <div>
+          <div class="swatch__name">Accent / CTA</div>
+          <div class="swatch__hex">--color-accent · #7435FD</div>
+          <div class="swatch__role">Buttons, hover, highlights, glow</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__block swatch__block--highlight"></div>
+        <div>
+          <div class="swatch__name">Highlight</div>
+          <div class="swatch__hex">--color-highlight · #8B71FF</div>
+          <div class="swatch__role">Gradients, halos, tech ambience</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__block swatch__block--surface"></div>
+        <div>
+          <div class="swatch__name">Surface</div>
+          <div class="swatch__hex">--color-surface · rgba(255,255,255,0.04)</div>
+          <div class="swatch__role">Card &amp; panel backgrounds</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__block swatch__block--gradient"></div>
+        <div>
+          <div class="swatch__name">Brand Gradient</div>
+          <div class="swatch__hex">--color-brand → --color-accent</div>
+          <div class="swatch__role">Icons, badges, emphasis elements</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── 2. TYPOGRAPHY ── -->
+  <section class="section">
+    <p class="section-label">02 — Typography</p>
+    <h2 class="section-title">Type Scale</h2>
+
+    <div class="type-scale">
+
+      <div class="type-row">
+        <span class="type-row__label">Display</span>
+        <span class="t-display gradient-text" style="font-size: clamp(32px, 5vw, 56px);">Building Smarter Retail.</span>
+        <span class="type-row__meta">Sora 800 · 88 / 44px clamp<br/>lh 1.05 · ls −0.03em</span>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">H1</span>
+        <span class="t-h1">Building Smarter Retail Networks.</span>
+        <span class="type-row__meta">Sora 800 · 60 / 36px clamp<br/>lh 1.10 · ls −0.02em</span>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">H2</span>
+        <span class="t-h2">More revenue. Less work.</span>
+        <span class="type-row__meta">Sora 700 · 42 / 26px clamp<br/>lh 1.15 · ls −0.01em</span>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">H3</span>
+        <span class="t-h3">Connected Retail Platform</span>
+        <span class="type-row__meta">Sora 600 · 28 / 20px clamp<br/>lh 1.25</span>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">H4</span>
+        <span class="t-h4">Deploy. Operate. Scale.</span>
+        <span class="type-row__meta">Sora 600 · 18px · lh 1.35</span>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Body</span>
+        <span class="t-body">Connect devices, simplify operations, and unlock new retail opportunities across your entire network — from a single dashboard.</span>
+        <span class="type-row__meta">Inter 400 · 16px · lh 1.70</span>
+      </div>
+
+      <div class="type-row">
+        <span class="type-row__label">Caption</span>
+        <span class="t-caption">Estimates are illustrative. Actual results vary by location and product mix.</span>
+        <span class="type-row__meta">Space Grotesk 500 · 12px<br/>ls 0.04em</span>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── 3. BUTTONS ── -->
+  <section class="section">
+    <p class="section-label">03 — Buttons</p>
+    <h2 class="section-title">Interactive Controls</h2>
+
+    <div class="btn-group" style="margin-bottom: 20px;">
+      <button class="btn btn--primary">Get a Demo</button>
+      <button class="btn btn--secondary">Explore AI Smart Cabinet</button>
+      <button class="btn btn--ghost">Learn more <span class="arrow">→</span></button>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn--primary btn--sm">Download Spec Sheet</button>
+      <button class="btn btn--secondary btn--sm">Request Access</button>
+    </div>
+    <p class="t-caption" style="margin-top: 16px;">
+      Hover each button. Primary: gradient fill + upward lift + glow. Secondary: border/color shift. Ghost: arrow slides right.
+    </p>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── 4. GLASSMORPHISM CARDS ── -->
+  <section class="section">
+    <p class="section-label">04 — Cards</p>
+    <h2 class="section-title">Glassmorphism Card Component</h2>
+
+    <div class="card-grid">
+
+      <!-- Card 1: Clock / 24-7 icon for "No Staff. Ever." -->
+      <div class="glass-card">
+        <div class="glass-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <polyline points="12 7 12 12 15.5 14.5"/>
+            <!-- 24h tick marks at top and sides -->
+            <line x1="12" y1="3.5" x2="12" y2="5.5"/>
+            <line x1="20.5" y1="12" x2="18.5" y2="12"/>
+            <line x1="3.5" y1="12" x2="5.5" y2="12"/>
+          </svg>
+        </div>
+        <h3 class="glass-card__title">No Staff. Ever.</h3>
+        <p class="glass-card__body">No cashier, no shift schedule, no labor cost per transaction. Your cabinet operates 24/7 with zero on-site staff.</p>
+        <span class="glass-card__tag">Operations</span>
+      </div>
+
+      <!-- Card 2: Activity / pulse-line icon for "Know Before You Go" -->
+      <div class="glass-card">
+        <div class="glass-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <polyline points="2 12 6 12 8 5 10 19 13 9 15 15 17 12 22 12"/>
+          </svg>
+        </div>
+        <h3 class="glass-card__title">Know Before You Go</h3>
+        <p class="glass-card__body">Live inventory and alerts tell you what's low before you make the drive. Manage every location from one dashboard.</p>
+        <span class="glass-card__tag">Intelligence</span>
+      </div>
+
+      <!-- Card 3: Connected-nodes / network icon for "Built to Scale" -->
+      <div class="glass-card">
+        <div class="glass-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <circle cx="12" cy="5"  r="2"/>
+            <circle cx="5"  cy="19" r="2"/>
+            <circle cx="19" cy="19" r="2"/>
+            <line x1="12" y1="7"  x2="5"  y2="17"/>
+            <line x1="12" y1="7"  x2="19" y2="17"/>
+            <line x1="7"  y1="19" x2="17" y2="19"/>
+          </svg>
+        </div>
+        <h3 class="glass-card__title">Built to Scale</h3>
+        <p class="glass-card__body">AIoT platform and cloud infrastructure support growing fleets from 10 to 10,000+ units without changing your workflow.</p>
+        <span class="glass-card__tag">Scalability</span>
+      </div>
+
+    </div>
+
+    <p class="t-caption" style="margin-top: 20px;">
+      Hover cards: top-edge glow line, border shift, shadow depth, 4px lift. Icons: 24×24 viewBox, stroke-width 1.5, round caps, Lucide-style.
+    </p>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── 5. STAT BLOCKS ── -->
+  <section class="section">
+    <p class="section-label">05 — Stats</p>
+    <h2 class="section-title">Stat Block Component</h2>
+
+    <div class="stat-grid">
+      <div class="stat-block">
+        <div class="stat-block__number">100,000+</div>
+        <div class="stat-block__label">Units Deployed Globally</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block__number">99.6%</div>
+        <div class="stat-block__label">AI Recognition Accuracy</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block__number">10+</div>
+        <div class="stat-block__label">Years in Retail Technology</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block__number">99+</div>
+        <div class="stat-block__label">Companies Deployed</div>
+      </div>
+    </div>
+
+    <p class="t-caption" style="margin-top: 16px;">
+      Numbers: Space Grotesk 700, white, faint purple text-shadow. Labels: Space Grotesk 500, muted. Animate with Count-Up on scroll.
+    </p>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── 6. BADGES / TAGS ── -->
+  <section class="section">
+    <p class="section-label">06 — Badges &amp; Tags</p>
+    <h2 class="section-title">Label Components</h2>
+
+    <div class="badge-row">
+      <span class="badge badge--accent">AI Smart Cabinet</span>
+      <span class="badge badge--highlight">Platform</span>
+      <span class="badge badge--neutral">Case Study</span>
+      <span class="badge badge--accent">New</span>
+      <span class="badge badge--highlight">Operations</span>
+      <span class="badge badge--neutral">Technology</span>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── 7. ANIMATION REFERENCE ── -->
+  <section class="section">
+    <p class="section-label">07 — Animation</p>
+    <h2 class="section-title">Permitted Motion Patterns</h2>
+
+    <div class="anim-banner">
+      <div class="anim-banner__glow"></div>
+      <div>
+        <p class="anim-banner__text">
+          <strong>Background Glow (active above)</strong> — radial pulse, 3s loop, opacity 0.5 → 1 → 0.5.
+        </p>
+        <br/>
+        <p class="anim-banner__text">Permitted: <strong>Scroll Reveal · Parallax · Gradient Flow · Number Count-Up · Card Hover · Background Glow</strong></p>
+        <p class="anim-banner__text" style="margin-top:6px;">Avoid: Heavy 3D · Particle overload · WebGL · High-frequency motion</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── 8. CSS TOKEN REFERENCE ── -->
+  <section class="section">
+    <p class="section-label">08 — Token Reference</p>
+    <h2 class="section-title">CSS Custom Properties</h2>
+
+    <div class="glass-card" style="max-width: 100%; background: rgba(0,0,0,0.30);">
+      <pre style="font-family: 'Space Grotesk', monospace; font-size: 13px; color: var(--color-text-secondary); line-height: 1.9; overflow-x: auto;"><span style="color:var(--color-highlight);">:root</span> {
+  <span style="color:var(--color-accent);">/* Colors */</span>
+  --color-bg:          <span style="color:var(--color-highlight);">#1A1A1C</span>
+  --color-brand:       <span style="color:var(--color-highlight);">#2C2069</span>
+  --color-accent:      <span style="color:var(--color-highlight);">#7435FD</span>
+  --color-highlight:   <span style="color:var(--color-highlight);">#8B71FF</span>
+  --color-text-primary:   <span style="color:var(--color-highlight);">#FFFFFF</span>
+  --color-text-secondary: <span style="color:var(--color-highlight);">#C8C8D4</span>
+  --color-text-muted:     <span style="color:var(--color-highlight);">#7A7A8C</span>
+
+  <span style="color:var(--color-accent);">/* Fonts */</span>
+  --font-heading: <span style="color:var(--color-highlight);">'Sora', sans-serif</span>
+  --font-body:    <span style="color:var(--color-highlight);">'Inter', sans-serif</span>
+  --font-data:    <span style="color:var(--color-highlight);">'Space Grotesk', sans-serif</span>
+
+  <span style="color:var(--color-accent);">/* Radii */</span>
+  --radius-sm: <span style="color:var(--color-highlight);">8px</span>    --radius-md: <span style="color:var(--color-highlight);">16px</span>
+  --radius-lg: <span style="color:var(--color-highlight);">24px</span>   --radius-xl: <span style="color:var(--color-highlight);">32px</span>
+}</pre>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── 9. ICON SYSTEM ── -->
+  <section class="section">
+    <p class="section-label">09 — Icon System</p>
+    <h2 class="section-title">Reusable Line Icons</h2>
+    <p class="t-caption" style="margin-bottom: var(--space-md);">
+      All icons: 24×24 viewBox · stroke="currentColor" · stroke-width="1.5" · stroke-linecap="round" · stroke-linejoin="round" · fill="none"
+    </p>
+
+    <div class="icon-grid">
+
+      <!-- Cabinet -->
+      <div class="icon-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4" y="2" width="16" height="20" rx="2"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="12" y1="7"  x2="12" y2="9"/>
+          <line x1="12" y1="15" x2="12" y2="17"/>
+        </svg>
+        <span class="icon-item__label">Cabinet</span>
+      </div>
+
+      <!-- Cloud -->
+      <div class="icon-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 10a6 6 0 0 0-11.6-2A5 5 0 0 0 7 18h11a4 4 0 0 0 0-8z"/>
+        </svg>
+        <span class="icon-item__label">Cloud</span>
+      </div>
+
+      <!-- Chip / Processor -->
+      <div class="icon-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="7" y="7" width="10" height="10" rx="1"/>
+          <line x1="9"  y1="7"  x2="9"  y2="4"/><line x1="12" y1="7"  x2="12" y2="4"/><line x1="15" y1="7"  x2="15" y2="4"/>
+          <line x1="9"  y1="20" x2="9"  y2="17"/><line x1="12" y1="20" x2="12" y2="17"/><line x1="15" y1="20" x2="15" y2="17"/>
+          <line x1="4"  y1="9"  x2="7"  y2="9"/><line x1="4"  y1="12" x2="7"  y2="12"/><line x1="4"  y1="15" x2="7"  y2="15"/>
+          <line x1="17" y1="9"  x2="20" y2="9"/><line x1="17" y1="12" x2="20" y2="12"/><line x1="17" y1="15" x2="20" y2="15"/>
+        </svg>
+        <span class="icon-item__label">Chip</span>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="icon-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3"  y="3"  width="7" height="7" rx="1"/>
+          <rect x="14" y="3"  width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+          <rect x="3"  y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span class="icon-item__label">Dashboard</span>
+      </div>
+
+      <!-- Location Pin -->
+      <div class="icon-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+          <circle cx="12" cy="9" r="2.5"/>
+        </svg>
+        <span class="icon-item__label">Location</span>
+      </div>
+
+      <!-- Shield -->
+      <div class="icon-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2L4 6v6c0 5.25 3.5 9.74 8 11 4.5-1.26 8-5.75 8-11V6z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+        <span class="icon-item__label">Shield</span>
+      </div>
+
+      <!-- Network -->
+      <div class="icon-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="5"  r="2"/>
+          <circle cx="5"  cy="19" r="2"/>
+          <circle cx="19" cy="19" r="2"/>
+          <line x1="12" y1="7"  x2="5"  y2="17"/>
+          <line x1="12" y1="7"  x2="19" y2="17"/>
+          <line x1="7"  y1="19" x2="17" y2="19"/>
+        </svg>
+        <span class="icon-item__label">Network</span>
+      </div>
+
+      <!-- Chart / Analytics -->
+      <div class="icon-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="20" x2="21" y2="20"/>
+          <polyline points="5 20 5 14 9 10 13 13 17 7 21 7"/>
+        </svg>
+        <span class="icon-item__label">Chart</span>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── 10. LOGO ── -->
+  <section class="section">
+    <!-- NOTE: This orbital mark is a placeholder. Replace with the final brand logo file when available. -->
+    <p class="section-label">10 — Logo</p>
+    <h2 class="section-title">Logo Mark + Wordmark Lockup</h2>
+    <p class="t-caption" style="margin-bottom: var(--space-md);">
+      Placeholder orbital mark — a central node with two elliptical orbit rings. Replace with final brand asset before launch.
+    </p>
+
+    <div class="logo-lockups">
+
+      <!-- Large -->
+      <div class="logo-lockup logo-lockup--lg">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="nodeGradLg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7435FD"/>
+              <stop offset="100%" stop-color="#8B71FF"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="14" cy="14" rx="11" ry="5" stroke="#8B71FF" stroke-width="1.2" stroke-opacity="0.55" fill="none" transform="rotate(30 14 14)"/>
+          <ellipse cx="14" cy="14" rx="11" ry="5" stroke="#8B71FF" stroke-width="1.2" stroke-opacity="0.35" fill="none" transform="rotate(-30 14 14)"/>
+          <circle cx="14" cy="14" r="3.5" fill="url(#nodeGradLg)"/>
+          <circle cx="14" cy="14" r="5.5" stroke="#7435FD" stroke-width="0.8" stroke-opacity="0.40" fill="none"/>
+        </svg>
+        <span class="logo-wordmark">SenseUni</span>
+      </div>
+
+      <!-- Medium -->
+      <div class="logo-lockup logo-lockup--md">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="nodeGradMd" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7435FD"/>
+              <stop offset="100%" stop-color="#8B71FF"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="14" cy="14" rx="11" ry="5" stroke="#8B71FF" stroke-width="1.2" stroke-opacity="0.55" fill="none" transform="rotate(30 14 14)"/>
+          <ellipse cx="14" cy="14" rx="11" ry="5" stroke="#8B71FF" stroke-width="1.2" stroke-opacity="0.35" fill="none" transform="rotate(-30 14 14)"/>
+          <circle cx="14" cy="14" r="3.5" fill="url(#nodeGradMd)"/>
+          <circle cx="14" cy="14" r="5.5" stroke="#7435FD" stroke-width="0.8" stroke-opacity="0.40" fill="none"/>
+        </svg>
+        <span class="logo-wordmark">SenseUni</span>
+      </div>
+
+      <!-- Small -->
+      <div class="logo-lockup logo-lockup--sm">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="nodeGradSm" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7435FD"/>
+              <stop offset="100%" stop-color="#8B71FF"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="14" cy="14" rx="11" ry="5" stroke="#8B71FF" stroke-width="1.2" stroke-opacity="0.55" fill="none" transform="rotate(30 14 14)"/>
+          <ellipse cx="14" cy="14" rx="11" ry="5" stroke="#8B71FF" stroke-width="1.2" stroke-opacity="0.35" fill="none" transform="rotate(-30 14 14)"/>
+          <circle cx="14" cy="14" r="3.5" fill="url(#nodeGradSm)"/>
+          <circle cx="14" cy="14" r="5.5" stroke="#7435FD" stroke-width="0.8" stroke-opacity="0.40" fill="none"/>
+        </svg>
+        <span class="logo-wordmark">SenseUni</span>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- /page-wrap -->
+
+</body>
+</html>
