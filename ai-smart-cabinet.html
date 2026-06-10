@@ -170,9 +170,7 @@
       .cabinet-hero__eyebrow,
       .cabinet-hero__headline,
       .cabinet-hero__sub,
-      .cabinet-hero__ctas,
-      .cabinet-hero__visual,
-      .cabinet-hero__product,
+      .product-showcase,
       .footer__main > * {
         animation: none !important;
         opacity: 1 !important;
@@ -463,7 +461,7 @@
       z-index: 0;
     }
 
-    /* Centred single-column layout */
+    /* ── Centred hero layout (text block) ── */
     .cabinet-hero__inner {
       position: relative;
       z-index: 1;
@@ -472,11 +470,9 @@
       align-items: center;
       text-align: center;
       width: 100%;
-      padding: 80px 0 88px;
-      gap: 0; /* controlled per-element */
+      padding: 80px 0 120px;
     }
 
-    /* ── Text block ── */
     .cabinet-hero__text {
       display: flex;
       flex-direction: column;
@@ -506,58 +502,226 @@
       line-height: 1.7;
       color: var(--color-text-secondary);
       max-width: 640px;
-      margin-bottom: 40px;
+      margin-bottom: 100px;
       animation: fadeUp 0.8s var(--ease-out) 0.52s both;
     }
 
-    .cabinet-hero__ctas {
-      display: flex;
+    .cabinet-hero__divider {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-highlight), transparent);
+      margin: 0 auto 80px;
+      opacity: 0.5;
+    }
+
+    /* ═══════════════════════════════════════
+       PRODUCT SHOWCASE MODULE
+       Sits inside .cabinet-hero__inner, below the text block
+    ═══════════════════════════════════════ */
+    .product-showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
       align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      animation: fadeUp 0.8s var(--ease-out) 0.68s both;
-    }
-
-    /* ── Large centred product image ── */
-    .cabinet-hero__product {
-      width: 90%;
+      width: 100%;
       max-width: 1100px;
-      margin: 56px auto 0;
-      animation: productReveal 0.8s var(--ease-out) 0.90s both;
+      margin: 0 auto 0;
+      animation: fadeUp 0.8s var(--ease-out) 0.90s both;
     }
 
-    .cabinet-hero__img {
+    /* ── Gallery ── */
+    .product-showcase__main-wrap {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid rgba(139, 113, 255, 0.15);
+      box-shadow: 0 8px 60px rgba(116, 53, 253, 0.20),
+                  0 0 100px rgba(139, 113, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .product-showcase__main-img {
       width: 100%;
       height: auto;
       display: block;
-      border-radius: var(--radius-md);
-      /* Prominent purple glow that echoes the brand */
-      box-shadow: 0 8px 80px rgba(116, 53, 253, 0.25),
-                  0 0 120px rgba(139, 113, 255, 0.12);
-      /* Subtle lift on hover */
-      transition: transform 0.4s var(--ease-out),
-                  box-shadow 0.4s var(--ease-out);
+      transition: opacity 0.35s ease;
     }
 
-    .cabinet-hero__img:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 100px rgba(116, 53, 253, 0.32),
-                  0 0 140px rgba(139, 113, 255, 0.16);
+    .product-showcase__thumbs {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
     }
 
-    /* ── Hero responsive ── */
+    .product-showcase__thumb {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .product-showcase__thumb:hover {
+      opacity: 0.9;
+      border-color: rgba(139, 113, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .product-showcase__thumb.is-active {
+      opacity: 1;
+      border-color: var(--color-highlight);
+      box-shadow: 0 0 12px rgba(139, 113, 255, 0.3);
+    }
+
+    /* ── Info column ── */
+    .product-showcase__info {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .product-showcase__toggle {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 40px;
+      padding: 4px;
+      margin-bottom: 24px;
+      align-self: flex-start;
+    }
+
+    .product-showcase__toggle-btn {
+      padding: 8px 20px;
+      border-radius: 36px;
+      border: none;
+      background: transparent;
+      color: var(--color-text-muted);
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .product-showcase__toggle-btn.is-active {
+      background: var(--gradient-btn);
+      color: var(--color-text-primary);
+      box-shadow: 0 2px 12px rgba(116, 53, 253, 0.28);
+    }
+
+    .product-showcase__name {
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--color-text-primary);
+      margin-bottom: 12px;
+    }
+
+    .product-showcase__capacity {
+      color: var(--color-highlight);
+      font-weight: 400;
+    }
+
+    .product-showcase__tagline {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--color-text-secondary);
+      max-width: 420px;
+      margin-bottom: 32px;
+    }
+
+    .product-showcase__specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+
+    .product-showcase__spec {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+    }
+
+    .product-showcase__spec svg {
+      flex-shrink: 0;
+      color: var(--color-highlight);
+    }
+
+    .product-showcase__spec-val {
+      font-family: var(--font-data);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      line-height: 1.2;
+    }
+
+    .product-showcase__spec-lbl {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    .product-showcase__price-block { margin-bottom: 36px; }
+
+    .product-showcase__price {
+      font-family: var(--font-data);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--color-text-primary) 40%, var(--color-highlight));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .product-showcase__price-note {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--color-text-muted);
+      margin-top: 6px;
+    }
+
+    .product-showcase__ctas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Hero + Showcase responsive ── */
     @media (max-width: 768px) {
-      .cabinet-hero__inner   { padding: 64px 0 64px; }
-      .cabinet-hero__product { width: 100%; margin-top: 40px; }
+      .cabinet-hero__inner { padding: 64px 0 72px; }
+      .product-showcase {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin-top: 40px;
+      }
+      .product-showcase__info {
+        text-align: center;
+        align-items: center;
+      }
+      .product-showcase__toggle  { align-self: center; }
+      .product-showcase__tagline { max-width: 100%; }
+      .product-showcase__ctas    { justify-content: center; }
     }
 
     @media (max-width: 480px) {
-      .cabinet-hero__inner { padding: 48px 0 48px; }
-      .cabinet-hero__ctas  { flex-direction: column; align-items: stretch; }
-      .cabinet-hero__ctas .btn--primary,
-      .cabinet-hero__ctas .btn--secondary { justify-content: center; }
-      .cabinet-hero__img   { border-radius: var(--radius-sm); }
+      .cabinet-hero__inner { padding: 48px 0 56px; }
+      .product-showcase__specs { grid-template-columns: 1fr; }
+      .product-showcase__ctas  { flex-direction: column; align-items: stretch; }
+      .product-showcase__ctas .btn--primary,
+      .product-showcase__ctas .btn--secondary { justify-content: center; }
+      .product-showcase__thumb { width: 60px; height: 60px; }
     }
 
     /* ═══════════════════════════════════════
@@ -2271,7 +2435,7 @@
       <div class="section-wrap">
         <div class="cabinet-hero__inner">
 
-          <!-- Centred text block -->
+          <!-- Centred text block — unchanged -->
           <div class="cabinet-hero__text">
 
             <p class="cabinet-hero__eyebrow">AI Smart Cabinet</p>
@@ -2285,33 +2449,107 @@
               and scale your business with confidence.
             </p>
 
-            <div class="cabinet-hero__ctas">
-              <a href="get-a-demo.html" class="btn--primary btn--lg">Get a Demo</a>
-              <a href="#spec-sheet" class="btn--secondary btn--lg">
-                Download Spec Sheet
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round"
-                     aria-hidden="true">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="7 10 12 15 17 10"/>
-                  <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-              </a>
+            <div class="cabinet-hero__divider" aria-hidden="true"></div>
+
+          </div>
+
+          <!-- ── Product Showcase Module ── -->
+          <div class="product-showcase" id="product-showcase">
+
+            <!-- Left: Image Gallery -->
+            <div class="product-showcase__gallery">
+              <div class="product-showcase__main-wrap">
+                <img class="product-showcase__main-img" id="ps-main-img"
+                     src="assets/images/product-1.webp"
+                     alt="Halo Max AI Smart Cabinet — front view"
+                     loading="eager" fetchpriority="high" />
+              </div>
+              <div class="product-showcase__thumbs">
+                <img class="product-showcase__thumb is-active" src="assets/images/product-1.webp"     alt="Front view" />
+                <img class="product-showcase__thumb"           src="assets/images/cabinet-hero.webp"  alt="Open door view" />
+                <img class="product-showcase__thumb"           src="assets/images/how-it-works-1.jpg" alt="Payment detail" />
+                <img class="product-showcase__thumb"           src="assets/images/how-it-works-2.jpg" alt="AI vision detail" />
+              </div>
             </div>
 
-          </div>
+            <!-- Right: Product Info -->
+            <div class="product-showcase__info">
 
-          <!-- Large centred product image — 75% width, grand entrance -->
-          <div class="cabinet-hero__product">
-            <img
-              src="assets/images/cabinet-hero.webp"
-              alt="SenseUni AI Smart Cabinet — open door view showing smart retail display"
-              class="cabinet-hero__img"
-              loading="eager"
-              fetchpriority="high"
-            />
-          </div>
+              <!-- Model toggle -->
+              <div class="product-showcase__toggle">
+                <button class="product-showcase__toggle-btn is-active" data-model="max">Halo Max</button>
+                <button class="product-showcase__toggle-btn"           data-model="mini">Halo Mini</button>
+              </div>
+
+              <!-- Product name -->
+              <h2 class="product-showcase__name" id="ps-name">
+                Halo Max <span class="product-showcase__capacity">608L</span>
+              </h2>
+
+              <!-- Tagline -->
+              <p class="product-showcase__tagline" id="ps-tagline">
+                Built for volume — cafeterias, gyms, transit hubs, and high-traffic lobbies.
+              </p>
+
+              <!-- Quick specs 2×2 -->
+              <div class="product-showcase__specs">
+
+                <div class="product-showcase__spec">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20"/></svg>
+                  <div>
+                    <p class="product-showcase__spec-val" data-max="608L" data-mini="508L">608L</p>
+                    <p class="product-showcase__spec-lbl">Capacity</p>
+                  </div>
+                </div>
+
+                <div class="product-showcase__spec">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                  <div>
+                    <p class="product-showcase__spec-val">99.6%</p>
+                    <p class="product-showcase__spec-lbl">AI Accuracy</p>
+                  </div>
+                </div>
+
+                <div class="product-showcase__spec">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M8 6l4-4 4 4M8 18l4 4 4-4"/></svg>
+                  <div>
+                    <p class="product-showcase__spec-val">32°F – 68°F</p>
+                    <p class="product-showcase__spec-lbl">Temp Range</p>
+                  </div>
+                </div>
+
+                <div class="product-showcase__spec">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 12h4m4 0h4"/></svg>
+                  <div>
+                    <p class="product-showcase__spec-val" data-max="28.6&Prime; HD Display" data-mini="No Display">28.6″ HD Display</p>
+                    <p class="product-showcase__spec-lbl">Touch Screen</p>
+                  </div>
+                </div>
+
+              </div><!-- /specs -->
+
+              <!-- Price -->
+              <div class="product-showcase__price-block">
+                <p class="product-showcase__price" id="ps-price">From $4,999</p>
+                <p class="product-showcase__price-note">Excludes shipping &amp; installation</p>
+              </div>
+
+              <!-- CTAs -->
+              <div class="product-showcase__ctas">
+                <a href="get-a-demo.html" class="btn--primary btn--lg">Request a Quote</a>
+                <a href="#spec-sheet" class="btn--secondary btn--lg">
+                  Download Spec Sheet
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                </a>
+              </div>
+
+            </div><!-- /product-showcase__info -->
+
+          </div><!-- /product-showcase -->
 
         </div>
       </div>
@@ -3888,6 +4126,92 @@
           localStorage.setItem('senseuni_cookie_accepted', 'true');
         });
       }());
+
+      /* ════════════════════════════════════
+         PRODUCT SHOWCASE — Model Toggle + Gallery
+      ════════════════════════════════════ */
+      (function initProductShowcase() {
+        var showcase = document.getElementById('product-showcase');
+        if (!showcase) return;
+
+        var modelData = {
+          max: {
+            name:     'Halo Max',
+            capacity: '608L',
+            tagline:  'Built for volume — cafeterias, gyms, transit hubs, and high-traffic lobbies.',
+            price:    'From $4,999',
+            images: [
+              'assets/images/product-1.webp',
+              'assets/images/cabinet-hero.webp',
+              'assets/images/how-it-works-1.jpg',
+              'assets/images/how-it-works-2.jpg'
+            ]
+          },
+          mini: {
+            name:     'Halo Mini',
+            capacity: '508L',
+            tagline:  'Built for tight spaces — break rooms, hallways, and shared lobbies.',
+            price:    'From $3,999',
+            images: [
+              'assets/images/product-2.webp',
+              'assets/images/cabinet-hero.webp',
+              'assets/images/how-it-works-1.jpg',
+              'assets/images/how-it-works-3.jpg'
+            ]
+          }
+        };
+
+        var toggleBtns = showcase.querySelectorAll('.product-showcase__toggle-btn');
+        var nameEl     = document.getElementById('ps-name');
+        var taglineEl  = document.getElementById('ps-tagline');
+        var priceEl    = document.getElementById('ps-price');
+        var mainImg    = document.getElementById('ps-main-img');
+        var thumbs     = showcase.querySelectorAll('.product-showcase__thumb');
+        var specVals   = showcase.querySelectorAll('.product-showcase__spec-val[data-max]');
+
+        function switchModel(model) {
+          var data = modelData[model];
+
+          toggleBtns.forEach(function(b) { b.classList.remove('is-active'); });
+          showcase.querySelector('[data-model="' + model + '"]').classList.add('is-active');
+
+          nameEl.innerHTML = data.name + ' <span class="product-showcase__capacity">' + data.capacity + '</span>';
+          taglineEl.textContent = data.tagline;
+          priceEl.textContent   = data.price;
+
+          specVals.forEach(function(el) { el.textContent = el.dataset[model]; });
+
+          mainImg.style.opacity = '0';
+          setTimeout(function() {
+            mainImg.src = data.images[0];
+            mainImg.alt = data.name + ' AI Smart Cabinet — front view';
+            mainImg.style.opacity = '1';
+          }, 250);
+
+          thumbs.forEach(function(thumb, i) {
+            thumb.src = data.images[i];
+            thumb.classList.toggle('is-active', i === 0);
+          });
+        }
+
+        toggleBtns.forEach(function(btn) {
+          btn.addEventListener('click', function() { switchModel(btn.dataset.model); });
+        });
+
+        thumbs.forEach(function(thumb) {
+          thumb.addEventListener('click', function() {
+            mainImg.style.opacity = '0';
+            setTimeout(function() {
+              mainImg.src = thumb.src;
+              mainImg.alt = thumb.alt;
+              mainImg.style.opacity = '1';
+            }, 250);
+            thumbs.forEach(function(t) { t.classList.remove('is-active'); });
+            thumb.classList.add('is-active');
+          });
+        });
+      }());
+
     })();
   </script>
 
