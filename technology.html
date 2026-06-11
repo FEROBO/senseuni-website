@@ -1,3796 +1,528 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SenseUni Technology — Full-stack retail AI engineered from chip to cloud. 150+ patents, 99.6% recognition accuracy, 10+ years of proprietary R&D." />
+  <meta name="description" content="SenseUni technology — full-stack retail infrastructure from intelligent hardware and computer vision to cloud platform, data intelligence, and AI agent services." />
   <title>Technology — SenseUni</title>
 
   <link rel="icon" type="image/webp" href="assets/images/logomini.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/main.css" />
 
   <style>
-    /* ═══════════════════════════════════════
-       DESIGN TOKENS
-    ═══════════════════════════════════════ */
-    :root {
-      --color-bg:              #14101F;
-      --color-bg-footer:       #0F0C18;
-      --color-brand:           #2C2069;
-      --color-accent:          #7435FD;
-      --color-highlight:       #8B71FF;
-      --color-cyan:            #5EEBFF;
-
-      --color-nav-bg:          rgba(20, 16, 31, 0.55);
-      --color-nav-bg-scrolled: rgba(20, 16, 31, 0.72);
-      --color-nav-border:      rgba(255, 255, 255, 0.08);
-      --color-footer-border:   rgba(255, 255, 255, 0.06);
-
-      --color-border:          rgba(255, 255, 255, 0.10);
-      --color-border-glow:     rgba(116, 53, 253, 0.40);
-      --color-surface:         rgba(255, 255, 255, 0.04);
-
-      --color-text-primary:    #FFFFFF;
-      --color-text-secondary:  #C8C8D4;
-      --color-text-muted:      #7A7A8C;
-
-      --gradient-btn:  linear-gradient(135deg, var(--color-accent), var(--color-highlight));
-      --gradient-card: linear-gradient(135deg, rgba(44, 32, 105, 0.20) 0%, rgba(116, 53, 253, 0.06) 100%);
-
-      --font-heading: 'Sora', sans-serif;
-      --font-body:    'Inter', sans-serif;
-      --font-data:    'Space Grotesk', sans-serif;
-
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-
-      --nav-height: 80px;
-
-      --ease-out:        cubic-bezier(0.22, 1, 0.36, 1);
-      --transition-base: 0.3s;
-      --transition-slow: 0.5s;
+    /* ── TECH · HERO ─────────────────────────────────────────── */
+    .tech-hero { text-align: center; padding-bottom: 0; }
+    .tech-hero .display, .tech-hero .lead { margin-inline: auto; }
+    .tech-hero .eyebrow::after {
+      content: '';
+      width: 22px; height: 1px;
+      background: var(--highlight);
+      opacity: 0.7;
     }
-
-    /* ═══════════════════════════════════════
-       RESET & BASE
-    ═══════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      scrollbar-color: var(--color-highlight) rgba(20, 16, 31, 0.4);
+    .tech-hero__stats {
+      margin-top: clamp(56px, 7vw, 80px);
+      padding-block: clamp(36px, 5vw, 52px);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
     }
+    @media (max-width: 880px) { .tech-hero__stats { grid-template-columns: repeat(2, 1fr); } }
 
-    body {
+    /* ── TECH · LAYERS ───────────────────────────────────────── */
+    .layer {
+      position: relative;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: clamp(30px, 4vw, 48px);
+      overflow: hidden;
+      transition: border-color var(--t-base), transform var(--t-base) var(--ease);
+    }
+    .layer:hover { border-color: rgba(139,113,255,0.35); transform: translateY(-3px); }
+    .layer + .layer { margin-top: 22px; }
+    .layer--top { background: linear-gradient(160deg, rgba(44,32,105,0.4), rgba(116,53,253,0.08)); }
+    .layer__head {
       display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-color: var(--color-bg);
-      color: var(--color-text-primary);
-      font-family: var(--font-body);
-      overflow-x: hidden;
+      align-items: baseline;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
     }
-
-    a { text-decoration: none; }
-
-    /* ═══════════════════════════════════════
-       CUSTOM SCROLLBAR
-    ═══════════════════════════════════════ */
-    ::-webkit-scrollbar        { width: 6px; }
-    ::-webkit-scrollbar-track  { background: rgba(20, 16, 31, 0.4); }
-    ::-webkit-scrollbar-thumb  {
-      background: linear-gradient(to bottom, var(--color-accent), var(--color-highlight));
-      border-radius: 3px;
+    .layer__tag {
+      font-family: var(--font-data);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--highlight);
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--color-highlight);
-      box-shadow: 0 0 8px rgba(139, 113, 255, 0.50);
+    .layer__badge {
+      margin-left: auto;
+      padding: 5px 14px;
+      border-radius: 100px;
+      border: 1px solid rgba(139,113,255,0.4);
+      font-family: var(--font-data);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-2);
     }
-
-    /* ═══════════════════════════════════════
-       AMBIENT GLOW LAYERS (body pseudo-elements)
-    ═══════════════════════════════════════ */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 90vh;
-      background: radial-gradient(
-        ellipse 160% 65% at 50% -8%,
-        rgba(116, 53, 253, 0.28) 0%,
-        rgba(116, 53, 253, 0.10) 42%,
-        rgba(116, 53, 253, 0.03) 68%,
-        transparent 80%
-      );
-      pointer-events: none;
-      z-index: 0;
+    .layer__sub { color: var(--text-3); font-family: var(--font-data); font-size: 0.88rem; letter-spacing: 0.04em; }
+    .layer__grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
     }
-
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -10%; left: -15%;
-      width: 70vw; height: 70vh;
-      background: radial-gradient(
-        ellipse at center,
-        rgba(139, 113, 255, 0.10) 0%,
-        rgba(116, 53, 253, 0.04) 50%,
-        transparent 75%
-      );
-      pointer-events: none;
-      z-index: 0;
+    .layer__item h4 {
+      font-family: var(--font-heading);
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-bottom: 6px;
     }
+    .layer__item p { font-size: 0.88rem; color: var(--text-2); }
+    @media (max-width: 1024px) { .layer__grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px)  { .layer__grid { grid-template-columns: 1fr; } }
 
-    /* Grain texture */
-    .grain-overlay {
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 200px 200px;
-      opacity: 0.035;
-      mix-blend-mode: overlay;
-      pointer-events: none;
+    .layers__connector {
+      width: 1px; height: 26px;
+      margin: -2px auto;
+      background: linear-gradient(180deg, rgba(139,113,255,0.6), rgba(139,113,255,0.2));
+      position: relative;
       z-index: 2;
     }
 
-    /* ═══════════════════════════════════════
-       KEYFRAMES
-    ═══════════════════════════════════════ */
-    @keyframes navSlideDown {
-      from { opacity: 0; transform: translateY(-8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes floatY {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-6px); }
-    }
-
-    @keyframes pulseRing {
-      0%   { transform: scale(1);   opacity: 0.7; }
-      100% { transform: scale(2.4); opacity: 0; }
-    }
-
-    @keyframes orbDrift {
-      0%, 100% { transform: translate(0, 0); }
-      33%       { transform: translate(24px, -18px); }
-      66%       { transform: translate(-16px, 12px); }
-    }
-
-    /* ═══════════════════════════════════════
-       PREFERS-REDUCED-MOTION
-    ═══════════════════════════════════════ */
-    @media (prefers-reduced-motion: reduce) {
-      .nav,
-      .tech-hero__eyebrow,
-      .tech-hero__headline,
-      .tech-hero__sub,
-      .footer__main > * {
-        animation: none !important;
-        opacity: 1 !important;
-        transform: none !important;
-      }
-      .back-to-top              { transition: opacity 0.2s ease !important; }
-      .back-to-top,
-      .back-to-top.is-visible,
-      .back-to-top:hover        { transform: none !important; }
-    }
-
-    /* ═══════════════════════════════════════
-       NAVIGATION (z-index 1000)
-    ═══════════════════════════════════════ */
-    .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      height: var(--nav-height);
-      background: var(--color-nav-bg);
-      backdrop-filter: blur(28px) saturate(160%);
-      -webkit-backdrop-filter: blur(28px) saturate(160%);
-      border-bottom: 1px solid var(--color-nav-border);
-      box-shadow: 0 1px 0 0 rgba(116, 53, 253, 0.18), 0 4px 32px rgba(0, 0, 0, 0.30);
-      transition: transform      0.4s var(--ease-out),
-                  background     0.4s var(--ease-out),
-                  border-color   0.4s var(--ease-out),
-                  box-shadow     0.4s var(--ease-out);
-      animation: navSlideDown 0.7s var(--ease-out) both;
-    }
-
-    .nav.is-scrolled {
-      background: var(--color-nav-bg-scrolled);
-      border-bottom-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 1px 0 0 rgba(116, 53, 253, 0.22), 0 8px 48px rgba(0, 0, 0, 0.50);
-    }
-
-    .nav.is-hidden { transform: translateY(-100%); pointer-events: none; }
-
-    .nav__inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 40px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-
-    .nav__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-
-    .nav__links {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      list-style: none;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-    }
-
-    .nav__link {
-      position: relative;
-      display: inline-block;
-      padding: 6px 13px;
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      border-radius: var(--radius-sm);
-      transition: color var(--transition-base) var(--ease-out),
-                  background var(--transition-base) var(--ease-out);
-      white-space: nowrap;
-    }
-
-    .nav__link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 13px; right: 13px;
-      height: 1.5px;
-      background: var(--gradient-btn);
-      border-radius: 2px;
-      transform: scaleX(0);
-      transform-origin: center;
-      transition: transform var(--transition-base) var(--ease-out);
-    }
-
-    .nav__link:hover                { color: var(--color-text-primary); background: rgba(255,255,255,0.05); }
-    .nav__link:hover::after         { transform: scaleX(1); }
-    .nav__link.is-active            { color: var(--color-text-primary); }
-    .nav__link.is-active::after     { transform: scaleX(1); }
-
-    .nav__cta { flex-shrink: 0; margin-left: auto; }
-
-    /* ── Buttons ── */
-    .btn--primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 22px;
-      border-radius: var(--radius-sm);
-      font-family: var(--font-heading);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      background: var(--gradient-btn);
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 2px 12px rgba(116, 53, 253, 0.28);
-      transition: transform var(--transition-base) var(--ease-out),
-                  box-shadow var(--transition-base) var(--ease-out);
-      position: relative;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .btn--primary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 55%);
-      opacity: 0;
-      transition: opacity var(--transition-base) var(--ease-out);
-    }
-
-    .btn--primary:hover         { transform: translateY(-2px); box-shadow: 0 0 20px rgba(116,53,253,0.55), 0 6px 24px rgba(116,53,253,0.32); }
-    .btn--primary:hover::before { opacity: 1; }
-    .btn--primary:active        { transform: translateY(0); }
-
-    .btn--secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 22px;
-      border-radius: var(--radius-sm);
-      font-family: var(--font-heading);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      background: transparent;
-      border: 1.5px solid var(--color-border);
-      cursor: pointer;
-      transition: color var(--transition-base) var(--ease-out),
-                  border-color var(--transition-base) var(--ease-out),
-                  box-shadow var(--transition-base) var(--ease-out),
-                  transform var(--transition-base) var(--ease-out);
-      white-space: nowrap;
-    }
-
-    .btn--secondary:hover {
-      border-color: var(--color-highlight);
-      color: var(--color-highlight);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 20px rgba(139, 113, 255, 0.18);
-    }
-
-    .btn--secondary:active { transform: translateY(0); }
-    .btn--lg { padding: 15px 32px; font-size: 15px; }
-
-    /* ── Hamburger ── */
-    .nav__hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-      width: 36px; height: 36px;
-      padding: 6px;
-      background: none; border: none; cursor: pointer;
-      margin-left: auto;
-      border-radius: var(--radius-sm);
-      transition: background var(--transition-base) var(--ease-out);
-    }
-
-    .nav__hamburger:hover { background: rgba(255,255,255,0.06); }
-
-    .nav__hamburger-line {
-      display: block;
-      width: 100%; height: 1.5px;
-      background: var(--color-text-secondary);
-      border-radius: 2px;
-      transform-origin: center;
-      transition: transform var(--transition-base) var(--ease-out),
-                  opacity var(--transition-base) var(--ease-out);
-    }
-
-    .nav.is-open .nav__hamburger-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .nav.is-open .nav__hamburger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .nav.is-open .nav__hamburger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-    /* Mobile drawer */
-    .nav__drawer {
-      display: none;
-      position: fixed;
-      top: var(--nav-height); left: 0; right: 0;
-      background: rgba(15, 12, 24, 0.97);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--color-nav-border);
-      padding: 16px 24px 24px;
-      transform: translateY(-8px);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform var(--transition-slow) var(--ease-out),
-                  opacity var(--transition-slow) var(--ease-out);
-      z-index: 999;
-    }
-
-    .nav__drawer.is-open { transform: translateY(0); opacity: 1; pointer-events: all; }
-    .nav__drawer-links   { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-
-    .nav__drawer-link {
-      display: block;
-      padding: 12px 8px;
-      font-family: var(--font-body);
-      font-size: 15px; font-weight: 500;
-      color: var(--color-text-secondary);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      transition: color var(--transition-base) var(--ease-out);
-    }
-
-    .nav__drawer-link:hover { color: var(--color-text-primary); }
-    .nav__drawer-cta        { margin-top: 20px; width: 100%; justify-content: center; }
-
-    @media (max-width: 900px) {
-      .nav__links     { display: none; }
-      .nav__cta       { display: none; }
-      .nav__hamburger { display: flex; }
-      .nav__drawer    { display: block; }
-    }
-
-    @media (max-width: 480px) { .nav__inner { padding: 0 20px; } }
-
-    /* ═══════════════════════════════════════
-       PAGE LAYOUT
-    ═══════════════════════════════════════ */
-    main { flex: 1 0 auto; position: relative; z-index: 3; }
-
-    .section-wrap {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 40px;
-    }
-
-    @media (max-width: 640px) { .section-wrap { padding: 0 20px; } }
-
-    /* ═══════════════════════════════════════
-       TYPE UTILITIES
-    ═══════════════════════════════════════ */
-    .t-display {
-      font-family: var(--font-heading);
-      font-size: clamp(36px, 5.5vw, 76px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.06;
-      color: var(--color-text-primary);
-    }
-
-    .t-h2 {
-      font-family: var(--font-heading);
-      font-size: clamp(28px, 3.5vw, 46px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.12;
-      color: var(--color-text-primary);
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, var(--color-text-primary) 45%, var(--color-highlight));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .section-eyebrow {
+    /* ── TECH · AGENTS ───────────────────────────────────────── */
+    .agent-card { position: relative; }
+    .agent-card__kicker {
       font-family: var(--font-data);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
+      font-size: 0.74rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--color-highlight);
-      display: block;
-      margin-bottom: 16px;
-    }
-
-    /* ═══════════════════════════════════════
-       SCROLL REVEAL — [data-reveal]
-    ═══════════════════════════════════════ */
-    [data-reveal] {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.65s var(--ease-out),
-                  transform 0.65s var(--ease-out);
-    }
-
-    [data-reveal].in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ═══════════════════════════════════════
-       S1 — HERO
-    ═══════════════════════════════════════ */
-    .tech-hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding-top: var(--nav-height);
-      overflow: hidden;
-    }
-
-    /* Particle canvas covers the full hero area */
-    #hero-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .tech-hero__inner {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 100%;
-      padding: 80px 0 100px;
-    }
-
-    .tech-hero__eyebrow {
-      font-family: var(--font-data);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.20em;
-      text-transform: uppercase;
-      color: var(--color-highlight);
-      margin-bottom: 28px;
-      animation: fadeUp 0.7s var(--ease-out) 0.20s both;
-    }
-
-    .tech-hero__headline {
-      margin-bottom: 24px;
-      max-width: 800px;
-      animation: fadeUp 0.8s var(--ease-out) 0.36s both;
-    }
-
-    .tech-hero__sub {
-      font-family: var(--font-body);
-      font-size: clamp(16px, 1.6vw, 19px);
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      max-width: 560px;
-      animation: fadeUp 0.8s var(--ease-out) 0.52s both;
-    }
-
-    /* Decorative orbs behind the hero text */
-    .tech-hero__orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(100px);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .tech-hero__orb--1 {
-      width: 500px; height: 500px;
-      top: 10%; left: 50%;
-      transform: translateX(-50%);
-      background: radial-gradient(circle, rgba(116, 53, 253, 0.22) 0%, transparent 70%);
-      animation: orbDrift 18s ease-in-out infinite;
-    }
-
-    .tech-hero__orb--2 {
-      width: 300px; height: 300px;
-      bottom: 15%; right: 8%;
-      background: radial-gradient(circle, rgba(94, 235, 255, 0.14) 0%, transparent 70%);
-      animation: orbDrift 25s ease-in-out 5s infinite;
-    }
-
-    .tech-hero__orb--3 {
-      width: 250px; height: 250px;
-      top: 20%; left: 5%;
-      background: radial-gradient(circle, rgba(139, 113, 255, 0.12) 0%, transparent 70%);
-      animation: orbDrift 22s ease-in-out 10s infinite reverse;
-    }
-
-    @media (max-width: 768px) {
-      .tech-hero__inner { padding: 64px 0 80px; }
-    }
-
-    @media (max-width: 480px) {
-      .tech-hero__inner { padding: 48px 0 60px; }
-    }
-
-    /* ═══════════════════════════════════════
-       S1B — DATA ANCHORS (stat bar)
-    ═══════════════════════════════════════ */
-    .data-anchors {
-      position: relative;
-      z-index: 3;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .data-anchors__inner {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 40px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .data-anchors__stat {
-      padding: 44px 32px;
-      text-align: center;
-      border-right: 1px solid rgba(255, 255, 255, 0.06);
-      transition: background var(--transition-base) var(--ease-out);
-    }
-
-    .data-anchors__stat:last-child { border-right: none; }
-
-    .data-anchors__stat:hover {
-      background: rgba(116, 53, 253, 0.04);
-    }
-
-    .data-anchors__number {
-      font-family: var(--font-data);
-      font-size: clamp(32px, 3.5vw, 52px);
-      font-weight: 700;
-      line-height: 1;
-      color: var(--color-text-primary);
-      text-shadow: 0 0 32px rgba(116, 53, 253, 0.30);
-      margin-bottom: 10px;
-      will-change: contents;
-    }
-
-    .data-anchors__label {
-      font-family: var(--font-data);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-      line-height: 1.5;
-    }
-
-    @media (max-width: 780px) {
-      .data-anchors__inner { grid-template-columns: repeat(2, 1fr); padding: 0 24px; }
-      .data-anchors__stat  { padding: 36px 20px; }
-      .data-anchors__stat:nth-child(2) { border-right: none; }
-      .data-anchors__stat:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.06); }
-      .data-anchors__stat:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.06); }
-    }
-
-    @media (max-width: 440px) {
-      .data-anchors__inner { grid-template-columns: 1fr 1fr; padding: 0 16px; }
-      .data-anchors__stat  { padding: 28px 12px; }
-    }
-
-    /* ═══════════════════════════════════════
-       S2 — TECH STACK
-       Three Layers. One Architecture.
-    ═══════════════════════════════════════ */
-    .tech-stack {
-      position: relative;
-      z-index: 3;
-      padding: 120px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .tech-stack__header {
-      text-align: center;
-      margin-bottom: 80px;
-    }
-
-    .tech-stack__sub {
-      font-family: var(--font-body);
-      font-size: clamp(15px, 1.4vw, 18px);
-      line-height: 1.75;
-      color: var(--color-text-secondary);
-      max-width: 580px;
-      margin: 18px auto 0;
-    }
-
-    /* ── Layers container ── */
-    .tech-stack__layers {
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── Glassmorphism panel ── */
-    .layer-card {
-      position: relative;
-      background: linear-gradient(
-        135deg,
-        rgba(28, 18, 55, 0.82) 0%,
-        rgba(44, 32, 105, 0.28) 55%,
-        rgba(116, 53, 253, 0.07) 100%
-      );
-      border: 1px solid rgba(139, 113, 255, 0.18);
-      border-radius: var(--radius-lg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      padding: 44px 48px;
-      overflow: hidden;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.22),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.06);
-      /* Scroll-reveal start state */
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.65s var(--ease-out),
-                  transform 0.65s var(--ease-out),
-                  border-color 0.3s var(--ease-out),
-                  box-shadow 0.3s var(--ease-out);
-    }
-
-    .layer-card.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Top shimmer on hover */
-    .layer-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 8%; right: 8%;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(139, 113, 255, 0.55),
-        transparent
-      );
-      opacity: 0;
-      transition: opacity var(--transition-base) var(--ease-out);
-    }
-
-    .layer-card:hover { border-color: rgba(139, 113, 255, 0.32); box-shadow: 0 12px 56px rgba(116, 53, 253, 0.14), inset 0 1px 0 rgba(255,255,255,0.08); }
-    .layer-card:hover::before { opacity: 1; }
-
-    /* Left accent bar per layer */
-    .layer-card::after {
-      content: '';
-      position: absolute;
-      left: 0; top: 16%; bottom: 16%;
-      width: 2px;
-      border-radius: 0 2px 2px 0;
-    }
-
-    .layer-card--1::after { background: linear-gradient(to bottom, transparent, rgba(139,113,255,0.9), transparent); }
-    .layer-card--2::after { background: linear-gradient(to bottom, transparent, rgba(116,53,253,0.9),  transparent); }
-    .layer-card--3::after { background: linear-gradient(to bottom, transparent, rgba(94,235,255,0.9),  transparent); }
-
-    /* ── Card header row ── */
-    .layer-card__header {
-      display: flex;
-      align-items: center;
-      gap: 20px;
+      color: var(--text-3);
       margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    /* Layer badge: number + pip indicators */
-    .layer-badge {
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 5px;
-    }
-
-    .layer-badge__num {
-      font-family: var(--font-data);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.20em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-    }
-
-    .layer-badge__pips {
-      display: flex;
-      gap: 4px;
-    }
-
-    .layer-badge__pips span {
       display: block;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: rgba(139, 113, 255, 0.22);
     }
-
-    /* Lit pips per layer */
-    .layer-card--1 .layer-badge__pips span:nth-child(1)   { background: #8B71FF; box-shadow: 0 0 6px rgba(139,113,255,0.6); }
-    .layer-card--2 .layer-badge__pips span:nth-child(-n+2) { background: #7435FD; box-shadow: 0 0 6px rgba(116,53,253,0.6); }
-    .layer-card--3 .layer-badge__pips span                  { background: #5EEBFF; box-shadow: 0 0 6px rgba(94,235,255,0.6); }
-
-    /* Layer icon */
-    .layer-icon {
-      flex-shrink: 0;
-      width: 52px; height: 52px;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-highlight);
-      background: rgba(139, 113, 255, 0.10);
-      border: 1px solid rgba(139, 113, 255, 0.20);
-    }
-
-    .layer-card--3 .layer-icon {
-      color: var(--color-cyan);
-      background: rgba(94, 235, 255, 0.08);
-      border-color: rgba(94, 235, 255, 0.18);
-    }
-
-    /* Layer title block */
-    .layer-title {
-      font-family: var(--font-heading);
-      font-size: clamp(18px, 1.8vw, 24px);
-      font-weight: 700;
-      color: var(--color-text-primary);
-      line-height: 1.2;
-    }
-
-    .layer-subtitle {
-      font-family: var(--font-body);
-      font-size: 13px;
-      color: var(--color-text-muted);
-      margin-top: 3px;
-    }
-
-    /* Proprietary chip */
-    .layer-tag {
-      margin-left: auto;
-      flex-shrink: 0;
-      font-family: var(--font-data);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: var(--color-highlight);
-      background: rgba(139, 113, 255, 0.10);
-      border: 1px solid rgba(139, 113, 255, 0.22);
-      border-radius: 20px;
-      padding: 5px 14px;
-      align-self: flex-start;
-    }
-
-    .layer-card--3 .layer-tag {
-      color: var(--color-cyan);
-      background: rgba(94, 235, 255, 0.08);
-      border-color: rgba(94, 235, 255, 0.22);
-    }
-
-    /* Thin divider below header */
-    .layer-divider {
-      height: 1px;
-      background: linear-gradient(90deg, rgba(139,113,255,0.25), rgba(116,53,253,0.10), transparent 75%);
-      margin: 20px 0 32px;
-    }
-
-    /* ── Tech points 2×2 grid ── */
-    .layer-points {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px 52px;
-    }
-
-    .layer-point {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-
-    .layer-point__icon {
-      flex-shrink: 0;
-      width: 34px; height: 34px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      color: var(--color-highlight);
-      margin-top: 1px;
-    }
-
-    .layer-card--3 .layer-point__icon { color: var(--color-cyan); }
-
-    .layer-point__text { flex: 1; min-width: 0; }
-
-    .layer-point__name {
-      display: block;
-      font-family: var(--font-heading);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-
-    .layer-point__desc {
-      font-family: var(--font-body);
-      font-size: 13px;
-      line-height: 1.65;
-      color: var(--color-text-secondary);
-    }
-
-    /* ── Connector between layers ── */
-    .layer-connector {
-      position: relative;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-    }
-
-    .layer-connector__track {
-      position: absolute;
-      left: 50%; top: 0; bottom: 0;
-      width: 1px;
-      transform: translateX(-50%);
-      background: linear-gradient(
-        to bottom,
-        rgba(116, 53, 253, 0.15) 0%,
-        rgba(139, 113, 255, 0.55) 50%,
-        rgba(116, 53, 253, 0.15) 100%
-      );
-    }
-
-    .layer-connector__pulse {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 3px;
-      height: 22px;
-      border-radius: 3px;
-      background: linear-gradient(
-        to bottom,
-        transparent,
-        var(--color-accent),
-        var(--color-highlight),
-        transparent
-      );
-      animation: connPulseUp 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      filter: blur(0.4px);
-    }
-
-    @keyframes connPulseUp {
-      0%   { top: 100%; opacity: 0; }
-      10%  { opacity: 1; }
-      90%  { opacity: 1; }
-      100% { top: -22px; opacity: 0; }
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .tech-stack       { padding: 96px 0; }
-      .layer-card       { padding: 32px 28px; }
-      .layer-points     { grid-template-columns: 1fr; gap: 20px; }
-      .layer-tag        { display: none; }
-    }
-
-    @media (max-width: 640px) {
-      .tech-stack           { padding: 72px 0; }
-      .tech-stack__header   { margin-bottom: 48px; }
-      .layer-card           { padding: 28px 20px; }
-      .layer-card__header   { gap: 12px; }
-      .layer-icon           { width: 44px; height: 44px; }
-      .layer-connector      { height: 44px; }
-    }
-
-    /* ═══════════════════════════════════════
-       S3 — IP & PATENTS
-       150+ Patents and Copyrights. One Vision.
-    ═══════════════════════════════════════ */
-    .ip-patents {
-      position: relative;
-      z-index: 3;
-      padding: 120px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .ip-patents__header {
+    .agents__note {
+      margin-top: 30px;
       text-align: center;
-      margin-bottom: 72px;
+      font-size: 0.95rem;
+      color: var(--text-2);
     }
 
-    .ip-patents__sub {
-      font-family: var(--font-body);
-      font-size: clamp(15px, 1.35vw, 17px);
-      line-height: 1.75;
-      color: var(--color-text-secondary);
-      max-width: 680px;
-      margin: 18px auto 0;
-    }
-
-    /* ── Two-column layout ── */
-    .ip-patents__body {
+    /* ── TECH · IP ───────────────────────────────────────────── */
+    .ip-band {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-strong);
+      background: linear-gradient(135deg, rgba(44,32,105,0.5), rgba(116,53,253,0.1));
+      padding: clamp(40px, 6vw, 72px);
       display: grid;
-      grid-template-columns: 60fr 40fr;
-      gap: 64px;
-      align-items: start;
-    }
-
-    /* ── Certificate wall (left 60%) ── */
-    .patent-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    /* Individual certificate card */
-    .patent-item {
-      position: relative;
-      aspect-ratio: 3 / 4;
-      border-radius: 6px;
+      grid-template-columns: auto 1fr;
+      gap: clamp(36px, 6vw, 80px);
+      align-items: center;
       overflow: hidden;
-      cursor: pointer;
-      /* Scroll-reveal start state (overrides global [data-reveal]) */
-      opacity: 0;
-      transform: translateY(20px) rotate(var(--rot, 0deg));
-      transition: opacity 0.45s var(--ease-out),
-                  transform 0.45s var(--ease-out),
-                  box-shadow 0.35s var(--ease-out);
+      position: relative;
     }
-
-    .patent-item.in-view {
-      opacity: 1;
-      transform: translateY(0) rotate(var(--rot, 0deg));
-    }
-
-    .patent-item:hover {
-      transform: translateY(-4px) rotate(0deg) scale(1.06) !important;
-      z-index: 10;
-      box-shadow: 0 14px 36px rgba(116, 53, 253, 0.30),
-                  0 0 0 1.5px rgba(139, 113, 255, 0.55);
-    }
-
-    /* Per-item rotation angles via custom property */
-    .patent-item:nth-child(1)  { --rot: -2.5deg; }
-    .patent-item:nth-child(2)  { --rot:  1.8deg; }
-    .patent-item:nth-child(3)  { --rot: -1.2deg; }
-    .patent-item:nth-child(4)  { --rot:  2.8deg; }
-    .patent-item:nth-child(5)  { --rot:  1.5deg; }
-    .patent-item:nth-child(6)  { --rot: -2.0deg; }
-    .patent-item:nth-child(7)  { --rot:  2.2deg; }
-    .patent-item:nth-child(8)  { --rot: -1.5deg; }
-    .patent-item:nth-child(9)  { --rot: -2.8deg; }
-    .patent-item:nth-child(10) { --rot:  1.0deg; }
-    .patent-item:nth-child(11) { --rot: -1.8deg; }
-    .patent-item:nth-child(12) { --rot:  2.5deg; }
-
-    /* Real image (swap in once assets ready) */
-    .patent-item__img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* Placeholder box (shown before images are supplied) */
-    .patent-item__placeholder {
-      width: 100%; height: 100%;
-      background: rgba(28, 18, 55, 0.85);
-      border: 1.5px dashed rgba(139, 113, 255, 0.28);
-      border-radius: 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 8px;
-      text-align: center;
-    }
-
-    .patent-item__ph-icon { color: rgba(139, 113, 255, 0.40); }
-
-    .patent-item__ph-label {
-      font-family: var(--font-data);
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(139, 113, 255, 0.55);
-      line-height: 1.4;
-    }
-
-    .patent-item__ph-note {
-      font-family: var(--font-body);
-      font-size: 8.5px;
-      color: rgba(139, 113, 255, 0.32);
-      line-height: 1.5;
-    }
-
-    /* Bottom fade to background */
-    .patent-item__mask {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 45%;
-      background: linear-gradient(to top, var(--color-bg) 0%, transparent 100%);
-      pointer-events: none;
-    }
-
-    /* ── Data column (right 40%) ── */
-    .ip-patents__data {
-      position: sticky;
-      top: 108px;
-      display: flex;
-      flex-direction: column;
-      gap: 36px;
-    }
-
-    .patents-count__num {
-      display: block;
-      font-family: var(--font-data);
-      font-size: clamp(80px, 9vw, 120px);
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-cyan) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .patents-count__label {
-      font-family: var(--font-heading);
-      font-size: clamp(16px, 1.6vw, 20px);
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin-top: 12px;
-    }
-
-    .patents-count__sub {
-      font-family: var(--font-body);
-      font-size: 13px;
-      color: var(--color-text-muted);
-      margin-top: 6px;
-      line-height: 1.6;
-    }
-
-    /* Three bullet lines */
-    .patents-bullets {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      padding-top: 28px;
-    }
-
-    .patents-bullet {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      font-family: var(--font-body);
-      font-size: 14px;
-      line-height: 1.65;
-      color: var(--color-text-secondary);
-    }
-
-    .patents-bullet::before {
+    .ip-band::after {
       content: '';
-      flex-shrink: 0;
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--color-accent);
-      box-shadow: 0 0 8px rgba(116, 53, 253, 0.55);
-      margin-top: 8px;
+      position: absolute;
+      right: -10%; top: -40%;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(139,113,255,0.25), transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
     }
-
-    /* Responsive */
-    @media (max-width: 960px) {
-      .ip-patents__body {
-        display: flex;
-        flex-direction: column;
-        gap: 48px;
-      }
-      .ip-patents__data  { position: static; order: -1; }
-      .patent-grid       { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 640px) {
-      .ip-patents         { padding: 72px 0; }
-      .ip-patents__header { margin-bottom: 48px; }
-    }
-
-    /* ═══════════════════════════════════════
-       S4 — AI DEEP DIVE
-       See What Our AI Sees.
-    ═══════════════════════════════════════ */
-    .ai-section {
-      position: relative;
-      z-index: 3;
-      padding: 120px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .ai-section__header {
-      text-align: center;
-      margin-bottom: 56px;
-    }
-
-    .ai-section__sub {
-      font-family: var(--font-body);
-      font-size: clamp(15px, 1.35vw, 17px);
-      line-height: 1.75;
-      color: var(--color-text-secondary);
-      max-width: 640px;
-      margin: 18px auto 0;
-    }
-
-    /* ── SVG visualization container ── */
-    .ai-viz {
-      max-width: 900px;
-      margin: 0 auto 60px;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      border: 1px solid rgba(139, 113, 255, 0.14);
-      box-shadow: 0 0 80px rgba(116, 53, 253, 0.07),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .ai-shelf-svg {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    /* ── Scan line animation ── */
-    .ai-scan { animation: aiScanDown 3s linear infinite; }
-
-    @keyframes aiScanDown {
-      0%   { transform: translateY(-4px); }
-      100% { transform: translateY(424px); }
-    }
-
-    /* ── Live-dot pulse ── */
-    .ai-live-dot { animation: livePulse 1.5s ease-in-out infinite; }
-
-    @keyframes livePulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.25; }
-    }
-
-    /* ── Identification overlays: timed to scan line position ──
-       Scan: 3 s, 420 SVG units
-       Row 1 center ≈ y 92  → 22% of cycle
-       Row 2 center ≈ y 237 → 56% of cycle
-       Row 3 center ≈ y 365 → 87% of cycle
-    ── */
-    .id-overlay--1 { animation: identifyRow1 3s linear infinite; }
-    .id-overlay--2 { animation: identifyRow2 3s linear infinite; }
-    .id-overlay--3 { animation: identifyRow3 3s linear infinite; }
-
-    @keyframes identifyRow1 {
-      0%, 18%       { opacity: 0; }
-      23%, 40%      { opacity: 1; }
-      46%, 100%     { opacity: 0; }
-    }
-
-    @keyframes identifyRow2 {
-      0%, 53%       { opacity: 0; }
-      58%, 74%      { opacity: 1; }
-      79%, 100%     { opacity: 0; }
-    }
-
-    @keyframes identifyRow3 {
-      0%, 83%       { opacity: 0; }
-      88%, 96%      { opacity: 1; }
-      100%          { opacity: 0; }
-    }
-
-    /* ── 4 Ability cards ── */
-    .ai-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      margin-bottom: 72px;
-    }
-
-    .ai-card {
-      position: relative;
-      background: linear-gradient(
-        135deg,
-        rgba(28, 18, 55, 0.78) 0%,
-        rgba(44, 32, 105, 0.22) 100%
-      );
-      border: 1px solid rgba(139, 113, 255, 0.16);
-      border-radius: var(--radius-md);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 28px 24px;
-      transition: border-color var(--transition-base) var(--ease-out),
-                  box-shadow var(--transition-base) var(--ease-out),
-                  transform var(--transition-base) var(--ease-out),
-                  opacity 0.55s var(--ease-out);
-      /* reveal start state */
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    .ai-card.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .ai-card:hover {
-      border-color: rgba(139, 113, 255, 0.32);
-      box-shadow: 0 8px 32px rgba(116, 53, 253, 0.14);
-      transform: translateY(-4px);
-    }
-
-    .ai-card__icon {
-      width: 44px; height: 44px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(116, 53, 253, 0.12);
-      border: 1px solid rgba(116, 53, 253, 0.20);
-      color: var(--color-highlight);
-      margin-bottom: 20px;
-    }
-
-    .ai-card__title {
-      font-family: var(--font-heading);
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
-
-    .ai-card__desc {
-      font-family: var(--font-body);
-      font-size: 13px;
-      line-height: 1.65;
-      color: var(--color-text-secondary);
-    }
-
-    /* ── Bottom accuracy stat ── */
-    .ai-stat {
-      text-align: center;
-      padding-top: 8px;
-    }
-
-    .ai-stat__num {
+    .ip-band__num {
       font-family: var(--font-data);
-      font-size: clamp(72px, 8.5vw, 112px);
+      font-size: clamp(3.4rem, 7vw, 5.4rem);
       font-weight: 700;
+      letter-spacing: -0.03em;
       line-height: 1;
-      letter-spacing: -0.02em;
-      color: var(--color-highlight);
-      display: block;
-      animation: accuracyPulse 2.6s ease-in-out infinite;
-    }
-
-    @keyframes accuracyPulse {
-      0%, 100% {
-        opacity: 0.72;
-        filter: drop-shadow(0 0 22px rgba(139, 113, 255, 0.35));
-      }
-      50% {
-        opacity: 1;
-        filter: drop-shadow(0 0 56px rgba(139, 113, 255, 0.80))
-                drop-shadow(0 0 100px rgba(94, 235, 255, 0.22));
-      }
-    }
-
-    .ai-stat__label {
-      font-family: var(--font-heading);
-      font-size: clamp(16px, 1.6vw, 22px);
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin-top: 14px;
-    }
-
-    .ai-stat__sub {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--color-text-muted);
-      margin-top: 6px;
-    }
-
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      .ai-scan, .ai-live-dot,
-      .id-overlay--1, .id-overlay--2, .id-overlay--3,
-      .ai-stat__num { animation: none; }
-      .id-overlay--1, .id-overlay--2, .id-overlay--3 { opacity: 0; }
-      .ai-stat__num { opacity: 1; filter: none; }
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .ai-cards { grid-template-columns: 1fr 1fr; gap: 16px; }
-    }
-
-    @media (max-width: 640px) {
-      .ai-section  { padding: 72px 0; }
-      .ai-cards    { grid-template-columns: 1fr; }
-      .ai-viz      { margin-bottom: 44px; }
-      .ai-cards    { margin-bottom: 52px; }
-    }
-
-    /* ═══════════════════════════════════════
-       S5 — HARDWARE ENGINEERING
-       Built to Last. Built to Scale.
-    ═══════════════════════════════════════ */
-    .hw-section {
-      position: relative;
-      z-index: 3;
-      padding: 120px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .hw-section__header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    .hw-section__sub {
-      font-family: var(--font-body);
-      font-size: clamp(15px, 1.35vw, 17px);
-      line-height: 1.75;
-      color: var(--color-text-secondary);
-      max-width: 600px;
-      margin: 18px auto 0;
-    }
-
-    /* ── SVG container (hotspots positioned inside) ── */
-    .hw-viz {
-      position: relative;
-      max-width: 640px;
-      margin: 0 auto 44px;
-    }
-
-    .hw-cabinet-svg {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    /* ── Hotspot dot ── */
-    .hotspot {
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      transform: translate(-50%, -50%);
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    .hotspot__dot {
-      position: relative;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--color-cyan);
-      animation: hsDotGlow 2.5s ease-in-out infinite;
-      animation-delay: var(--hs-delay, 0s);
-    }
-
-    .hotspot__ring {
-      position: absolute;
-      inset: -5px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(94, 235, 255, 0.50);
-      animation: hsRingExpand 2.5s ease-in-out infinite;
-      animation-delay: var(--hs-delay, 0s);
-    }
-
-    @keyframes hsDotGlow {
-      0%, 100% { box-shadow: 0 0 6px rgba(94,235,255,0.50); }
-      50%       { box-shadow: 0 0 18px rgba(94,235,255,0.95), 0 0 36px rgba(94,235,255,0.28); }
-    }
-
-    @keyframes hsRingExpand {
-      0%   { transform: scale(1);   opacity: 0.55; }
-      100% { transform: scale(2.8); opacity: 0;    }
-    }
-
-    /* ── Hotspot label card ── */
-    .hotspot__card {
-      position: absolute;
-      width: 215px;
-      background: rgba(8, 5, 20, 0.95);
-      border: 1px solid rgba(94, 235, 255, 0.22);
-      border-radius: 10px;
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      padding: 12px 16px;
-      pointer-events: none;
-      z-index: 20;
-      opacity: 0;
-      transition: opacity 0.20s ease, transform 0.20s ease;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
-    }
-
-    /* RIGHT — card to the right of the dot */
-    .hs--r .hotspot__card {
-      top: 50%;
-      left: calc(100% + 13px);
-      transform: translateY(calc(-50% + 6px));
-    }
-    .hs--r:hover .hotspot__card { opacity: 1; transform: translateY(-50%); }
-
-    /* LEFT — card to the left of the dot */
-    .hs--l .hotspot__card {
-      top: 50%;
-      right: calc(100% + 13px);
-      transform: translateY(calc(-50% + 6px));
-    }
-    .hs--l:hover .hotspot__card { opacity: 1; transform: translateY(-50%); }
-
-    /* BELOW — card below (used for top hotspot) */
-    .hs--b .hotspot__card {
-      top: calc(100% + 13px);
-      left: 50%;
-      transform: translateX(calc(-50% + 6px));
-    }
-    .hs--b:hover .hotspot__card { opacity: 1; transform: translateX(-50%); }
-
-    .hotspot__label {
-      font-family: var(--font-data);
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: var(--color-cyan);
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .hotspot__spec {
-      font-family: var(--font-body);
-      font-size: 12px;
-      line-height: 1.55;
-      color: rgba(255, 255, 255, 0.70);
-    }
-
-    /* ── Mobile hotspot list (shown when hover cards are hidden) ── */
-    .hw-hotspot-list { display: none; }
-
-    /* ── Bottom two-models text ── */
-    .hw-models {
-      max-width: 640px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .hw-models__headline {
-      font-family: var(--font-heading);
-      font-size: clamp(18px, 1.8vw, 22px);
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin-bottom: 10px;
-    }
-
-    .hw-models__body {
-      font-family: var(--font-body);
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-    }
-
-    .hw-models__body a {
-      color: var(--color-highlight);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(139, 113, 255, 0.35);
-      transition: color var(--transition-base), border-color var(--transition-base);
-    }
-
-    .hw-models__body a:hover {
-      color: var(--color-cyan);
-      border-color: var(--color-cyan);
-    }
-
-    /* Responsive — S5 */
-    @media (max-width: 768px) {
-      .hw-section     { padding: 80px 0; }
-      .hotspot__card  { display: none; }
-      .hw-hotspot-list {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin: 0 0 40px;
-      }
-      .hw-hs-item {
-        background: rgba(28, 18, 55, 0.60);
-        border: 1px solid rgba(139, 113, 255, 0.14);
-        border-radius: var(--radius-sm);
-        padding: 14px 16px;
-      }
-      .hw-hs-item__name {
-        font-family: var(--font-data);
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.10em;
-        text-transform: uppercase;
-        color: var(--color-cyan);
-        display: block;
-        margin-bottom: 4px;
-      }
-      .hw-hs-item__spec {
-        font-family: var(--font-body);
-        font-size: 12px;
-        color: var(--color-text-secondary);
-        line-height: 1.55;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .hw-hotspot-list { grid-template-columns: 1fr; }
-    }
-
-    /* ═══════════════════════════════════════
-       S6 — SECURITY & COMPLIANCE
-       Enterprise-Grade. Privacy-First.
-    ═══════════════════════════════════════ */
-    .sec-section {
-      position: relative;
-      z-index: 3;
-      padding: 120px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .sec-section__header {
-      text-align: center;
-      margin-bottom: 64px;
-    }
-
-    .sec-section__sub {
-      font-family: var(--font-body);
-      font-size: clamp(15px, 1.35vw, 17px);
-      line-height: 1.75;
-      color: var(--color-text-secondary);
-      max-width: 580px;
-      margin: 18px auto 0;
-    }
-
-    .sec-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-
-    .sec-card {
-      position: relative;
-      background: linear-gradient(
-        135deg,
-        rgba(28, 18, 55, 0.80) 0%,
-        rgba(44, 32, 105, 0.22) 100%
-      );
-      border: 1px solid rgba(139, 113, 255, 0.16);
-      border-radius: var(--radius-md);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 32px 24px;
-      /* reveal start */
-      opacity: 0;
-      transform: translateY(20px);
-      transition: border-color 0.30s var(--ease-out),
-                  box-shadow 0.30s var(--ease-out),
-                  transform 0.30s var(--ease-out),
-                  opacity 0.55s var(--ease-out);
-    }
-
-    .sec-card.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .sec-card:hover {
-      border-color: rgba(139, 113, 255, 0.30);
-      box-shadow: 0 8px 32px rgba(116, 53, 253, 0.12);
-      transform: translateY(-4px);
-    }
-
-    .sec-card__icon {
-      width: 48px; height: 48px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(116, 53, 253, 0.12);
-      border: 1px solid rgba(116, 53, 253, 0.20);
-      color: var(--color-highlight);
-      margin-bottom: 22px;
-      animation: iconBreath 3s ease-in-out infinite;
-    }
-
-    .sec-card:nth-child(2) .sec-card__icon { animation-delay: 0.75s; }
-    .sec-card:nth-child(3) .sec-card__icon { animation-delay: 1.50s; }
-    .sec-card:nth-child(4) .sec-card__icon { animation-delay: 2.25s; }
-
-    @keyframes iconBreath {
-      0%, 100% {
-        box-shadow: 0 0 0 0 rgba(116,53,253,0.40),
-                    0 0 8px rgba(116,53,253,0.12);
-      }
-      50% {
-        box-shadow: 0 0 0 8px rgba(116,53,253,0.00),
-                    0 0 20px rgba(116,53,253,0.32);
-      }
-    }
-
-    .sec-card__title {
-      font-family: var(--font-heading);
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin-bottom: 10px;
-      line-height: 1.3;
-    }
-
-    .sec-card__desc {
-      font-family: var(--font-body);
-      font-size: 13px;
-      line-height: 1.65;
-      color: var(--color-text-secondary);
-    }
-
-    /* Combined reduced-motion override */
-    @media (prefers-reduced-motion: reduce) {
-      .hotspot__dot, .hotspot__ring,
-      .sec-card__icon { animation: none; }
-    }
-
-    /* Responsive — S6 */
-    @media (max-width: 900px) {
-      .sec-section { padding: 80px 0; }
-      .sec-cards    { grid-template-columns: 1fr 1fr; gap: 16px; }
-    }
-
-    @media (max-width: 480px) {
-      .sec-cards { grid-template-columns: 1fr; }
-    }
-    .section-placeholder {
-      position: relative;
-      z-index: 3;
-      padding: 100px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .section-placeholder__inner {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 160px;
-      gap: 12px;
-      border: 1px dashed rgba(116, 53, 253, 0.18);
-      border-radius: var(--radius-lg);
-    }
-
-    .section-placeholder__tag {
-      font-family: var(--font-data);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(116, 53, 253, 0.5);
-    }
-
-    .section-placeholder__title {
-      font-family: var(--font-heading);
-      font-size: 18px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.2);
-    }
-
-    .section-placeholder__note {
-      font-family: var(--font-body);
-      font-size: 12px;
-      color: rgba(122, 122, 140, 0.4);
-    }
-
-    /* ═══════════════════════════════════════
-       S7 — FINAL CTA
-       Particle network backdrop
-    ═══════════════════════════════════════ */
-    .final-cta {
-      position: relative;
-      z-index: 3;
-      overflow: hidden;
-      background: linear-gradient(180deg, var(--color-brand) 0%, var(--color-bg) 100%);
-    }
-
-    .final-cta__canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-              mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-    }
-
-    .final-cta__inner {
-      position: relative;
-      z-index: 1;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 128px 60px;
-      text-align: center;
-    }
-
-    .final-cta__eyebrow {
-      font-family: var(--font-data);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--color-cyan);
-      display: block;
-      margin-bottom: 24px;
-    }
-
-    .final-cta__headline {
-      font-family: var(--font-heading);
-      font-size: clamp(36px, 4.5vw, 56px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      margin-bottom: 20px;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
-    }
-
-    .final-cta__headline.in-view { opacity: 1; transform: translateY(0); }
-
-    .final-cta__action-word {
-      background: linear-gradient(135deg, var(--color-highlight), var(--color-cyan));
+      background: var(--grad-text);
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-
-    .final-cta__sub {
-      font-family: var(--font-body);
-      font-size: clamp(15px, 1.5vw, 18px);
-      line-height: 1.75;
-      color: var(--color-text-secondary);
-      max-width: 520px;
-      margin: 0 auto 52px;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.65s var(--ease-out) 0.15s,
-                  transform 0.65s var(--ease-out) 0.15s;
+    .ip-band__num-label {
+      margin-top: 10px;
+      font-family: var(--font-data);
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-2);
     }
-
-    .final-cta__sub.in-view { opacity: 1; transform: translateY(0); }
-
-    .final-cta__actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.65s var(--ease-out) 0.3s,
-                  transform 0.65s var(--ease-out) 0.3s;
-    }
-
-    .final-cta__actions.in-view { opacity: 1; transform: translateY(0); }
-
-    .final-cta__btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-heading);
-      font-size: 16px;
-      font-weight: 600;
-      padding: 16px 36px;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .final-cta__btn--primary {
-      background: var(--gradient-btn);
-      color: #FFFFFF;
-      border: none;
-      box-shadow: 0 4px 24px rgba(116, 53, 253, 0.32);
-      transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
-    }
-
-    .final-cta__btn--primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 32px rgba(116, 53, 253, 0.50), 0 8px 30px rgba(116, 53, 253, 0.30);
-    }
-
-    .final-cta__btn--secondary {
-      background: transparent;
-      border: 1.5px solid rgba(255, 255, 255, 0.18);
-      color: var(--color-text-primary);
-      transition: border-color 0.3s var(--ease-out),
-                  background   0.3s var(--ease-out),
-                  transform    0.3s var(--ease-out);
-    }
-
-    .final-cta__btn--secondary:hover {
-      border-color: var(--color-highlight);
-      background: rgba(139, 113, 255, 0.06);
-      transform: translateY(-2px);
-    }
-
-    @media (max-width: 560px) {
-      .final-cta__inner   { padding: 96px 32px; }
-      .final-cta__actions { flex-direction: column; align-items: stretch; }
-      .final-cta__btn     { width: 100%; justify-content: center; }
-    }
-
-    /* ═══════════════════════════════════════
-       FOOTER (z-index 1)
-    ═══════════════════════════════════════ */
-    .footer {
-      flex-shrink: 0;
-      background: linear-gradient(to bottom, rgba(116, 53, 253, 0.12) 0%, transparent 60%),
-                  var(--color-bg-footer);
-      border-top: 1px solid var(--color-footer-border);
+    .ip-band__points { display: grid; gap: 14px; }
+    .ip-band__points li {
       position: relative;
-      z-index: 1;
+      padding-left: 22px;
+      color: var(--text-2);
+      font-size: 0.97rem;
     }
-
-    .footer__main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 72px 32px 56px;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-      gap: 40px;
+    .ip-band__points li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.6em;
+      width: 10px; height: 1.5px;
+      background: var(--highlight);
     }
+    @media (max-width: 880px) { .ip-band { grid-template-columns: 1fr; } }
 
-    .footer__main > * { opacity: 0; transform: translateY(16px); }
-    .footer__main > *.is-visible { animation: fadeUp 0.7s var(--ease-out) both; }
-    .footer__main > *:nth-child(1) { animation-delay: 0ms;   }
-    .footer__main > *:nth-child(2) { animation-delay: 60ms;  }
-    .footer__main > *:nth-child(3) { animation-delay: 120ms; }
-    .footer__main > *:nth-child(4) { animation-delay: 180ms; }
-    .footer__main > *:nth-child(5) { animation-delay: 240ms; }
-
-    .footer__logo         { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-
-    .footer__tagline { font-family: var(--font-body); font-size: 16px; color: rgba(255, 255, 255, 0.6); line-height: 1.6; max-width: 220px; }
-    .footer__col-title    { font-family: var(--font-data); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-primary); margin-bottom: 20px; }
-    .footer__col-links    { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .footer__col-link     { font-family: var(--font-body); font-size: 14px; color: var(--color-text-muted); transition: color var(--transition-base) var(--ease-out); }
-    .footer__col-link:hover { color: var(--color-text-secondary); }
-    .footer__contact-item   { display: flex; flex-direction: column; gap: 2px; }
-    .footer__contact-label  { font-family: var(--font-data); font-size: 10px; font-weight: 500; letter-spacing: 0.10em; text-transform: uppercase; color: rgba(122,122,140,0.55); }
-
-
-    .footer__position-line {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.4);
-      line-height: 1.6;
-      max-width: 220px;
-      margin-top: 8px;
-    }
-    .footer__bottom {
-      border-top: 1px solid var(--color-footer-border);
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .footer__copy   { font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); }
-    .footer__social { display: flex; align-items: center; gap: 10px; list-style: none; }
-
-    .footer__social-link {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--color-text-muted);
-      transition: color var(--transition-base) var(--ease-out),
-                  border-color var(--transition-base) var(--ease-out),
-                  background var(--transition-base) var(--ease-out),
-                  box-shadow var(--transition-base) var(--ease-out),
-                  transform var(--transition-base) var(--ease-out);
-    }
-
-    .footer__social-link:hover {
-      color: var(--color-highlight);
-      border-color: var(--color-highlight);
-      background: rgba(116, 53, 253, 0.12);
-      box-shadow: 0 0 16px rgba(116, 53, 253, 0.40);
-      transform: translateY(-2px);
-    }
-
-    .footer__legal      { display: flex; align-items: center; gap: 20px; list-style: none; }
-    .footer__legal-link { font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); transition: color var(--transition-base) var(--ease-out); }
-    .footer__legal-link:hover { color: var(--color-text-secondary); }
-
-    @media (max-width: 1024px) { .footer__main { grid-template-columns: 2fr 1fr 1fr; } }
-    @media (max-width: 900px) {
-      .footer__main { grid-template-columns: 1fr 1fr 1fr; gap: 36px; padding: 56px 24px 48px; }
-      .footer__logo-col { grid-column: 1 / -1; }
-    }
-    @media (max-width: 600px) {
-      .footer__main { grid-template-columns: 1fr 1fr; gap: 32px; padding: 48px 20px 40px; }
-      .footer__logo-col { grid-column: 1 / -1; }
-    }
-    @media (max-width: 440px) {
-      .footer__main   { grid-template-columns: 1fr; }
-      .footer__bottom { flex-direction: column; align-items: flex-start; gap: 16px; padding: 20px; }
-    }
-
-    /* ═══════════════════════════════════════
-       BACK-TO-TOP (z-index 500)
-    ═══════════════════════════════════════ */
-    .back-to-top {
-      position: fixed;
-      bottom: 32px; right: 20px;
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: var(--gradient-btn);
-      border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--color-text-primary);
-      box-shadow: 0 4px 16px rgba(116, 53, 253, 0.28);
-      z-index: 500;
-      opacity: 0;
-      transform: scale(0.75) translateY(8px);
-      pointer-events: none;
-      transition: opacity 0.3s var(--ease-out),
-                  transform 0.3s var(--ease-out),
-                  box-shadow 0.3s var(--ease-out);
-    }
-
-    .back-to-top.is-visible {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-      pointer-events: all;
-    }
-
-    .back-to-top:hover {
-      transform: scale(1) translateY(-2px);
-      box-shadow: 0 0 20px rgba(116,53,253,0.50), 0 6px 20px rgba(116,53,253,0.28);
-    }
-
-    .back-to-top:active { transform: scale(0.94) translateY(0); }
-
-    /* ── Cookie Banner ── */
-    .cookie-banner {
-      display: none; position: fixed; bottom: 0; left: 0; right: 0;
-      z-index: 9999; align-items: center; justify-content: space-between; gap: 16px;
-      padding: 16px 32px;
-      background: rgba(20, 16, 31, 0.94);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(116, 53, 253, 0.3);
-      box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
-      transform: translateY(100%);
-      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .cookie-banner.is-visible { transform: translateY(0); }
-    .cookie-banner p { font-family: var(--font-body); font-size: 14px; color: rgba(255,255,255,0.80); line-height: 1.5; flex: 1; }
-    .cookie-banner a { color: var(--color-highlight); text-decoration: underline; }
-    .cookie-accept-btn {
-      flex-shrink: 0; padding: 8px 20px; border-radius: var(--radius-sm);
-      background: var(--color-accent); color: var(--color-text-primary);
-      font-family: var(--font-body); font-size: 13px; font-weight: 600;
-      border: none; cursor: pointer; white-space: nowrap;
-      transition: background var(--transition-base) var(--ease-out), transform var(--transition-base) var(--ease-out);
-    }
-    .cookie-accept-btn:hover { background: var(--color-highlight); transform: translateY(-1px); }
-    @media (max-width: 640px) {
-      .cookie-banner { flex-direction: column; align-items: flex-start; padding: 16px 20px; }
-      .cookie-accept-btn { width: 100%; text-align: center; }
-    }
-
+    /* ── TECH · SECURITY ─────────────────────────────────────── */
+    .sec-card .h3 { font-size: 1.12rem; }
   </style>
 </head>
 <body>
 
-  <!-- Grain texture overlay -->
-  <div class="grain-overlay" aria-hidden="true"></div>
-
-  <!-- ═══════════════════════════════════════
-       NAVIGATION
-  ═══════════════════════════════════════ -->
-  <nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
-    <div class="nav__inner">
-
-      <a href="index.html" class="nav__logo" aria-label="SenseUni home">
-        <img src="assets/images/logo.webp" alt="SenseUni" height="32" width="auto" style="display:block;" />
-      </a>
-
-      <ul class="nav__links" role="list">
-        <li><a href="index.html"           class="nav__link">Home</a></li>
-        <li><a href="ai-smart-cabinet.html" class="nav__link">AI Smart Cabinet</a></li>
-        <li><a href="solutions.html"        class="nav__link">Solutions</a></li>
-        <li><a href="technology.html"       class="nav__link is-active">Technology</a></li>
-        <li><a href="case-studies.html"     class="nav__link">Case Studies</a></li>
-        <li><a href="company.html"          class="nav__link">Company</a></li>
-      </ul>
-
-      <div class="nav__cta">
-        <a href="get-a-demo.html" class="btn--primary">Get a Demo</a>
-      </div>
-
-      <button class="nav__hamburger" id="nav-hamburger"
-              aria-label="Toggle navigation menu"
-              aria-expanded="false" aria-controls="nav-drawer">
-        <span class="nav__hamburger-line"></span>
-        <span class="nav__hamburger-line"></span>
-        <span class="nav__hamburger-line"></span>
-      </button>
-
-    </div>
-  </nav>
-
-  <!-- Mobile drawer -->
-  <div class="nav__drawer" id="nav-drawer" aria-hidden="true">
-    <ul class="nav__drawer-links" role="list">
-      <li><a href="index.html"            class="nav__drawer-link">Home</a></li>
-      <li><a href="ai-smart-cabinet.html" class="nav__drawer-link">AI Smart Cabinet</a></li>
-      <li><a href="solutions.html"        class="nav__drawer-link">Solutions</a></li>
-      <li><a href="technology.html"       class="nav__drawer-link">Technology</a></li>
-      <li><a href="case-studies.html"     class="nav__drawer-link">Case Studies</a></li>
-      <li><a href="company.html"          class="nav__drawer-link">Company</a></li>
-    </ul>
-    <a href="get-a-demo.html" class="btn--primary nav__drawer-cta">Get a Demo</a>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__orb ambient__orb--a" data-parallax="0.06"></div>
+    <div class="ambient__orb ambient__orb--b" data-parallax="0.09"></div>
   </div>
 
-
-  <!-- ═══════════════════════════════════════
-       MAIN CONTENT
-  ═══════════════════════════════════════ -->
-  <main id="main">
-
-    <!-- ──────────────────────────────────────
-         S1 — HERO
-         Full-viewport · centered content
-         Particle network canvas backdrop
-         4 count-up stats below
-    ─────────────────────────────────────── -->
-    <section class="tech-hero" id="hero" aria-labelledby="hero-headline">
-
-      <!-- Particle network canvas — absolute within hero -->
-      <canvas id="hero-canvas" aria-hidden="true"></canvas>
-
-      <!-- Ambient depth orbs -->
-      <div class="tech-hero__orb tech-hero__orb--1" aria-hidden="true"></div>
-      <div class="tech-hero__orb tech-hero__orb--2" aria-hidden="true"></div>
-      <div class="tech-hero__orb tech-hero__orb--3" aria-hidden="true"></div>
-
-      <div class="section-wrap" style="position:relative; z-index:1;">
-        <div class="tech-hero__inner">
-
-          <span class="tech-hero__eyebrow">Full-Stack Technology</span>
-
-          <h1 class="t-display gradient-text tech-hero__headline" id="hero-headline">
-            Engineered from<br>Chip to Cloud.
-          </h1>
-
-          <p class="tech-hero__sub">
-            Full-stack retail technology. Designed, built, and deployed by one team.
-          </p>
-
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ──────────────────────────────────────
-         S1B — DATA ANCHORS
-         4 trust metrics, count-up on scroll
-    ─────────────────────────────────────── -->
-    <div class="data-anchors" id="data-anchors" aria-label="Key statistics">
-      <div class="data-anchors__inner">
-
-        <div class="data-anchors__stat">
-          <div class="data-anchors__number"
-               data-target="10"
-               data-suffix="+"
-               data-decimals="0">10+</div>
-          <div class="data-anchors__label">Years in Retail Tech</div>
-        </div>
-
-        <div class="data-anchors__stat">
-          <div class="data-anchors__number"
-               data-target="3"
-               data-decimals="0">3</div>
-          <div class="data-anchors__label">Core Technology Layers</div>
-        </div>
-
-        <div class="data-anchors__stat">
-          <div class="data-anchors__number"
-               data-target="99.6"
-               data-suffix="%"
-               data-decimals="1">99.6%</div>
-          <div class="data-anchors__label">AI Recognition Accuracy</div>
-        </div>
-
-        <div class="data-anchors__stat">
-          <div class="data-anchors__number"
-               data-target="150"
-               data-suffix="+"
-               data-decimals="0">150+</div>
-          <div class="data-anchors__label">Patents &amp; Copyrights</div>
-        </div>
-
-      </div>
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="SenseUni home">
+        <img src="assets/images/logo.webp" alt="SenseUni" width="160" height="34" />
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a class="nav__link" href="index.html">Home</a>
+        <a class="nav__link" href="ai-smart-cabinet.html">AI Smart Cabinet</a>
+        <a class="nav__link" href="solutions.html">Solutions</a>
+        <a class="nav__link is-active" href="technology.html">Technology</a>
+        <a class="nav__link" href="case-studies.html">Case Studies</a>
+        <a class="nav__link" href="company.html">Company</a>
+        <a class="btn btn--primary btn--sm nav__cta" href="get-a-demo.html">Get a Demo</a>
+      </nav>
+      <button class="nav__hamburger" id="nav-hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav-drawer">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </header>
+  <div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+    <a class="nav-drawer__link" href="index.html">Home</a>
+    <a class="nav-drawer__link" href="ai-smart-cabinet.html">AI Smart Cabinet</a>
+    <a class="nav-drawer__link" href="solutions.html">Solutions</a>
+    <a class="nav-drawer__link is-active" href="technology.html">Technology</a>
+    <a class="nav-drawer__link" href="case-studies.html">Case Studies</a>
+    <a class="nav-drawer__link" href="company.html">Company</a>
+    <a class="btn btn--primary nav-drawer__cta" href="get-a-demo.html">Get a Demo</a>
+  </div>
 
-    <!-- ──────────────────────────────────────
-         S2 — TECH STACK
-         Three Layers. One Architecture.
-    ─────────────────────────────────────── -->
-    <section class="tech-stack" id="s2-tech-stack" aria-labelledby="s2-headline">
-      <div class="section-wrap">
+  <main>
 
-        <!-- Section header -->
-        <div class="tech-stack__header" data-reveal>
-          <span class="section-eyebrow">Architecture</span>
-          <h2 class="t-h2" id="s2-headline">Three Layers. One Architecture.</h2>
-          <p class="tech-stack__sub">Every component — from cabinet hardware to cloud analytics — is designed and built in-house.</p>
+    <!-- ══ HERO ══════════════════════════════════════════════ -->
+    <section class="hero tech-hero" id="hero">
+      <div class="container">
+        <span class="eyebrow hero-enter" style="--enter-delay: 0s">Full-Stack Technology</span>
+        <h1 class="display hero-enter" style="--enter-delay: 0.1s">Engineered from <span class="text-grad">Chip to Cloud.</span></h1>
+        <p class="lead hero-enter" style="--enter-delay: 0.2s">Full-stack retail technology. Designed, built, and deployed by one team.</p>
+
+        <div class="tech-hero__stats" data-stagger>
+          <div class="stat">
+            <div class="stat__value"><span data-count="10">0</span>+</div>
+            <div class="stat__label">Years in Retail Tech</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value"><span data-count="3">0</span></div>
+            <div class="stat__label">Core Technology Layers</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value"><span data-count="99.6">0</span>%</div>
+            <div class="stat__label">AI Recognition Accuracy</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value"><span data-count="150">0</span>+</div>
+            <div class="stat__label">Patents &amp; Copyrights</div>
+          </div>
         </div>
-
-        <!-- Three-layer stack (observe as group → stagger reveal) -->
-        <div class="tech-stack__layers" data-reveal-group="tech-layers">
-
-          <!-- ════════════════════════════════
-               LAYER 3 — Cloud Platform & Data
-               (top of visual stack)
-          ════════════════════════════════ -->
-          <div class="layer-card layer-card--3" data-reveal>
-
-            <div class="layer-card__header">
-              <div class="layer-badge">
-                <span class="layer-badge__num">Layer 03</span>
-                <div class="layer-badge__pips">
-                  <span></span><span></span><span></span>
-                </div>
-              </div>
-              <div class="layer-icon" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
-                </svg>
-              </div>
-              <div>
-                <div class="layer-title">Cloud Platform &amp; Data</div>
-                <div class="layer-subtitle">Remote operations · Analytics · Content delivery</div>
-              </div>
-              <span class="layer-tag">Proprietary SaaS</span>
-            </div>
-
-            <div class="layer-divider"></div>
-
-            <div class="layer-points">
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
-                    <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Remote Operations</strong>
-                  <span class="layer-point__desc">Configure, restock, and update any cabinet fleet-wide from a single dashboard.</span>
-                </div>
-              </div>
-
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-                    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Real-Time Inventory</strong>
-                  <span class="layer-point__desc">Shelf-level stock tracking with automatic low-stock alerts and reorder triggers.</span>
-                </div>
-              </div>
-
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
-                    <line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Analytics Dashboard</strong>
-                  <span class="layer-point__desc">Sales velocity, heatmaps, and consumer behavior reports across all locations.</span>
-                </div>
-              </div>
-
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="3" width="20" height="14" rx="2"/>
-                    <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Content Management</strong>
-                  <span class="layer-point__desc">Push product images, pricing, and promotions to cabinet screens in real time.</span>
-                </div>
-              </div>
-            </div><!-- /layer-points -->
-
-          </div><!-- /layer-card--3 -->
-
-          <!-- Connector: Cloud → AI Vision -->
-          <div class="layer-connector" aria-hidden="true">
-            <div class="layer-connector__track"></div>
-            <div class="layer-connector__pulse" style="animation-delay:0s;"></div>
-          </div>
-
-          <!-- ════════════════════════════════
-               LAYER 2 — Computer Vision & AI
-               (middle of visual stack)
-          ════════════════════════════════ -->
-          <div class="layer-card layer-card--2" data-reveal>
-
-            <div class="layer-card__header">
-              <div class="layer-badge">
-                <span class="layer-badge__num">Layer 02</span>
-                <div class="layer-badge__pips">
-                  <span></span><span></span><span></span>
-                </div>
-              </div>
-              <div class="layer-icon" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-              </div>
-              <div>
-                <div class="layer-title">Computer Vision &amp; AI</div>
-                <div class="layer-subtitle">On-device inference · No cloud dependency</div>
-              </div>
-              <span class="layer-tag">Proprietary Model</span>
-            </div>
-
-            <div class="layer-divider"></div>
-
-            <div class="layer-points">
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M23 7V3h-4M1 7V3h4M23 17v4h-4M1 17v4h4"/>
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Pure Vision Recognition</strong>
-                  <span class="layer-point__desc">No barcodes, no RFID — products identified by visual appearance alone.</span>
-                </div>
-              </div>
-
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <circle cx="12" cy="12" r="6"/>
-                    <circle cx="12" cy="12" r="2"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">99.6% Accuracy</strong>
-                  <span class="layer-point__desc">Trained on millions of retail SKUs across varying lighting and orientation.</span>
-                </div>
-              </div>
-
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Real-Time Processing</strong>
-                  <span class="layer-point__desc">Sub-second inference on embedded hardware — no network latency required.</span>
-                </div>
-              </div>
-
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M2 12c0-5.52 4.48-10 10-10 2.83 0 5.37 1.17 7.21 3.06M22 12c0 5.52-4.48 10-10 10a9.96 9.96 0 0 1-7.21-3.06"/>
-                    <polyline points="22 5 22 12 15 12"/><polyline points="2 19 2 12 9 12"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Adaptive Learning</strong>
-                  <span class="layer-point__desc">Models continuously improve with new SKU data — zero manual retraining.</span>
-                </div>
-              </div>
-            </div><!-- /layer-points -->
-
-          </div><!-- /layer-card--2 -->
-
-          <!-- Connector: AI Vision → Hardware -->
-          <div class="layer-connector" aria-hidden="true">
-            <div class="layer-connector__track"></div>
-            <div class="layer-connector__pulse" style="animation-delay:1.3s;"></div>
-          </div>
-
-          <!-- ════════════════════════════════
-               LAYER 1 — Intelligent Hardware
-               (foundation of visual stack)
-          ════════════════════════════════ -->
-          <div class="layer-card layer-card--1" data-reveal>
-
-            <div class="layer-card__header">
-              <div class="layer-badge">
-                <span class="layer-badge__num">Layer 01</span>
-                <div class="layer-badge__pips">
-                  <span></span><span></span><span></span>
-                </div>
-              </div>
-              <div class="layer-icon" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="9" y="9" width="6" height="6" rx="1"/>
-                  <path d="M9 3H7a4 4 0 0 0-4 4v2M9 21H7a4 4 0 0 1-4-4v-2M15 3h2a4 4 0 0 1 4 4v2M15 21h2a4 4 0 0 0 4-4v-2"/>
-                </svg>
-              </div>
-              <div>
-                <div class="layer-title">Intelligent Hardware</div>
-                <div class="layer-subtitle">Industrial-grade cabinet · Embedded compute</div>
-              </div>
-              <span class="layer-tag">Proprietary Design</span>
-            </div>
-
-            <div class="layer-divider"></div>
-
-            <div class="layer-points">
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                    <line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Industrial-Grade Build</strong>
-                  <span class="layer-point__desc">Powder-coated steel frame, tempered glass, IP-rated anti-fog coating.</span>
-                </div>
-              </div>
-
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Precision Climate Control</strong>
-                  <span class="layer-point__desc">±0.5 °C temperature stability for beverages, fresh food, and pharmaceuticals.</span>
-                </div>
-              </div>
-
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Modular Architecture</strong>
-                  <span class="layer-point__desc">Shelf configs, door types, and screen sizes customized per deployment.</span>
-                </div>
-              </div>
-
-              <div class="layer-point">
-                <div class="layer-point__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                  </svg>
-                </div>
-                <div class="layer-point__text">
-                  <strong class="layer-point__name">Plug-and-Play Deployment</strong>
-                  <span class="layer-point__desc">Power-on ready in under 30 minutes — no specialist installation required.</span>
-                </div>
-              </div>
-            </div><!-- /layer-points -->
-
-          </div><!-- /layer-card--1 -->
-
-        </div><!-- /tech-stack__layers -->
-      </div><!-- /section-wrap -->
+      </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         S3 — IP & PATENTS
-         150+ Patents and Copyrights. One Vision.
-    ─────────────────────────────────────── -->
-    <section class="ip-patents" id="s3-patents" aria-labelledby="s3-headline">
-      <div class="section-wrap">
-
-        <!-- Section header -->
-        <div class="ip-patents__header" data-reveal>
-          <span class="section-eyebrow">Intellectual Property</span>
-          <h2 class="t-h2" id="s3-headline">150+ Patents and Copyrights.<br>One Vision.</h2>
-          <p class="ip-patents__sub">A decade of R&amp;D. Every core algorithm, every hardware design, every software system — proprietary and protected.</p>
+    <!-- ══ ARCHITECTURE ══════════════════════════════════════ -->
+    <section class="section" id="architecture">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Architecture</span>
+          <h2 class="h2">Three Layers. <span class="text-grad">One Architecture.</span></h2>
+          <p class="lead">Every component — from cabinet hardware to cloud analytics — is designed and built in-house.</p>
         </div>
 
-        <!-- Body: 60 / 40 split -->
-        <div class="ip-patents__body">
-
-          <!-- ═══ LEFT — Certificate wall (60%) ═══ -->
-          <div class="ip-patents__wall">
-            <!--
-              data-reveal-group="patent-wall"  → group observer triggers stagger
-              data-reveal-stagger="80"         → 80 ms between each card
-            -->
-            <div class="patent-grid" data-reveal-group="patent-wall" data-reveal-stagger="80">
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zl (7).webp"  alt="SenseUni Patent Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zl (11).webp" alt="SenseUni Patent Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zl (12).webp" alt="SenseUni Patent Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zl (1).webp"  alt="SenseUni Patent Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zl (4).webp"  alt="SenseUni Patent Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zl (5).webp"  alt="SenseUni Patent Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zl (6).webp"  alt="SenseUni Patent Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zlz (1).webp" alt="SenseUni Software Copyright Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zlz (2).webp" alt="SenseUni Software Copyright Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zlz (3).webp" alt="SenseUni Software Copyright Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zlz (4).webp" alt="SenseUni Software Copyright Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-              <div class="patent-item" data-reveal>
-                <img class="patent-item__img" src="assets/images/zlz (5).webp" alt="SenseUni Software Copyright Certificate" loading="lazy" />
-                <div class="patent-item__mask"></div>
-              </div>
-
-            </div><!-- /patent-grid -->
-          </div><!-- /ip-patents__wall -->
-
-          <!-- ═══ RIGHT — Data column (40%) ═══ -->
-          <div class="ip-patents__data" data-reveal>
-
-            <!-- Big count-up number -->
-            <div>
-              <span class="patents-count__num"
-                    data-countup
-                    data-target="150"
-                    data-suffix="+">0+</span>
-              <div class="patents-count__label">Patents &amp; Software Copyrights</div>
-              <div class="patents-count__sub">Registered with China National Intellectual Property Administration and related bodies.</div>
+        <div class="reveal">
+          <div class="layer layer--top">
+            <div class="layer__head">
+              <span class="layer__tag">Layer 03</span>
+              <h3 class="h3">Cloud Platform &amp; Data</h3>
+              <span class="layer__badge">Proprietary SaaS</span>
             </div>
-
-            <!-- Three statement bullets -->
-            <div class="patents-bullets">
-              <p class="patents-bullet">AI recognition algorithms, hardware systems, cloud architecture</p>
-              <p class="patents-bullet">Proprietary retail OS, analytics engine, device firmware</p>
-              <p class="patents-bullet">No licensed cores. No third-party dependencies on critical systems.</p>
+            <p class="layer__sub">Remote operations · Analytics · Content delivery</p>
+            <div class="layer__grid">
+              <div class="layer__item">
+                <h4>Remote Operations</h4>
+                <p>Configure, restock, and update any cabinet fleet-wide from a single dashboard.</p>
+              </div>
+              <div class="layer__item">
+                <h4>Real-Time Inventory</h4>
+                <p>Shelf-level stock tracking with automatic low-stock alerts and reorder triggers.</p>
+              </div>
+              <div class="layer__item">
+                <h4>Analytics Dashboard</h4>
+                <p>Sales velocity, heatmaps, and consumer behavior reports across all locations.</p>
+              </div>
+              <div class="layer__item">
+                <h4>Content Management</h4>
+                <p>Push product images, pricing, and promotions to cabinet screens in real time.</p>
+              </div>
             </div>
+          </div>
 
-          </div><!-- /ip-patents__data -->
+          <div class="layers__connector" aria-hidden="true"></div>
 
-        </div><!-- /ip-patents__body -->
-      </div><!-- /section-wrap -->
+          <div class="layer">
+            <div class="layer__head">
+              <span class="layer__tag">Layer 02</span>
+              <h3 class="h3">Computer Vision &amp; AI</h3>
+              <span class="layer__badge">Proprietary Model</span>
+            </div>
+            <p class="layer__sub">On-device inference · No cloud dependency</p>
+            <div class="layer__grid">
+              <div class="layer__item">
+                <h4>Pure Vision Recognition</h4>
+                <p>No barcodes, no RFID — products identified by visual appearance alone.</p>
+              </div>
+              <div class="layer__item">
+                <h4>99.6% Accuracy</h4>
+                <p>Trained on millions of retail SKUs across varying lighting and orientation.</p>
+              </div>
+              <div class="layer__item">
+                <h4>Real-Time Processing</h4>
+                <p>Sub-second inference on embedded hardware — no network latency required.</p>
+              </div>
+              <div class="layer__item">
+                <h4>Adaptive Learning</h4>
+                <p>Models continuously improve with new SKU data — zero manual retraining.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="layers__connector" aria-hidden="true"></div>
+
+          <div class="layer">
+            <div class="layer__head">
+              <span class="layer__tag">Layer 01</span>
+              <h3 class="h3">Intelligent Hardware</h3>
+              <span class="layer__badge">Proprietary Design</span>
+            </div>
+            <p class="layer__sub">Industrial-grade cabinet · Embedded compute</p>
+            <div class="layer__grid">
+              <div class="layer__item">
+                <h4>Industrial-Grade Build</h4>
+                <p>Powder-coated steel frame, tempered glass, IP-rated anti-fog coating.</p>
+              </div>
+              <div class="layer__item">
+                <h4>Precision Climate Control</h4>
+                <p>±0.5 °C temperature stability for beverages, fresh food, and pharmaceuticals.</p>
+              </div>
+              <div class="layer__item">
+                <h4>Modular Architecture</h4>
+                <p>Shelf configs, door types, and screen sizes customized per deployment.</p>
+              </div>
+              <div class="layer__item">
+                <h4>Plug-and-Play Deployment</h4>
+                <p>Power-on ready in under 30 minutes — no specialist installation required.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         S4 — AI DEEP DIVE
-         See What Our AI Sees.
-    ─────────────────────────────────────── -->
-    <section class="ai-section" id="s4-ai" aria-labelledby="s4-headline">
-      <div class="section-wrap">
-
-        <!-- Section header -->
-        <div class="ai-section__header" data-reveal>
-          <span class="section-eyebrow">Computer Vision</span>
-          <h2 class="t-h2" id="s4-headline">See What Our AI Sees.</h2>
-          <p class="ai-section__sub">Computer vision that identifies products in milliseconds — without barcodes, RFID tags, or weight sensors.</p>
+    <!-- ══ AI AGENTS ═════════════════════════════════════════ -->
+    <section class="section section--flush-top" id="ai-agents">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">AI Agent Services</span>
+          <h2 class="h2">The Next Layer: <span class="text-grad">Retail AI Agents.</span></h2>
+          <p class="lead">Purpose-built agents that connect devices, data, and operating decisions — the long-term direction of the SenseUni platform.</p>
         </div>
 
-        <!-- ══ SVG Shelf Visualization ══ -->
-        <div class="ai-viz" data-reveal>
-          <!--
-            Pure SVG + CSS animation shelf wireframe.
-            viewBox 600×420 SVG user units.
-            All animations via CSS classes — no JS required.
-            Products: 3 rows × 4 items, aspect ~3:4 wireframe rects.
-            Scan line: CSS translateY 0→424px, 3 s linear infinite.
-            ID overlays: keyed to scan timing — Row 1 @22%, Row 2 @56%, Row 3 @87%.
-          -->
-          <svg class="ai-shelf-svg"
-               viewBox="0 0 600 420"
-               overflow="hidden"
-               xmlns="http://www.w3.org/2000/svg"
-               role="img"
-               aria-label="Simulated AI product recognition across a retail shelf">
-
-            <defs>
-              <!-- Scan line glow: percentage-based to survive translateY -->
-              <filter id="scanGlow" x="-2%" y="-700%" width="104%" height="1500%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
-                <feMerge>
-                  <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-              <!-- ID box glow -->
-              <filter id="idGlow" x="-6%" y="-6%" width="112%" height="112%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="blur"/>
-                <feMerge>
-                  <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-
-            <!-- Background -->
-            <rect width="600" height="420" fill="#080512"/>
-
-            <!-- Corner-bracket frame -->
-            <path d="M30 12 L14 12 L14 28"   fill="none" stroke="#5EEBFF" stroke-width="1.5" stroke-opacity="0.45" stroke-linecap="round"/>
-            <path d="M570 12 L586 12 L586 28" fill="none" stroke="#5EEBFF" stroke-width="1.5" stroke-opacity="0.45" stroke-linecap="round"/>
-            <path d="M30 408 L14 408 L14 392" fill="none" stroke="#5EEBFF" stroke-width="1.5" stroke-opacity="0.45" stroke-linecap="round"/>
-            <path d="M570 408 L586 408 L586 392" fill="none" stroke="#5EEBFF" stroke-width="1.5" stroke-opacity="0.45" stroke-linecap="round"/>
-
-            <!-- Live-scan indicator -->
-            <circle cx="276" cy="20" r="4" fill="#22C55E" class="ai-live-dot"/>
-            <text x="288" y="25" fill="#22C55E"
-                  font-family="Space Grotesk, monospace, sans-serif"
-                  font-size="9" font-weight="700" letter-spacing="2">LIVE RECOGNITION</text>
-
-            <!-- ── Shelf boards ── -->
-            <rect x="28" y="162" width="544" height="4" rx="2" fill="rgba(139,113,255,0.30)"/>
-            <rect x="28" y="304" width="544" height="4" rx="2" fill="rgba(139,113,255,0.30)"/>
-
-            <!-- ════════════════════════
-                 ROW 1 — base outlines
-                 Products: y 22–161
-            ════════════════════════ -->
-            <!-- P1: tall bottle (x=28) -->
-            <rect x="28"  y="22"  width="88" height="140" rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="41"  y="22"  width="62" height="20"  rx="3" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-            <!-- P2: medium box (x=180) -->
-            <rect x="180" y="52"  width="88" height="110" rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="180" y="88"  width="88" height="24"  rx="0" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-            <!-- P3: tall box (x=332) -->
-            <rect x="332" y="36"  width="88" height="126" rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="332" y="62"  width="88" height="26"  rx="0" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-            <!-- P4: bottle (x=484) -->
-            <rect x="484" y="26"  width="88" height="136" rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="497" y="26"  width="62" height="20"  rx="3" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-
-            <!-- ════════════════════════
-                 ROW 2 — base outlines
-                 Products: y 174–303
-            ════════════════════════ -->
-            <!-- P5 (x=28) -->
-            <rect x="28"  y="174" width="88" height="130" rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="41"  y="174" width="62" height="20"  rx="3" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-            <!-- P6 (x=180) -->
-            <rect x="180" y="180" width="88" height="124" rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="180" y="214" width="88" height="22"  rx="0" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-            <!-- P7 (x=332) -->
-            <rect x="332" y="172" width="88" height="132" rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="332" y="200" width="88" height="24"  rx="0" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-            <!-- P8 (x=484) -->
-            <rect x="484" y="178" width="88" height="126" rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="497" y="178" width="62" height="18"  rx="3" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-
-            <!-- ════════════════════════
-                 ROW 3 — base outlines
-                 Products: y 316–414
-            ════════════════════════ -->
-            <!-- P9  (x=28) -->
-            <rect x="28"  y="316" width="88" height="98"  rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="28"  y="346" width="88" height="22"  rx="0" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-            <!-- P10 (x=180) -->
-            <rect x="180" y="322" width="88" height="92"  rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="180" y="350" width="88" height="20"  rx="0" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-            <!-- P11 (x=332) -->
-            <rect x="332" y="313" width="88" height="101" rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="332" y="343" width="88" height="22"  rx="0" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-            <!-- P12 (x=484) -->
-            <rect x="484" y="318" width="88" height="96"  rx="4" fill="none" stroke="rgba(139,113,255,0.22)" stroke-width="1.2"/>
-            <rect x="484" y="348" width="88" height="20"  rx="0" fill="none" stroke="rgba(139,113,255,0.12)" stroke-width="0.8"/>
-
-            <!-- ════════════════════════
-                 IDENTIFICATION OVERLAYS
-                 (animated in sync with scan line)
-            ════════════════════════ -->
-
-            <!-- Row 1 identification -->
-            <g class="id-overlay id-overlay--1">
-              <!-- P1 -->
-              <rect x="26"  y="20"  width="92" height="144" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="28"  y="22"  width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="32"  y="32"  fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-              <!-- P2 -->
-              <rect x="178" y="50"  width="92" height="114" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="180" y="52"  width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="184" y="62"  fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-              <!-- P3 -->
-              <rect x="330" y="34"  width="92" height="130" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="332" y="36"  width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="336" y="46"  fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-              <!-- P4 -->
-              <rect x="482" y="24"  width="92" height="140" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="484" y="26"  width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="488" y="36"  fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-            </g>
-
-            <!-- Row 2 identification -->
-            <g class="id-overlay id-overlay--2">
-              <!-- P5 -->
-              <rect x="26"  y="172" width="92" height="134" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="28"  y="174" width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="32"  y="184" fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-              <!-- P6 -->
-              <rect x="178" y="178" width="92" height="128" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="180" y="180" width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="184" y="190" fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-              <!-- P7 -->
-              <rect x="330" y="170" width="92" height="136" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="332" y="172" width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="336" y="182" fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-              <!-- P8 -->
-              <rect x="482" y="176" width="92" height="130" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="484" y="178" width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="488" y="188" fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-            </g>
-
-            <!-- Row 3 identification -->
-            <g class="id-overlay id-overlay--3">
-              <!-- P9 -->
-              <rect x="26"  y="314" width="92" height="102" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="28"  y="316" width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="32"  y="326" fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-              <!-- P10 -->
-              <rect x="178" y="320" width="92" height="96"  rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="180" y="322" width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="184" y="332" fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-              <!-- P11 -->
-              <rect x="330" y="311" width="92" height="106" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="332" y="313" width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="336" y="323" fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-              <!-- P12 -->
-              <rect x="482" y="316" width="92" height="100" rx="5" fill="rgba(34,197,94,0.06)" stroke="#22C55E" stroke-width="1.5" filter="url(#idGlow)"/>
-              <rect x="484" y="318" width="88" height="14"  rx="2" fill="#22C55E" fill-opacity="0.92"/>
-              <text x="488" y="328" fill="white" font-family="monospace,sans-serif" font-size="8" font-weight="700">Identified ✓</text>
-            </g>
-
-            <!-- ════════════════════════
-                 SCAN LINE (top of z-order)
-            ════════════════════════ -->
-            <g class="ai-scan">
-              <!-- soft aura halo -->
-              <rect x="28" y="-10" width="544" height="20" rx="4" fill="#5EEBFF" fill-opacity="0.05"/>
-              <!-- main glowing line -->
-              <rect x="28" y="0"   width="544" height="2"  rx="1" fill="#5EEBFF" filter="url(#scanGlow)"/>
-              <!-- bright highlight core -->
-              <rect x="28" y="0.5" width="544" height="1"  rx="0.5" fill="white" fill-opacity="0.65"/>
-            </g>
-
-          </svg>
-        </div><!-- /ai-viz -->
-
-        <!-- ══ 4 Ability Cards ══ -->
-        <div class="ai-cards" data-reveal-group="ai-cards" data-reveal-stagger="100">
-
-          <!-- Card 1: Multi-SKU Recognition -->
-          <div class="ai-card" data-reveal>
-            <div class="ai-card__icon" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7" rx="1"/>
-                <rect x="14" y="3" width="7" height="7" rx="1"/>
-                <rect x="3" y="14" width="7" height="7" rx="1"/>
-                <rect x="14" y="14" width="7" height="7" rx="1"/>
-              </svg>
-            </div>
-            <div class="ai-card__title">Multi-SKU Recognition</div>
-            <p class="ai-card__desc">Hundreds of products simultaneously identified in a single frame.</p>
-          </div>
-
-          <!-- Card 2: Occlusion Handling -->
-          <div class="ai-card" data-reveal>
-            <div class="ai-card__icon" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <!-- back card (occluded) -->
-                <rect x="3" y="5" width="12" height="14" rx="2" stroke-opacity="0.35"/>
-                <!-- front card covering part of back -->
-                <rect x="9" y="3" width="12" height="14" rx="2"/>
-              </svg>
-            </div>
-            <div class="ai-card__title">Occlusion Handling</div>
-            <p class="ai-card__desc">Accurate even when products overlap or are partially hidden from view.</p>
-          </div>
-
-          <!-- Card 3: Rapid Onboarding -->
-          <div class="ai-card" data-reveal>
-            <div class="ai-card__icon" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-              </svg>
-            </div>
-            <div class="ai-card__title">Rapid Onboarding</div>
-            <p class="ai-card__desc">New products trained and deployed to the fleet within hours, not weeks.</p>
-          </div>
-
-          <!-- Card 4: Environment Adaptive -->
-          <div class="ai-card" data-reveal>
-            <div class="ai-card__icon" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="4" y1="6"  x2="20" y2="6"/>
-                <line x1="4" y1="12" x2="20" y2="12"/>
-                <line x1="4" y1="18" x2="20" y2="18"/>
-                <circle cx="8"  cy="6"  r="2"/>
-                <circle cx="15" cy="12" r="2"/>
-                <circle cx="10" cy="18" r="2"/>
-              </svg>
-            </div>
-            <div class="ai-card__title">Environment Adaptive</div>
-            <p class="ai-card__desc">Consistent recognition across varying lighting conditions and humidity levels.</p>
-          </div>
-
-        </div><!-- /ai-cards -->
-
-        <!-- ══ Bottom accuracy stat (pulsing glow) ══ -->
-        <div class="ai-stat" data-reveal>
-          <span class="ai-stat__num">99.6%</span>
-          <div class="ai-stat__label">Recognition Accuracy</div>
-          <p class="ai-stat__sub">Verified across 100,000+ real-world transactions</p>
+        <div class="grid grid--4" data-stagger>
+          <article class="card agent-card">
+            <span class="agent-card__kicker">Agent 01</span>
+            <h3 class="h3">Operations Agent</h3>
+            <p>Watches fleet health around the clock — flags hardware faults, transaction irregularities, and compliance gaps automatically.</p>
+          </article>
+          <article class="card agent-card">
+            <span class="agent-card__kicker">Agent 02</span>
+            <h3 class="h3">Inventory Agent</h3>
+            <p>Predicts sell-through by SKU, location, and time window — triggers restocking before stockouts occur.</p>
+          </article>
+          <article class="card agent-card">
+            <span class="agent-card__kicker">Agent 03</span>
+            <h3 class="h3">Merchandising Agent</h3>
+            <p>Combines shelf status with sales data to optimize placement, assortment, and pricing — evidence, not guesswork.</p>
+          </article>
+          <article class="card agent-card">
+            <span class="agent-card__kicker">Agent 04</span>
+            <h3 class="h3">Marketing Agent</h3>
+            <p>Refines campaign targeting with anonymized audience context — right content, right screen, right moment.</p>
+          </article>
         </div>
 
-      </div><!-- /section-wrap -->
+        <p class="agents__note reveal">AI Agents act on the data your network already produces — so your team focuses on strategy, not operations.</p>
+      </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         S5 — HARDWARE ENGINEERING
-         Built to Last. Built to Scale.
-    ─────────────────────────────────────── -->
-    <section class="hw-section" id="s5-hardware" aria-labelledby="s5-headline">
-      <div class="section-wrap">
-
-        <!-- Section header -->
-        <div class="hw-section__header" data-reveal>
-          <span class="section-eyebrow">Hardware</span>
-          <h2 class="t-h2" id="s5-headline">Built to Last. Built to Scale.</h2>
-          <p class="hw-section__sub">Industrial-grade retail hardware, engineered for 24/7 unattended operation.</p>
+    <!-- ══ IP ════════════════════════════════════════════════ -->
+    <section class="section section--flush-top" id="ip">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Intellectual Property</span>
+          <h2 class="h2">150+ Patents and Copyrights. <span class="text-grad">One Vision.</span></h2>
+          <p class="lead">A decade of R&amp;D. Every core algorithm, every hardware design, every software system — proprietary and protected.</p>
         </div>
 
-        <!-- ══ Cabinet wireframe + hotspot overlay ══ -->
-        <div class="hw-viz" data-reveal>
-
-          <!--
-            Inline SVG — simplified axonometric cabinet wireframe.
-            ViewBox 0 0 560 460. Depth offset: dx=+80, dy=−48.
-            Strokes: #8B71FF at low opacity (brand purple wireframe aesthetic).
-            No fills — pure line art.
-
-            Key faces:
-              Front  : (100,70)→(340,70)→(340,390)→(100,390)
-              Top    : (100,70)→(180,22)→(420,22)→(340,70)
-              Right  : (340,70)→(420,22)→(420,342)→(340,390)
-              Base-F : (84,390)→(356,390)→(356,418)→(84,418)
-              Base-R : (356,390)→(436,342)→(436,370)→(356,418)
-          -->
-          <svg class="hw-cabinet-svg"
-               viewBox="0 0 560 460"
-               overflow="hidden"
-               xmlns="http://www.w3.org/2000/svg"
-               role="img"
-               aria-label="Axonometric wireframe diagram of a Halo smart cabinet">
-
-            <!-- ── Main cabinet faces ── -->
-            <!-- Front face -->
-            <path d="M100,70 L340,70 L340,390 L100,390 Z"
-                  fill="rgba(8,5,18,0.60)" stroke="rgba(139,113,255,0.50)" stroke-width="1.4"/>
-            <!-- Top face -->
-            <path d="M100,70 L180,22 L420,22 L340,70 Z"
-                  fill="rgba(8,5,18,0.28)" stroke="rgba(139,113,255,0.40)" stroke-width="1.4"/>
-            <!-- Right face -->
-            <path d="M340,70 L420,22 L420,342 L340,390 Z"
-                  fill="rgba(8,5,18,0.22)" stroke="rgba(139,113,255,0.35)" stroke-width="1.4"/>
-
-            <!-- ── Base / plinth ── -->
-            <!-- Base front -->
-            <path d="M84,390 L356,390 L356,418 L84,418 Z"
-                  fill="rgba(8,5,18,0.50)" stroke="rgba(139,113,255,0.38)" stroke-width="1.4"/>
-            <!-- Base right face -->
-            <path d="M356,390 L436,342 L436,370 L356,418 Z"
-                  fill="rgba(8,5,18,0.16)" stroke="rgba(139,113,255,0.28)" stroke-width="1.4"/>
-            <!-- Base top back edge (visible strip) -->
-            <line x1="164" y1="342" x2="436" y2="342"
-                  stroke="rgba(139,113,255,0.22)" stroke-width="1.0"/>
-
-            <!-- ── Glass door (front face inner) ── -->
-            <rect x="112" y="84" width="216" height="258" rx="3"
-                  fill="rgba(94,235,255,0.018)"
-                  stroke="rgba(139,113,255,0.30)" stroke-width="1.0"
-                  stroke-dasharray="5 3"/>
-
-            <!-- ── Screen area (top of glass door) ── -->
-            <rect x="113" y="85" width="214" height="72" rx="2"
-                  fill="rgba(94,235,255,0.045)"
-                  stroke="rgba(94,235,255,0.28)" stroke-width="0.9"/>
-            <!-- Screen content lines (simulated UI) -->
-            <line x1="126" y1="100" x2="288" y2="100" stroke="rgba(94,235,255,0.14)" stroke-width="0.6"/>
-            <line x1="126" y1="110" x2="260" y2="110" stroke="rgba(94,235,255,0.10)" stroke-width="0.6"/>
-            <line x1="126" y1="120" x2="274" y2="120" stroke="rgba(94,235,255,0.10)" stroke-width="0.6"/>
-            <line x1="126" y1="130" x2="248" y2="130" stroke="rgba(94,235,255,0.08)" stroke-width="0.6"/>
-            <line x1="126" y1="145" x2="288" y2="145" stroke="rgba(94,235,255,0.07)" stroke-width="0.6"/>
-
-            <!-- ── Product shelves (inside glass, below screen) ── -->
-            <line x1="114" y1="210" x2="326" y2="210"
-                  stroke="rgba(139,113,255,0.22)" stroke-width="0.9"/>
-            <line x1="114" y1="278" x2="326" y2="278"
-                  stroke="rgba(139,113,255,0.22)" stroke-width="0.9"/>
-
-            <!-- ── Door handle ── -->
-            <line x1="322" y1="192" x2="322" y2="234"
-                  stroke="rgba(139,113,255,0.45)" stroke-width="2.2"
-                  stroke-linecap="round"/>
-
-            <!-- ── Payment terminal (below glass door) ── -->
-            <rect x="168" y="350" width="104" height="30" rx="4"
-                  fill="rgba(8,5,18,0.35)"
-                  stroke="rgba(139,113,255,0.28)" stroke-width="1.0"/>
-            <line x1="180" y1="361" x2="258" y2="361"
-                  stroke="rgba(139,113,255,0.18)" stroke-width="0.7"/>
-            <line x1="180" y1="370" x2="258" y2="370"
-                  stroke="rgba(139,113,255,0.12)" stroke-width="0.7"/>
-
-            <!-- ── Right-face depth lines (shelf levels projected) ── -->
-            <!-- At height of screen bottom (front y=157): -->
-            <line x1="340" y1="157" x2="420" y2="109"
-                  stroke="rgba(139,113,255,0.16)" stroke-width="0.8"/>
-            <!-- At shelf 1 (front y=210): -->
-            <line x1="340" y1="210" x2="420" y2="162"
-                  stroke="rgba(139,113,255,0.16)" stroke-width="0.8"/>
-            <!-- At shelf 2 (front y=278): -->
-            <line x1="340" y1="278" x2="420" y2="230"
-                  stroke="rgba(139,113,255,0.16)" stroke-width="0.8"/>
-
-            <!-- ── 4G antenna stub on top face ── -->
-            <line x1="252" y1="22" x2="252" y2="7"
-                  stroke="rgba(94,235,255,0.42)" stroke-width="1.6" stroke-linecap="round"/>
-            <line x1="260" y1="22" x2="260" y2="13"
-                  stroke="rgba(94,235,255,0.28)" stroke-width="1.2" stroke-linecap="round"/>
-            <circle cx="252" cy="6" r="2.2" fill="rgba(94,235,255,0.55)"/>
-
-          </svg>
-
-          <!-- ════════════════════════
-               HOTSPOTS (HTML overlay)
-               Positioned as % of .hw-viz container.
-               All label cards hidden on mobile;
-               .hw-hotspot-list shown instead.
-          ════════════════════════ -->
-
-          <!-- ① 4G Connectivity (top face, antenna) -->
-          <div class="hotspot hs--b" style="left:46.4%;top:4.8%;--hs-delay:0s" aria-label="4G Connectivity">
-            <div class="hotspot__dot"><span class="hotspot__ring" aria-hidden="true"></span></div>
-            <div class="hotspot__card" role="tooltip">
-              <span class="hotspot__label">4G Connectivity</span>
-              <span class="hotspot__spec">Always-on data sync. Dual-SIM supported.</span>
-            </div>
+        <div class="ip-band reveal">
+          <div>
+            <p class="ip-band__num"><span data-count="150">0</span>+</p>
+            <p class="ip-band__num-label">Patents &amp; Software Copyrights</p>
           </div>
-
-          <!-- ② 21.5" Touchscreen (right edge of screen area) -->
-          <div class="hotspot hs--l" style="left:59.8%;top:26.1%;--hs-delay:0.42s" aria-label="21.5-inch Touchscreen">
-            <div class="hotspot__dot"><span class="hotspot__ring" aria-hidden="true"></span></div>
-            <div class="hotspot__card" role="tooltip">
-              <span class="hotspot__label">21.5″ HD Touchscreen</span>
-              <span class="hotspot__spec">Advertising &amp; promotions (Halo Max model)</span>
-            </div>
-          </div>
-
-          <!-- ③ Tempered Glass door (center-left of glass area) -->
-          <div class="hotspot hs--r" style="left:26.4%;top:48.9%;--hs-delay:0.84s" aria-label="Tempered Glass">
-            <div class="hotspot__dot"><span class="hotspot__ring" aria-hidden="true"></span></div>
-            <div class="hotspot__card" role="tooltip">
-              <span class="hotspot__label">Tempered Glass</span>
-              <span class="hotspot__spec">Anti-fog coating. Full-perimeter LED illumination.</span>
-            </div>
-          </div>
-
-          <!-- ④ Cooling system (lower-left, interior hint) -->
-          <div class="hotspot hs--r" style="left:22.9%;top:64.1%;--hs-delay:1.26s" aria-label="Cooling System">
-            <div class="hotspot__dot"><span class="hotspot__ring" aria-hidden="true"></span></div>
-            <div class="hotspot__card" role="tooltip">
-              <span class="hotspot__label">32–68 °F Cooling</span>
-              <span class="hotspot__spec">Wind-cooled precision climate. ±0.5 °C stability.</span>
-            </div>
-          </div>
-
-          <!-- ⑤ Payment terminal (lower front center) -->
-          <div class="hotspot hs--r" style="left:39.3%;top:79.3%;--hs-delay:1.68s" aria-label="Payment Terminal">
-            <div class="hotspot__dot"><span class="hotspot__ring" aria-hidden="true"></span></div>
-            <div class="hotspot__card" role="tooltip">
-              <span class="hotspot__label">Universal Payment</span>
-              <span class="hotspot__spec">Visa · Mastercard · Apple Pay · Google Pay · NFC</span>
-            </div>
-          </div>
-
-          <!-- ⑥ Base / weight (right side of base) -->
-          <div class="hotspot hs--l" style="left:63.4%;top:90.2%;--hs-delay:2.1s" aria-label="Base Structure">
-            <div class="hotspot__dot"><span class="hotspot__ring" aria-hidden="true"></span></div>
-            <div class="hotspot__card" role="tooltip">
-              <span class="hotspot__label">220–364 lbs</span>
-              <span class="hotspot__spec">Powder-coated steel frame. Commercial grade.</span>
-            </div>
-          </div>
-
-        </div><!-- /hw-viz -->
-
-        <!-- Mobile fallback: vertical spec list (hotspot cards are hidden on mobile) -->
-        <div class="hw-hotspot-list" aria-label="Cabinet specifications">
-          <div class="hw-hs-item">
-            <span class="hw-hs-item__name">4G Connectivity</span>
-            <span class="hw-hs-item__spec">Always-on data sync. Dual-SIM supported.</span>
-          </div>
-          <div class="hw-hs-item">
-            <span class="hw-hs-item__name">21.5″ Touchscreen</span>
-            <span class="hw-hs-item__spec">Advertising &amp; promotions (Halo Max model)</span>
-          </div>
-          <div class="hw-hs-item">
-            <span class="hw-hs-item__name">Tempered Glass</span>
-            <span class="hw-hs-item__spec">Anti-fog coating. Full-perimeter LED illumination.</span>
-          </div>
-          <div class="hw-hs-item">
-            <span class="hw-hs-item__name">32–68 °F Cooling</span>
-            <span class="hw-hs-item__spec">Wind-cooled precision climate. ±0.5 °C stability.</span>
-          </div>
-          <div class="hw-hs-item">
-            <span class="hw-hs-item__name">Universal Payment</span>
-            <span class="hw-hs-item__spec">Visa · Mastercard · Apple Pay · Google Pay · NFC</span>
-          </div>
-          <div class="hw-hs-item">
-            <span class="hw-hs-item__name">220–364 lbs</span>
-            <span class="hw-hs-item__spec">Powder-coated steel frame. Commercial grade.</span>
-          </div>
+          <ul class="ip-band__points">
+            <li>AI recognition algorithms, hardware systems, and cloud architecture.</li>
+            <li>Proprietary retail OS, analytics engine, and device firmware.</li>
+            <li>No licensed cores. No third-party dependencies on critical systems.</li>
+            <li>Registered with China National Intellectual Property Administration and related bodies.</li>
+          </ul>
         </div>
-
-        <!-- Bottom "Two models" copy -->
-        <div class="hw-models" data-reveal>
-          <p class="hw-models__headline">Two models. One platform.</p>
-          <p class="hw-models__body">
-            <strong>Halo Mini (508 L)</strong> and <strong>Halo Max (608 L)</strong> share the same
-            software, cloud backend, and service network.
-            <a href="ai-smart-cabinet.html#comparison">Compare Models →</a>
-          </p>
-        </div>
-
-      </div><!-- /section-wrap -->
+      </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         S6 — SECURITY & COMPLIANCE
-         Enterprise-Grade. Privacy-First.
-    ─────────────────────────────────────── -->
-    <section class="sec-section" id="s6-security" aria-labelledby="s6-headline">
-      <div class="section-wrap">
-
-        <!-- Section header -->
-        <div class="sec-section__header" data-reveal>
-          <span class="section-eyebrow">Security &amp; Compliance</span>
-          <h2 class="t-h2" id="s6-headline">Enterprise-Grade. Privacy-First.</h2>
-          <p class="sec-section__sub">Built for the compliance requirements of large-scale retail deployments.</p>
+    <!-- ══ SECURITY ══════════════════════════════════════════ -->
+    <section class="section section--flush-top" id="security">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Security &amp; Compliance</span>
+          <h2 class="h2">Enterprise-Grade. <span class="text-grad">Privacy-First.</span></h2>
+          <p class="lead">Built for the compliance requirements of large-scale retail deployments.</p>
         </div>
 
-        <!-- 4 Security cards -->
-        <div class="sec-cards" data-reveal-group="sec-cards" data-reveal-stagger="120">
-
-          <!-- Card 1: Payment Security -->
-          <div class="sec-card" data-reveal>
-            <div class="sec-card__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <polyline points="9 12 11 14 15 10"/>
-              </svg>
+        <div class="grid grid--2" data-stagger>
+          <article class="card sec-card">
+            <div class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="2"/><line x1="2.5" y1="10.5" x2="21.5" y2="10.5"/></svg>
             </div>
-            <div class="sec-card__title">Payment Security</div>
-            <p class="sec-card__desc">PCI DSS compliant. Visa, Mastercard, Apple Pay, Google Pay, and NFC all natively supported.</p>
-          </div>
-
-          <!-- Card 2: Data Privacy -->
-          <div class="sec-card" data-reveal>
-            <div class="sec-card__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                <line x1="1" y1="1" x2="23" y2="23"/>
-              </svg>
+            <h3 class="h3">Payment Security</h3>
+            <p>PCI DSS compliant. Visa, Mastercard, Apple Pay, Google Pay, and NFC all natively supported.</p>
+          </article>
+          <article class="card sec-card">
+            <div class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 20 6v6c0 5-3.5 8.5-8 9.5-4.5-1-8-4.5-8-9.5V6l8-3.5Z"/><polyline points="9 12 11.2 14.2 15.5 9.8"/></svg>
             </div>
-            <div class="sec-card__title">Data Privacy</div>
-            <p class="sec-card__desc">No biometric collection. Anonymous transactions. Full operator data ownership and portability.</p>
-          </div>
-
-          <!-- Card 3: Cloud Infrastructure -->
-          <div class="sec-card" data-reveal>
-            <div class="sec-card__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="2" width="20" height="8" rx="2"/>
-                <rect x="2" y="14" width="20" height="8" rx="2"/>
-                <line x1="6" y1="6"  x2="6.01"  y2="6"/>
-                <line x1="6" y1="18" x2="6.01" y2="18"/>
-              </svg>
+            <h3 class="h3">Data Privacy</h3>
+            <p>No biometric collection. Anonymous transactions. Full operator data ownership and portability.</p>
+          </article>
+          <article class="card sec-card">
+            <div class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 0 0 .9-8.9A6.5 6.5 0 0 0 5.7 8.5 5 5 0 0 0 6.5 19h11Z"/></svg>
             </div>
-            <div class="sec-card__title">Cloud Infrastructure</div>
-            <p class="sec-card__desc">AWS hosted. Enterprise SLA with 99.9% uptime. Private on-premise deployment available on request.</p>
-          </div>
-
-          <!-- Card 4: OTA Updates -->
-          <div class="sec-card" data-reveal>
-            <div class="sec-card__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="16 16 12 12 8 16"/>
-                <line x1="12" y1="12" x2="12" y2="21"/>
-                <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
-              </svg>
+            <h3 class="h3">Cloud Infrastructure</h3>
+            <p>AWS hosted. Enterprise SLA with 99.9% uptime. Private on-premise deployment available on request.</p>
+          </article>
+          <article class="card sec-card">
+            <div class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.3"/><polyline points="21 3 21 9 15 9"/></svg>
             </div>
-            <div class="sec-card__title">OTA Updates</div>
-            <p class="sec-card__desc">Remote firmware and software updates. Zero downtime. Centralized fleet management across all locations.</p>
-          </div>
-
-        </div><!-- /sec-cards -->
-      </div><!-- /section-wrap -->
+            <h3 class="h3">OTA Updates</h3>
+            <p>Remote firmware and software updates. Zero downtime. Centralized fleet management across all locations.</p>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         S7 — FINAL CTA
-         "See the Technology in Action."
-         Particle network backdrop
-    ─────────────────────────────────────── -->
-    <section class="final-cta" id="final-cta" aria-labelledby="final-cta-headline">
-
-      <canvas class="final-cta__canvas" id="final-cta-canvas" aria-hidden="true"></canvas>
-
-      <div class="final-cta__inner">
-
-        <span class="final-cta__eyebrow">Get Started</span>
-
-        <h2 class="final-cta__headline" id="final-cta-headline" data-reveal>
-          See the Technology<br><span class="final-cta__action-word">in Action.</span>
-        </h2>
-
-        <p class="final-cta__sub" data-reveal>
-          Schedule a technical walkthrough with our engineering team.
-          Or download the full hardware specification sheet.
-        </p>
-
-        <div class="final-cta__actions" data-reveal>
-          <a href="get-a-demo.html" class="final-cta__btn final-cta__btn--primary">
-            Schedule a Demo
-          </a>
-          <a href="#" class="final-cta__btn final-cta__btn--secondary">
-            Download Spec Sheet
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7 10 12 15 17 10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-          </a>
+    <!-- ══ FINAL CTA ═════════════════════════════════════════ -->
+    <section class="cta-band" id="get-started">
+      <div class="container cta-band__inner">
+        <div class="reveal">
+          <span class="eyebrow" style="margin-bottom: 22px;">Get Started</span>
+          <h2 class="display">See the Technology<br /><span class="text-grad">in Action.</span></h2>
+          <p class="lead">Schedule a technical walkthrough with our engineering team. Or download the full hardware specification sheet.</p>
+          <div class="cta-band__actions">
+            <a class="btn btn--primary" href="get-a-demo.html">Schedule a Demo</a>
+            <a class="btn btn--ghost" href="get-a-demo.html">Download Spec Sheet</a>
+          </div>
         </div>
-
       </div>
     </section>
 
   </main>
 
-
-  <!-- ═══════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════ -->
   <footer class="footer" role="contentinfo">
-    <div class="footer__main" id="footer-main">
-
-      <!-- Column 1 — Brand -->
-      <div class="footer__logo-col">
+    <div class="footer__main">
+      <div class="footer__brand">
         <a href="index.html" class="footer__logo" aria-label="SenseUni home">
-          <img src="assets/images/logo.webp" alt="SenseUni" style="width:160px;height:auto;display:block;" />
+          <img src="assets/images/logo.webp" alt="SenseUni" width="160" height="34" />
         </a>
         <p class="footer__tagline">Building Smarter Retail Networks.</p>
-        <p class="footer__position-line">AI-powered retail infrastructure for global markets.</p>
+        <p class="footer__desc">AI-powered retail infrastructure for global markets.</p>
       </div>
-
-      <!-- Column 2 — Product -->
-      <div>
-        <p class="footer__col-title">Product</p>
-        <ul class="footer__col-links" role="list">
-          <li><a href="ai-smart-cabinet.html"      class="footer__col-link">AI Smart Cabinet</a></li>
-          <li><a href="solutions.html#showcase"    class="footer__col-link">Smart Showcase</a></li>
-          <li><a href="solutions.html#advertising" class="footer__col-link">Smart Advertising</a></li>
-          <li><a href="technology.html"            class="footer__col-link">AIoT Platform</a></li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Product</h3>
+        <ul>
+          <li><a href="ai-smart-cabinet.html">AI Smart Cabinet</a></li>
+          <li><a href="solutions.html#showcase">Smart Showcase</a></li>
+          <li><a href="solutions.html#advertising">Smart Advertising</a></li>
+          <li><a href="technology.html">AIoT Platform</a></li>
         </ul>
       </div>
-
-      <!-- Column 3 — Company -->
-      <div>
-        <p class="footer__col-title">Company</p>
-        <ul class="footer__col-links" role="list">
-          <li><a href="company.html"          class="footer__col-link">About SenseUni</a></li>
-          <li><a href="case-studies.html"     class="footer__col-link">Case Studies</a></li>
-          <li><a href="technology.html"       class="footer__col-link">Technology</a></li>
-          <li><a href="company.html#partners" class="footer__col-link">Partners</a></li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Company</h3>
+        <ul>
+          <li><a href="company.html">About SenseUni</a></li>
+          <li><a href="case-studies.html">Case Studies</a></li>
+          <li><a href="technology.html">Technology</a></li>
+          <li><a href="get-a-demo.html">Get a Demo</a></li>
         </ul>
       </div>
-
-      <!-- Column 4 — Global -->
-      <div>
-        <p class="footer__col-title">Global Presence</p>
-        <ul class="footer__col-links" role="list">
-          <li><span class="footer__col-link">North America</span></li>
-          <li><span class="footer__col-link">Europe</span></li>
-          <li><span class="footer__col-link">Middle East</span></li>
-          <li><span class="footer__col-link">Asia Pacific</span></li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Global Presence</h3>
+        <ul>
+          <li><span>North America</span></li>
+          <li><span>Europe</span></li>
+          <li><span>Middle East</span></li>
+          <li><span>Asia Pacific</span></li>
         </ul>
       </div>
-
-      <!-- Column 5 — Contact -->
-      <div>
-        <p class="footer__col-title">Contact</p>
-        <ul class="footer__col-links" role="list">
-          <li>
-            <div class="footer__contact-item">
-              <span class="footer__contact-label">General</span>
-              <a href="mailto:hello@senseuni.ai" class="footer__col-link">hello@senseuni.ai</a>
-            </div>
-          </li>
-          <li>
-            <div class="footer__contact-item">
-              <span class="footer__contact-label">Sales</span>
-              <a href="mailto:sales@senseuni.ai" class="footer__col-link">sales@senseuni.ai</a>
-            </div>
-          </li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Contact</h3>
+        <ul>
+          <li><a href="mailto:hello@senseuni.ai">hello@senseuni.ai</a></li>
+          <li><a href="mailto:sales@senseuni.ai">sales@senseuni.ai</a></li>
         </ul>
       </div>
-
     </div>
-
-    <!-- Bottom bar -->
     <div class="footer__bottom">
-
-      <p class="footer__copy">© 2026 SenseUni. All rights reserved.</p>
-
-      <ul class="footer__social" role="list" aria-label="Social media links">
-        <li>
-          <a href="https://linkedin.com/company/senseuni" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://tiktok.com/@senseuni" class="footer__social-link" aria-label="TikTok" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.79a8.18 8.18 0 0 0 4.78 1.52V6.85a4.85 4.85 0 0 1-1-.16z"/>
-            </svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://youtube.com/@senseuni" class="footer__social-link" aria-label="YouTube" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-            </svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://instagram.com/senseuni" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-            </svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://x.com/senseuni" class="footer__social-link" aria-label="X (Twitter)" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-        </li>
-      </ul>
-
-      <ul class="footer__legal" role="list">
-        <li><a href="privacy-policy.html" class="footer__legal-link">Privacy Policy</a></li>
-        <li><a href="terms-of-service.html"   class="footer__legal-link">Terms of Service</a></li>
-      </ul>
-
+      <div class="footer__bottom-inner">
+        <p class="footer__copyright">© <span id="footer-year">2026</span> SenseUni. All rights reserved.</p>
+        <div class="footer__legal">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+        </div>
+      </div>
     </div>
-
   </footer>
 
-
-  <!-- Back-to-top -->
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <polyline points="18 15 12 9 6 15"/>
-    </svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
   </button>
 
-
-  <!-- ═══════════════════════════════════════
-       JAVASCRIPT
-  ═══════════════════════════════════════ -->
-  <script>
-    (() => {
-
-      /* ════════════════════════════════════
-         NAV — SCROLL HIDE/SHOW + HAMBURGER
-      ════════════════════════════════════ */
-      const nav       = document.getElementById('nav');
-      const hamburger = document.getElementById('nav-hamburger');
-      const drawer    = document.getElementById('nav-drawer');
-      const backToTop = document.getElementById('back-to-top');
-
-      let lastScrollY = 0, ticking = false;
-      const HIDE_THRESHOLD = 120, DELTA = 5;
-
-      function onScroll() {
-        const y = window.scrollY;
-        if (y < HIDE_THRESHOLD) {
-          nav.classList.remove('is-hidden');
-          nav.classList.toggle('is-scrolled', y > 12);
-        } else if (y > lastScrollY + DELTA) {
-          nav.classList.add('is-hidden');
-          nav.classList.add('is-scrolled');
-        } else if (y < lastScrollY - DELTA) {
-          nav.classList.remove('is-hidden');
-        }
-        if (backToTop) backToTop.classList.toggle('is-visible', y > 400);
-        lastScrollY = y;
-        ticking = false;
-      }
-
-      window.addEventListener('scroll', () => {
-        if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
-      }, { passive: true });
-
-      /* Peek-reveal on cursor near top */
-      document.addEventListener('mousemove', (e) => {
-        if (e.clientY < 80 && window.scrollY >= HIDE_THRESHOLD) nav.classList.remove('is-hidden');
-      });
-
-      /* Remove animation fill once entrance completes */
-      nav.addEventListener('animationend', () => { nav.style.animation = 'none'; }, { once: true });
-      onScroll();
-
-      /* Hamburger */
-      const toggleDrawer = (open) => {
-        nav.classList.toggle('is-open', open);
-        drawer.classList.toggle('is-open', open);
-        hamburger.setAttribute('aria-expanded', String(open));
-        drawer.setAttribute('aria-hidden',   String(!open));
-        document.body.style.overflow = open ? 'hidden' : '';
-      };
-
-      hamburger.addEventListener('click', () => toggleDrawer(!drawer.classList.contains('is-open')));
-
-      document.addEventListener('click', (e) => {
-        if (drawer.classList.contains('is-open') &&
-            !nav.contains(e.target) &&
-            !drawer.contains(e.target)) toggleDrawer(false);
-      });
-
-      window.addEventListener('resize', () => {
-        if (window.innerWidth > 900) toggleDrawer(false);
-      });
-
-      drawer.querySelectorAll('a').forEach(l => l.addEventListener('click', () => toggleDrawer(false)));
-
-      if (backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-      /* ════════════════════════════════════
-         FOOTER COLUMN ENTRANCE
-      ════════════════════════════════════ */
-      const footerCols = document.querySelectorAll('#footer-main > *');
-      if ('IntersectionObserver' in window) {
-        const footerObs = new IntersectionObserver((entries) => {
-          entries.forEach(e => {
-            if (e.isIntersecting) { e.target.classList.add('is-visible'); footerObs.unobserve(e.target); }
-          });
-        }, { threshold: 0.15 });
-        footerCols.forEach(c => footerObs.observe(c));
-      } else {
-        footerCols.forEach(c => c.classList.add('is-visible'));
-      }
-
-      /* ════════════════════════════════════
-         HERO PARTICLE NETWORK — CANVAS
-         50 nodes, connect when < 150px apart
-         Respects prefers-reduced-motion
-      ════════════════════════════════════ */
-      (function initHeroParticles() {
-        const canvas = document.getElementById('hero-canvas');
-        if (!canvas) return;
-
-        const ctx     = canvas.getContext('2d');
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const COUNT   = 55;
-        const CONNECT = 150;
-
-        let particles = [], rafId = null;
-
-        function resize() {
-          const hero = canvas.parentElement;
-          canvas.width  = hero.offsetWidth;
-          canvas.height = hero.offsetHeight;
-        }
-
-        function rand(min, max) { return min + Math.random() * (max - min); }
-
-        function spawn() {
-          particles = [];
-          for (let i = 0; i < COUNT; i++) {
-            particles.push({
-              x:  rand(0, canvas.width),
-              y:  rand(0, canvas.height),
-              r:  rand(1.2, 2.4),
-              vx: reduced ? 0 : rand(-0.28, 0.28),
-              vy: reduced ? 0 : rand(-0.28, 0.28),
-            });
-          }
-        }
-
-        function draw() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          /* Connection lines */
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const dx   = particles[i].x - particles[j].x;
-              const dy   = particles[i].y - particles[j].y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < CONNECT) {
-                const alpha = (1 - dist / CONNECT) * 0.50;
-                ctx.beginPath();
-                ctx.strokeStyle = `rgba(116, 53, 253, ${alpha.toFixed(3)})`;
-                ctx.lineWidth   = 0.5;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-              }
-            }
-          }
-
-          /* Dots */
-          for (const p of particles) {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(139, 113, 255, 0.38)';
-            ctx.fill();
-          }
-        }
-
-        function update() {
-          for (const p of particles) {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < p.r || p.x > canvas.width  - p.r) { p.vx *= -1; p.x = Math.max(p.r, Math.min(canvas.width  - p.r, p.x)); }
-            if (p.y < p.r || p.y > canvas.height - p.r)  { p.vy *= -1; p.y = Math.max(p.r, Math.min(canvas.height - p.r, p.y)); }
-          }
-        }
-
-        function loop() { update(); draw(); rafId = requestAnimationFrame(loop); }
-
-        resize();
-        spawn();
-        if (reduced) { draw(); } else { loop(); }
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-            resize(); spawn();
-            if (reduced) { draw(); } else { loop(); }
-          }, 200);
-        }, { passive: true });
-      }());
-
-      /* ════════════════════════════════════
-         FINAL CTA PARTICLE NETWORK — CANVAS
-         Lighter-weight version of the hero canvas
-      ════════════════════════════════════ */
-      (function initCtaParticles() {
-        const canvas = document.getElementById('final-cta-canvas');
-        if (!canvas) return;
-
-        const ctx     = canvas.getContext('2d');
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const COUNT   = 36;
-        const CONNECT = 100;
-
-        let particles = [], rafId = null;
-
-        function resize() {
-          const section = canvas.parentElement;
-          canvas.width  = section.offsetWidth;
-          canvas.height = section.offsetHeight;
-        }
-
-        function rand(min, max) { return min + Math.random() * (max - min); }
-
-        function spawn() {
-          particles = [];
-          for (let i = 0; i < COUNT; i++) {
-            particles.push({
-              x: rand(0, canvas.width),
-              y: rand(0, canvas.height),
-              r: 1.5,
-              vx: reduced ? 0 : rand(-0.18, 0.18),
-              vy: reduced ? 0 : rand(-0.18, 0.18),
-            });
-          }
-        }
-
-        function draw() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const dx   = particles[i].x - particles[j].x;
-              const dy   = particles[i].y - particles[j].y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < CONNECT) {
-                const alpha = (1 - dist / CONNECT) * 0.32;
-                ctx.beginPath();
-                ctx.strokeStyle = `rgba(116, 53, 253, ${alpha.toFixed(3)})`;
-                ctx.lineWidth   = 0.5;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-              }
-            }
-          }
-          for (const p of particles) {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(116, 53, 253, 0.18)';
-            ctx.fill();
-          }
-        }
-
-        function update() {
-          for (const p of particles) {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < p.r || p.x > canvas.width  - p.r) { p.vx *= -1; p.x = Math.max(p.r, Math.min(canvas.width  - p.r, p.x)); }
-            if (p.y < p.r || p.y > canvas.height - p.r)  { p.vy *= -1; p.y = Math.max(p.r, Math.min(canvas.height - p.r, p.y)); }
-          }
-        }
-
-        function loop() { update(); draw(); rafId = requestAnimationFrame(loop); }
-
-        resize();
-        spawn();
-        if (reduced) { draw(); } else { loop(); }
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-            resize(); spawn();
-            if (reduced) { draw(); } else { loop(); }
-          }, 200);
-        }, { passive: true });
-      }());
-
-      /* ════════════════════════════════════
-         COUNT-UP ANIMATION
-         Triggered by IntersectionObserver
-         on #data-anchors (threshold 0.3)
-         Easing: ease-out cubic
-         Formats: integer, decimal, or integer+suffix
-         NOTE: animates all [data-target] on the page.
-         Future sections with their own count-up
-         (e.g. S3 "150+") should use a separate observer.
-      ════════════════════════════════════ */
-      (function initCountUp() {
-        const numbers = document.querySelectorAll('[data-target]');
-        if (!numbers.length) return;
-
-        const DURATION = 1800; /* ms */
-
-        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-        function format(el, value) {
-          const suffix   = el.dataset.suffix   || '';
-          const decimals = parseInt(el.dataset.decimals || '0', 10);
-          const str      = decimals > 0 ? value.toFixed(decimals) : String(Math.round(value));
-          return str + suffix;
-        }
-
-        function animateOne(el) {
-          const target = parseFloat(el.dataset.target);
-          const t0     = performance.now();
-
-          function tick(now) {
-            const progress = Math.min((now - t0) / DURATION, 1);
-            const eased    = easeOutCubic(progress);
-            el.textContent = format(el, eased * target);
-            if (progress < 1) {
-              requestAnimationFrame(tick);
-            } else {
-              el.textContent = format(el, target); /* exact final value */
-            }
-          }
-          requestAnimationFrame(tick);
-        }
-
-        if ('IntersectionObserver' in window) {
-          const bar = document.getElementById('data-anchors');
-          if (!bar) return;
-
-          const obs = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                numbers.forEach(animateOne);
-                obs.disconnect();
-              }
-            });
-          }, { threshold: 0.3 });
-
-          obs.observe(bar);
-        } else {
-          numbers.forEach(el => { el.textContent = format(el, parseFloat(el.dataset.target)); });
-        }
-      }());
-
-      /* ════════════════════════════════════
-         SCROLL REVEAL — [data-reveal]
-         Single shared IntersectionObserver.
-         Adds .in-view class; CSS handles
-         the opacity + transform transition.
-      ════════════════════════════════════ */
-      (function initScrollReveal() {
-        if (!('IntersectionObserver' in window)) {
-          document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('in-view'));
-          return;
-        }
-
-        function revealEl(el, delay) {
-          setTimeout(function() { if (el) el.classList.add('in-view'); }, delay || 0);
-        }
-
-        /* ── Group observer: stagger direct [data-reveal] children ── */
-        /* Supports data-reveal-stagger="Nms" for custom interval        */
-        var groups = document.querySelectorAll('[data-reveal-group]');
-        if (groups.length) {
-          var groupObs = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(function(entry) {
-              if (!entry.isIntersecting) return;
-              var stagger = parseInt(entry.target.dataset.revealStagger || '200', 10);
-              var children = entry.target.querySelectorAll(':scope > [data-reveal]');
-              children.forEach(function(child, i) { revealEl(child, i * stagger); });
-              observer.unobserve(entry.target);
-            });
-          }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
-          groups.forEach(function(g) { groupObs.observe(g); });
-        }
-
-        /* ── Standalone [data-reveal] — not inside a group ── */
-        var els = document.querySelectorAll('[data-reveal]:not([data-reveal-group] [data-reveal])');
-        if (!els.length) return;
-
-        var obs = new IntersectionObserver(function(entries, observer) {
-          entries.forEach(function(entry) {
-            if (!entry.isIntersecting) return;
-            revealEl(entry.target, 0);
-            observer.unobserve(entry.target);
-          });
-        }, { threshold: 0.18, rootMargin: '0px 0px -48px 0px' });
-
-        els.forEach(function(el) { obs.observe(el); });
-      }());
-
-      /* ════════════════════════════════════
-         SECTION COUNT-UPS — [data-countup]
-         Independent of hero count-up.
-         Triggers when each element enters
-         the viewport at 50% threshold.
-      ════════════════════════════════════ */
-      (function initSectionCountUps() {
-        var countEls = document.querySelectorAll('[data-countup]');
-        if (!countEls.length) return;
-
-        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-        function animateCount(el) {
-          var target   = parseFloat(el.dataset.target   || '0');
-          var suffix   = el.dataset.suffix   || '';
-          var decimals = parseInt(el.dataset.decimals || '0', 10);
-          var duration = 1800;
-          var startTs  = null;
-
-          function step(ts) {
-            if (!startTs) startTs = ts;
-            var progress = Math.min((ts - startTs) / duration, 1);
-            var val = target * easeOutCubic(progress);
-            el.textContent = val.toFixed(decimals) + suffix;
-            if (progress < 1) requestAnimationFrame(step);
-          }
-          requestAnimationFrame(step);
-        }
-
-        if (!('IntersectionObserver' in window)) {
-          countEls.forEach(function(el) { animateCount(el); });
-          return;
-        }
-
-        var cObs = new IntersectionObserver(function(entries, observer) {
-          entries.forEach(function(entry) {
-            if (!entry.isIntersecting) return;
-            animateCount(entry.target);
-            observer.unobserve(entry.target);
-          });
-        }, { threshold: 0.5 });
-
-        countEls.forEach(function(el) { cObs.observe(el); });
-      }());
-
-      /* ── Cookie Banner ── */
-      (function() {
-        var banner = document.getElementById('cookie-banner');
-        var btn    = document.getElementById('cookie-accept');
-        if (!banner || !btn) return;
-        if (!localStorage.getItem('senseuni_cookie_accepted')) {
-          banner.style.display = 'flex';
-          requestAnimationFrame(function() {
-            requestAnimationFrame(function() { banner.classList.add('is-visible'); });
-          });
-        }
-        btn.addEventListener('click', function() {
-          banner.classList.remove('is-visible');
-          setTimeout(function() { banner.style.display = 'none'; }, 400);
-          localStorage.setItem('senseuni_cookie_accepted', 'true');
-        });
-      }());
-
-    })();
-  </script>
-
-  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Cookie notice">
-    <p>We use essential cookies to ensure our website functions properly. No tracking or advertising cookies are used.
-      <a href="privacy-policy.html#cookies">Learn more</a>
-    </p>
-    <button id="cookie-accept" class="cookie-accept-btn">Got It</button>
+  <div class="cookie-notice" id="cookie-notice" hidden>
+    <p>We use essential cookies to ensure our website functions properly. No tracking or advertising cookies are used. <a href="privacy-policy.html">Learn more</a></p>
+    <button class="btn btn--ghost btn--sm" data-cookie-accept>Got It</button>
   </div>
 
+  <script src="assets/js/main.js" defer></script>
 </body>
 </html>

@@ -1,4227 +1,738 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SenseUni AI Smart Cabinet — Deploy autonomous retail, manage every location from one platform, and scale your business with confidence." />
+  <meta name="description" content="SenseUni AI Smart Cabinet — deploy autonomous retail, manage every location from one platform, and scale your business with confidence. 99.6% AI recognition accuracy." />
   <title>AI Smart Cabinet — SenseUni</title>
 
   <link rel="icon" type="image/webp" href="assets/images/logomini.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/main.css" />
 
   <style>
-    /* ═══════════════════════════════════════
-       DESIGN TOKENS
-    ═══════════════════════════════════════ */
-    :root {
-      --color-bg:              #14101F;
-      --color-bg-footer:       #0F0C18;
-      --color-brand:           #2C2069;
-      --color-accent:          #7435FD;
-      --color-highlight:       #8B71FF;
-      --color-cyan:            #5EEBFF;
-
-      --color-nav-bg:          rgba(20, 16, 31, 0.55);
-      --color-nav-bg-scrolled: rgba(20, 16, 31, 0.72);
-      --color-nav-border:      rgba(255, 255, 255, 0.08);
-      --color-footer-border:   rgba(255, 255, 255, 0.06);
-
-      --color-border:          rgba(255, 255, 255, 0.10);
-      --color-border-glow:     rgba(116, 53, 253, 0.40);
-      --color-surface:         rgba(255, 255, 255, 0.04);
-
-      --color-text-primary:    #FFFFFF;
-      --color-text-secondary:  #C8C8D4;
-      --color-text-muted:      #7A7A8C;
-
-      --gradient-btn:  linear-gradient(135deg, var(--color-accent), var(--color-highlight));
-      --gradient-card: linear-gradient(135deg, rgba(44, 32, 105, 0.20) 0%, rgba(116, 53, 253, 0.06) 100%);
-
-      --font-heading: 'Sora', sans-serif;
-      --font-body:    'Inter', sans-serif;
-      --font-data:    'Space Grotesk', sans-serif;
-
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-
-      --nav-height: 80px;
-
-      --ease-out:        cubic-bezier(0.22, 1, 0.36, 1);
-      --transition-base: 0.3s;
-      --transition-slow: 0.5s;
-    }
-
-    /* ═══════════════════════════════════════
-       RESET & STICKY-FOOTER
-    ═══════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      scrollbar-color: var(--color-highlight) rgba(20, 16, 31, 0.4);
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-color: var(--color-bg);
-      color: var(--color-text-primary);
-      font-family: var(--font-body);
-      overflow-x: hidden;
-    }
-
-    a { text-decoration: none; }
-
-    /* ═══════════════════════════════════════
-       CUSTOM SCROLLBAR
-    ═══════════════════════════════════════ */
-    ::-webkit-scrollbar        { width: 6px; }
-    ::-webkit-scrollbar-track  { background: rgba(20, 16, 31, 0.4); }
-    ::-webkit-scrollbar-thumb  {
-      background: linear-gradient(to bottom, var(--color-accent), var(--color-highlight));
-      border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--color-highlight);
-      box-shadow: 0 0 8px rgba(139, 113, 255, 0.50);
-    }
-
-    /* ═══════════════════════════════════════
-       AMBIENT GLOW LAYERS (z-index 0)
-    ═══════════════════════════════════════ */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 90vh;
-      background: radial-gradient(
-        ellipse 160% 65% at 50% -8%,
-        rgba(116, 53, 253, 0.28) 0%,
-        rgba(116, 53, 253, 0.10) 42%,
-        rgba(116, 53, 253, 0.03) 68%,
-        transparent 80%
-      );
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -10%; left: -15%;
-      width: 70vw; height: 70vh;
-      background: radial-gradient(
-        ellipse at center,
-        rgba(139, 113, 255, 0.10) 0%,
-        rgba(116, 53, 253, 0.04) 50%,
-        transparent 75%
-      );
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Grain texture (z-index 2) */
-    .grain-overlay {
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 200px 200px;
-      opacity: 0.035;
-      mix-blend-mode: overlay;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    /* ═══════════════════════════════════════
-       KEYFRAMES
-    ═══════════════════════════════════════ */
-    @keyframes navSlideDown {
-      from { opacity: 0; transform: translateY(-8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes imageReveal {
-      from { opacity: 0; transform: scale(0.97) translateY(10px); }
-      to   { opacity: 1; transform: scale(1)    translateY(0); }
-    }
-
-    /* Grander entrance for the centred product image — slower, rises more */
-    @keyframes productReveal {
-      from { opacity: 0; transform: scale(0.97) translateY(40px); }
-      to   { opacity: 1; transform: scale(1)    translateY(0); }
-    }
-
-    /* ═══════════════════════════════════════
-       PREFERS REDUCED MOTION
-    ═══════════════════════════════════════ */
-    @media (prefers-reduced-motion: reduce) {
-      .nav,
-      .cabinet-hero__eyebrow,
-      .cabinet-hero__headline,
-      .cabinet-hero__sub,
-      .product-showcase,
-      .footer__main > * {
-        animation: none !important;
-        opacity: 1 !important;
-        transform: none !important;
-      }
-
-      .back-to-top              { transition: opacity 0.2s ease !important; }
-      .back-to-top,
-      .back-to-top.is-visible,
-      .back-to-top:hover        { transform: none !important; }
-    }
-
-    /* ═══════════════════════════════════════
-       NAVIGATION (z-index 1000)
-    ═══════════════════════════════════════ */
-    .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      height: var(--nav-height);
-      background: var(--color-nav-bg);
-      backdrop-filter: blur(28px) saturate(160%);
-      -webkit-backdrop-filter: blur(28px) saturate(160%);
-      border-bottom: 1px solid var(--color-nav-border);
-      box-shadow: 0 1px 0 0 rgba(116, 53, 253, 0.18), 0 4px 32px rgba(0, 0, 0, 0.30);
-      transition: transform      0.4s var(--ease-out),
-                  background     0.4s var(--ease-out),
-                  border-color   0.4s var(--ease-out),
-                  box-shadow     0.4s var(--ease-out);
-      animation: navSlideDown 0.7s var(--ease-out) both;
-    }
-
-    .nav.is-scrolled {
-      background: var(--color-nav-bg-scrolled);
-      border-bottom-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 1px 0 0 rgba(116, 53, 253, 0.22), 0 8px 48px rgba(0, 0, 0, 0.50);
-    }
-
-    .nav.is-hidden { transform: translateY(-100%); pointer-events: none; }
-
-    .nav__inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 40px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-
-    .nav__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-
-    .nav__links {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      list-style: none;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-    }
-
-    .nav__link {
-      position: relative;
-      display: inline-block;
-      padding: 6px 13px;
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      border-radius: var(--radius-sm);
-      transition: color var(--transition-base) var(--ease-out),
-                  background var(--transition-base) var(--ease-out);
-      white-space: nowrap;
-    }
-
-    .nav__link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 13px; right: 13px;
-      height: 1.5px;
-      background: var(--gradient-btn);
-      border-radius: 2px;
-      transform: scaleX(0);
-      transform-origin: center;
-      transition: transform var(--transition-base) var(--ease-out);
-    }
-
-    .nav__link:hover                { color: var(--color-text-primary); background: rgba(255,255,255,0.05); }
-    .nav__link:hover::after         { transform: scaleX(1); }
-    .nav__link.is-active            { color: var(--color-text-primary); }
-    .nav__link.is-active::after     { transform: scaleX(1); }
-
-    .nav__cta { flex-shrink: 0; margin-left: auto; }
-
-    /* Buttons */
-    .btn--primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 22px;
-      border-radius: var(--radius-sm);
-      font-family: var(--font-heading);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      background: var(--gradient-btn);
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 2px 12px rgba(116, 53, 253, 0.28);
-      transition: transform var(--transition-base) var(--ease-out),
-                  box-shadow var(--transition-base) var(--ease-out);
-      position: relative;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .btn--primary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 55%);
-      opacity: 0;
-      transition: opacity var(--transition-base) var(--ease-out);
-    }
-
-    .btn--primary:hover         { transform: translateY(-2px); box-shadow: 0 0 20px rgba(116,53,253,0.55), 0 6px 24px rgba(116,53,253,0.32); }
-    .btn--primary:hover::before { opacity: 1; }
-    .btn--primary:active        { transform: translateY(0); }
-
-    .btn--secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 22px;
-      border-radius: var(--radius-sm);
-      font-family: var(--font-heading);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      background: transparent;
-      border: 1.5px solid var(--color-border);
-      cursor: pointer;
-      transition: color var(--transition-base) var(--ease-out),
-                  border-color var(--transition-base) var(--ease-out),
-                  box-shadow var(--transition-base) var(--ease-out),
-                  transform var(--transition-base) var(--ease-out);
-      white-space: nowrap;
-    }
-
-    .btn--secondary:hover {
-      border-color: var(--color-highlight);
-      color: var(--color-highlight);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 20px rgba(139, 113, 255, 0.18);
-    }
-
-    .btn--secondary:active { transform: translateY(0); }
-
-    .btn--lg { padding: 15px 32px; font-size: 15px; }
-
-    /* Hamburger */
-    .nav__hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-      width: 36px; height: 36px;
-      padding: 6px;
-      background: none; border: none; cursor: pointer;
-      margin-left: auto;
-      border-radius: var(--radius-sm);
-      transition: background var(--transition-base) var(--ease-out);
-    }
-
-    .nav__hamburger:hover { background: rgba(255,255,255,0.06); }
-
-    .nav__hamburger-line {
-      display: block;
-      width: 100%; height: 1.5px;
-      background: var(--color-text-secondary);
-      border-radius: 2px;
-      transform-origin: center;
-      transition: transform var(--transition-base) var(--ease-out),
-                  opacity var(--transition-base) var(--ease-out);
-    }
-
-    .nav.is-open .nav__hamburger-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .nav.is-open .nav__hamburger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .nav.is-open .nav__hamburger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-    /* Mobile drawer */
-    .nav__drawer {
-      display: none;
-      position: fixed;
-      top: var(--nav-height); left: 0; right: 0;
-      background: rgba(15, 12, 24, 0.97);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--color-nav-border);
-      padding: 16px 24px 24px;
-      transform: translateY(-8px);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform var(--transition-slow) var(--ease-out),
-                  opacity var(--transition-slow) var(--ease-out);
-      z-index: 999;
-    }
-
-    .nav__drawer.is-open { transform: translateY(0); opacity: 1; pointer-events: all; }
-    .nav__drawer-links   { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-
-    .nav__drawer-link {
-      display: block;
-      padding: 12px 8px;
-      font-family: var(--font-body);
-      font-size: 15px; font-weight: 500;
-      color: var(--color-text-secondary);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      transition: color var(--transition-base) var(--ease-out);
-    }
-
-    .nav__drawer-link:hover { color: var(--color-text-primary); }
-    .nav__drawer-cta        { margin-top: 20px; width: 100%; justify-content: center; }
-
-    @media (max-width: 900px) {
-      .nav__links     { display: none; }
-      .nav__cta       { display: none; }
-      .nav__hamburger { display: flex; }
-      .nav__drawer    { display: block; }
-    }
-
-    @media (max-width: 480px) { .nav__inner { padding: 0 20px; } }
-
-    /* ═══════════════════════════════════════
-       PAGE LAYOUT
-    ═══════════════════════════════════════ */
-    main { flex: 1 0 auto; position: relative; z-index: 3; }
-
-    .section-wrap {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 40px;
-    }
-
-    @media (max-width: 640px) { .section-wrap { padding: 0 20px; } }
-
-    /* ═══════════════════════════════════════
-       TYPE UTILITIES
-    ═══════════════════════════════════════ */
-    .t-display {
-      font-family: var(--font-heading);
-      font-size: clamp(36px, 5.5vw, 76px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.06;
-      color: var(--color-text-primary);
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, var(--color-text-primary) 45%, var(--color-highlight));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 1A — HERO (CENTRED) WITH PARTICLE CANVAS
-    ═══════════════════════════════════════ */
-    .cabinet-hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: flex-start;   /* content starts at top of the min-height zone */
-      padding-top: var(--nav-height);
-      overflow: hidden;
-    }
-
-    /* Particle canvas covers the FULL hero section, including behind the product */
-    #hero-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── Centred hero layout (text block) ── */
-    .cabinet-hero__inner {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 100%;
-      padding: 80px 0 120px;
-    }
-
-    .cabinet-hero__text {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    }
-
-    .cabinet-hero__eyebrow {
-      font-family: var(--font-data);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.20em;
-      text-transform: uppercase;
-      color: var(--color-highlight);
-      margin-bottom: 24px;
-      animation: fadeUp 0.7s var(--ease-out) 0.20s both;
-    }
-
-    .cabinet-hero__headline {
-      margin-bottom: 24px;
-      animation: fadeUp 0.8s var(--ease-out) 0.36s both;
-    }
-
-    .cabinet-hero__sub {
-      font-family: var(--font-body);
-      font-size: clamp(16px, 1.6vw, 19px);
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      max-width: 640px;
-      margin-bottom: 100px;
-      animation: fadeUp 0.8s var(--ease-out) 0.52s both;
-    }
-
-    .cabinet-hero__divider {
-      width: 120px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--color-highlight), transparent);
-      margin: 0 auto 80px;
-      opacity: 0.5;
-    }
-
-    /* ═══════════════════════════════════════
-       PRODUCT SHOWCASE MODULE
-       Sits inside .cabinet-hero__inner, below the text block
-    ═══════════════════════════════════════ */
-    .product-showcase {
+    /* ── CABINET · HERO ──────────────────────────────────────── */
+    .cab-hero { padding-bottom: 0; }
+    .cab-hero__grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 72px;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(40px, 6vw, 80px);
       align-items: center;
-      width: 100%;
-      max-width: 1100px;
-      margin: 0 auto 0;
-      animation: fadeUp 0.8s var(--ease-out) 0.90s both;
     }
-
-    /* ── Gallery ── */
-    .product-showcase__main-wrap {
-      position: relative;
+    .cab-hero__media { position: relative; }
+    .cab-hero__media .media-frame { aspect-ratio: 4 / 4.6; }
+    .cab-hero__media .media-frame img { object-position: 50% 60%; }
+    .cab-hero__media-glow {
+      position: absolute;
+      inset: 8% -10% -12%;
+      background: radial-gradient(ellipse 55% 55% at 50% 60%, rgba(116,53,253,0.35), transparent 70%);
+      filter: blur(50px);
+      pointer-events: none;
+    }
+    .cab-hero__badge {
+      position: absolute;
+      z-index: 2;
+      right: -14px; top: 8%;
+      padding: 14px 20px;
       border-radius: var(--radius-md);
-      overflow: hidden;
-      border: 1px solid rgba(139, 113, 255, 0.15);
-      box-shadow: 0 8px 60px rgba(116, 53, 253, 0.20),
-                  0 0 100px rgba(139, 113, 255, 0.08);
-      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(139,113,255,0.35);
+      background: rgba(22, 20, 30, 0.82);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 36px rgba(8,5,20,0.5);
+      text-align: center;
     }
-
-    .product-showcase__main-img {
-      width: 100%;
-      height: auto;
+    .cab-hero__badge strong {
       display: block;
-      transition: opacity 0.35s ease;
-    }
-
-    .product-showcase__thumbs {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .product-showcase__thumb {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      cursor: pointer;
-      opacity: 0.6;
-      transition: opacity 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-    }
-
-    .product-showcase__thumb:hover {
-      opacity: 0.9;
-      border-color: rgba(139, 113, 255, 0.3);
-      transform: scale(1.05);
-    }
-
-    .product-showcase__thumb.is-active {
-      opacity: 1;
-      border-color: var(--color-highlight);
-      box-shadow: 0 0 12px rgba(139, 113, 255, 0.3);
-    }
-
-    /* ── Info column ── */
-    .product-showcase__info {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-    }
-
-    .product-showcase__toggle {
-      display: inline-flex;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 40px;
-      padding: 4px;
-      margin-bottom: 24px;
-      align-self: flex-start;
-    }
-
-    .product-showcase__toggle-btn {
-      padding: 8px 20px;
-      border-radius: 36px;
-      border: none;
-      background: transparent;
-      color: var(--color-text-muted);
-      font-family: var(--font-heading);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .product-showcase__toggle-btn.is-active {
-      background: var(--gradient-btn);
-      color: var(--color-text-primary);
-      box-shadow: 0 2px 12px rgba(116, 53, 253, 0.28);
-    }
-
-    .product-showcase__name {
-      font-family: var(--font-heading);
-      font-size: clamp(28px, 3.5vw, 44px);
+      font-family: var(--font-data);
+      font-size: 1.5rem;
       font-weight: 700;
-      line-height: 1.1;
-      color: var(--color-text-primary);
+      background: var(--grad-text);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .cab-hero__badge span { font-size: 0.78rem; color: var(--text-3); }
+    @media (max-width: 880px) {
+      .cab-hero__grid { grid-template-columns: 1fr; }
+      .cab-hero__media { order: -1; max-width: 460px; margin-inline: auto; }
+      .cab-hero__badge { right: 0; }
+    }
+
+    /* Stat anchors */
+    .cab-anchors {
+      margin-top: clamp(64px, 8vw, 96px);
+      padding-block: clamp(36px, 5vw, 52px);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+    }
+    @media (max-width: 880px) { .cab-anchors { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ── CABINET · BENEFITS ──────────────────────────────────── */
+    .benefit-card .h3 { font-size: 1.25rem; }
+    .benefit-card__kicker {
+      font-family: var(--font-data);
+      font-size: 0.76rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--highlight);
       margin-bottom: 12px;
+      display: block;
     }
 
-    .product-showcase__capacity {
-      color: var(--color-highlight);
-      font-weight: 400;
+    /* ── CABINET · STEPS ─────────────────────────────────────── */
+    .step-card { text-align: center; padding: 40px 28px; }
+    .step-card__num {
+      width: 54px; height: 54px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-data);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--grad-cta);
+      box-shadow: 0 8px 26px rgba(116,53,253,0.45);
+    }
+    .steps__payments {
+      margin-top: clamp(36px, 5vw, 48px);
+      text-align: center;
+      font-family: var(--font-data);
+      font-size: 0.92rem;
+      letter-spacing: 0.14em;
+      color: var(--text-3);
     }
 
-    .product-showcase__tagline {
-      font-family: var(--font-body);
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--color-text-secondary);
-      max-width: 420px;
-      margin-bottom: 32px;
-    }
-
-    .product-showcase__specs {
+    /* ── CABINET · ROI ───────────────────────────────────────── */
+    .roi-panel {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 36px;
+      gap: 0;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-strong);
+      overflow: hidden;
+      background: var(--surface);
     }
-
-    .product-showcase__spec {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-sm);
-    }
-
-    .product-showcase__spec svg {
-      flex-shrink: 0;
-      color: var(--color-highlight);
-    }
-
-    .product-showcase__spec-val {
+    .roi-inputs { padding: clamp(30px, 4vw, 48px); display: flex; flex-direction: column; gap: 28px; }
+    .roi-input__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+    .roi-input__head label {
       font-family: var(--font-data);
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      line-height: 1.2;
-    }
-
-    .product-showcase__spec-lbl {
-      font-family: var(--font-body);
-      font-size: 12px;
-      color: var(--color-text-muted);
-      margin-top: 2px;
-    }
-
-    .product-showcase__price-block { margin-bottom: 36px; }
-
-    .product-showcase__price {
-      font-family: var(--font-data);
-      font-size: 32px;
-      font-weight: 700;
-      line-height: 1;
-      background: linear-gradient(135deg, var(--color-text-primary) 40%, var(--color-highlight));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .product-showcase__price-note {
-      font-family: var(--font-body);
-      font-size: 13px;
-      color: var(--color-text-muted);
-      margin-top: 6px;
-    }
-
-    .product-showcase__ctas {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    /* ── Hero + Showcase responsive ── */
-    @media (max-width: 768px) {
-      .cabinet-hero__inner { padding: 64px 0 72px; }
-      .product-showcase {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        margin-top: 40px;
-      }
-      .product-showcase__info {
-        text-align: center;
-        align-items: center;
-      }
-      .product-showcase__toggle  { align-self: center; }
-      .product-showcase__tagline { max-width: 100%; }
-      .product-showcase__ctas    { justify-content: center; }
-    }
-
-    @media (max-width: 480px) {
-      .cabinet-hero__inner { padding: 48px 0 56px; }
-      .product-showcase__specs { grid-template-columns: 1fr; }
-      .product-showcase__ctas  { flex-direction: column; align-items: stretch; }
-      .product-showcase__ctas .btn--primary,
-      .product-showcase__ctas .btn--secondary { justify-content: center; }
-      .product-showcase__thumb { width: 60px; height: 60px; }
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 1B — DATA ANCHORS
-    ═══════════════════════════════════════ */
-    .data-anchors {
-      position: relative;
-      z-index: 3;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .data-anchors__inner {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 40px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .data-anchors__stat {
-      padding: 44px 32px;
-      text-align: center;
-      border-right: 1px solid rgba(255, 255, 255, 0.06);
-      transition: background var(--transition-base) var(--ease-out);
-    }
-
-    .data-anchors__stat:last-child { border-right: none; }
-
-    .data-anchors__stat:hover {
-      background: rgba(116, 53, 253, 0.04);
-    }
-
-    .data-anchors__number {
-      font-family: var(--font-data);
-      font-size: clamp(32px, 3.5vw, 52px);
-      font-weight: 700;
-      line-height: 1;
-      color: var(--color-text-primary);
-      text-shadow: 0 0 32px rgba(116, 53, 253, 0.30);
-      margin-bottom: 10px;
-      /* Start hidden; JS count-up will reveal */
-      will-change: contents;
-    }
-
-    .data-anchors__label {
-      font-family: var(--font-data);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--color-text-muted);
-      line-height: 1.5;
+      color: var(--text-3);
     }
-
-    /* Data anchors responsive */
-    @media (max-width: 780px) {
-      .data-anchors__inner {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 0 24px;
-      }
-
-      .data-anchors__stat:nth-child(2) { border-right: none; }
-      .data-anchors__stat:nth-child(1),
-      .data-anchors__stat:nth-child(2) {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      }
-    }
-
-    @media (max-width: 480px) {
-      .data-anchors__inner { grid-template-columns: 1fr; padding: 0 20px; }
-      .data-anchors__stat  { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
-      .data-anchors__stat:last-child { border-bottom: none; }
-      .data-anchors__stat { padding: 32px 20px; }
-    }
-
-    /* ═══════════════════════════════════════
-       SHARED SECTION UTILITIES (S2–S5)
-    ═══════════════════════════════════════ */
-    .section-label {
-      display: block;
+    .roi-input__value {
       font-family: var(--font-data);
-      font-size: 13px;
+      font-size: 1.05rem;
       font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      text-align: center;
-      margin-bottom: 16px;
+      color: var(--text);
     }
-
-    .section-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-
-    .section-divider {
-      display: block;
-      height: 1px;
-      max-width: 1280px;
-      margin: 0 auto;
-      border: none;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), var(--color-accent), rgba(255, 255, 255, 0.08), transparent);
-    }
-
-    .gradient-text-cyan {
-      background: linear-gradient(135deg, var(--color-text-primary) 45%, var(--color-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(116, 53, 253, 0); }
-      50%      { box-shadow: 0 0 0 12px rgba(116, 53, 253, 0.15); }
-    }
-
-    @keyframes floatY {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(-4px); }
-    }
-
-    @keyframes orbDriftA {
-      0%, 100% { transform: translate(0, 0); }
-      25%      { transform: translate(28px, -22px); }
-      50%      { transform: translate(8px, 28px); }
-      75%      { transform: translate(-26px, 8px); }
-    }
-
-    @keyframes orbDriftB {
-      0%, 100% { transform: translate(0, 0); }
-      30%      { transform: translate(-26px, -16px); }
-      60%      { transform: translate(20px, 24px); }
-      85%      { transform: translate(14px, -28px); }
-    }
-
-    @property --angle {
-      syntax: '<angle>';
-      initial-value: 0deg;
-      inherits: false;
-    }
-
-    @keyframes rotateAngle {
-      to { --angle: 360deg; }
-    }
-
-    @keyframes vsPop {
-      from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-      to   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 2 — THE EXPERIENCE
-       3-step horizontal walkthrough
-    ═══════════════════════════════════════ */
-    .experience {
-      position: relative;
-      z-index: 3;
-      padding: 120px 60px 0;
-    }
-
-    .experience__label { color: var(--color-cyan); }
-
-    .experience__headline {
-      font-family: var(--font-heading);
-      font-size: 52px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .experience__go {
-      background: linear-gradient(135deg, var(--color-highlight), var(--color-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .experience__sub {
-      font-family: var(--font-body);
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      text-align: center;
-      max-width: 520px;
-      margin: 0 auto;
-    }
-
-    .experience__steps {
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      margin-top: 72px;
-      padding-bottom: 96px;
-    }
-
-    .experience__line {
-      position: absolute;
-      top: 24px;
-      left: 16%;
-      right: 16%;
-      height: 2px;
-      background: linear-gradient(90deg, var(--color-accent), var(--color-highlight), var(--color-accent));
-      opacity: 0.3;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.8s var(--ease-out);
-      z-index: 0;
-    }
-
-    .experience__line.in-view { transform: scaleX(1); }
-
-    .experience__step {
-      position: relative;
-      z-index: 1;
+    .roi-outputs {
+      padding: clamp(30px, 4vw, 48px);
+      background: linear-gradient(160deg, rgba(44,32,105,0.5), rgba(116,53,253,0.12));
+      border-left: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
-      min-width: 0;
-      padding: 0 28px;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
-    }
-
-    .experience__step.in-view { opacity: 1; transform: translateY(0); }
-
-    .experience__circle {
-      width: 48px; height: 48px;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      border-radius: 50%;
-      background: var(--color-brand);
-      border: 2px solid var(--color-accent);
-      font-family: var(--font-heading);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--color-highlight);
-      margin-bottom: 28px;
-      animation: pulseGlow 2.5s ease-out infinite;
+      gap: 30px;
     }
-
-    .experience__step:nth-of-type(1) .experience__circle { animation-delay: 0s;   }
-    .experience__step:nth-of-type(2) .experience__circle { animation-delay: 0.8s; }
-    .experience__step:nth-of-type(3) .experience__circle { animation-delay: 1.6s; }
-
-    .experience__image {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      border-radius: 16px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      margin-bottom: 24px;
-      transition: transform 0.3s ease, border-color 0.3s ease;
+    .roi-output__label {
+      font-family: var(--font-data);
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-2);
     }
-
-    .experience__image::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      background: linear-gradient(135deg, rgba(116, 53, 253, 0.35) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    .experience__image img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .experience__image:hover {
-      transform: scale(1.03);
-      border-color: var(--color-accent);
-    }
-
-    .experience__step-title {
-      font-family: var(--font-heading);
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .experience__step-desc {
-      font-family: var(--font-body);
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--color-text-secondary);
-      max-width: 280px;
-    }
-
-    @media (max-width: 860px) {
-      .experience__steps { grid-template-columns: 1fr; gap: 56px; }
-      .experience__line  { display: none; }
-      .experience__step  { padding: 0; }
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 3 — WHY SENSEUNI
-       4-card value-proposition grid w/ floating orbs
-    ═══════════════════════════════════════ */
-    .why-operate {
-      position: relative;
-      z-index: 3;
-      padding: 120px 60px;
-      overflow: hidden;
-    }
-
-    .why-operate__orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .why-operate__orb--1 {
-      width: 350px; height: 350px;
-      top: -80px; left: -120px;
-      background: radial-gradient(circle, rgba(116, 53, 253, 0.35), transparent 72%);
-      animation: orbDriftA 15s ease-in-out infinite;
-    }
-
-    .why-operate__orb--2 {
-      width: 280px; height: 280px;
-      bottom: -60px; right: -80px;
-      background: radial-gradient(circle, rgba(94, 235, 255, 0.26), transparent 72%);
-      animation: orbDriftB 20s ease-in-out infinite;
-    }
-
-    .why-operate__label { position: relative; z-index: 1; color: var(--color-highlight); }
-
-    .why-operate__headline {
-      position: relative;
-      z-index: 1;
-      font-family: var(--font-heading);
-      font-size: 48px;
+    .roi-output__value {
+      font-family: var(--font-data);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
       font-weight: 700;
       letter-spacing: -0.02em;
-      line-height: 1.1;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .why-operate__sub {
-      position: relative;
-      z-index: 1;
-      font-family: var(--font-body);
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      text-align: center;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .why-operate__grid {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      margin-top: 72px;
-    }
-
-    .why-operate__card {
-      position: relative;
-      overflow: hidden;
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: 20px;
-      padding: 32px 24px;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.5s var(--ease-out),
-                  transform 0.4s cubic-bezier(.25, .46, .45, .94),
-                  background 0.4s cubic-bezier(.25, .46, .45, .94),
-                  border-color 0.4s cubic-bezier(.25, .46, .45, .94);
-    }
-
-    .why-operate__card.in-view { opacity: 1; transform: translateY(0); }
-
-    .why-operate__card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-
-    .why-operate__card:hover {
-      transform: translateY(-4px);
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(116, 53, 253, 0.4);
-    }
-
-    .why-operate__card:hover::before { opacity: 1; }
-
-    .why-operate__icon {
-      width: 48px; height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(116, 53, 253, 0.35), rgba(94, 235, 255, 0.22));
-      margin-bottom: 20px;
-      animation: floatY 3s ease-in-out infinite;
-    }
-
-    .why-operate__icon svg { display: block; color: var(--color-cyan); }
-
-    .why-operate__card:nth-child(1) .why-operate__icon { animation-delay: 0s;   }
-    .why-operate__card:nth-child(2) .why-operate__icon { animation-delay: 0.6s; }
-    .why-operate__card:nth-child(3) .why-operate__icon { animation-delay: 1.2s; }
-    .why-operate__card:nth-child(4) .why-operate__icon { animation-delay: 1.8s; }
-
-    .why-operate__card-title {
-      font-family: var(--font-heading);
-      font-size: 17px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .why-operate__card-desc {
-      font-family: var(--font-body);
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--color-text-secondary);
-      margin-bottom: 24px;
-    }
-
-    .why-operate__metric {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 16px;
-    }
-
-    .why-operate__metric-value {
-      font-family: var(--font-data);
-      font-size: 24px;
-      font-weight: 700;
-      line-height: 1;
-      background: linear-gradient(135deg, var(--color-highlight), var(--color-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 6px;
-    }
-
-    .why-operate__metric-label {
-      font-family: var(--font-data);
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-    }
-
-    @media (max-width: 980px) {
-      .why-operate__grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 560px) {
-      .why-operate__grid { grid-template-columns: 1fr; }
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 3b — PRODUCT FLEXIBILITY
-       4-card staggered category grid
-    ═══════════════════════════════════════ */
-    .prod-flex {
-      position: relative;
-      z-index: 3;
-      padding: 120px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .prod-flex__inner {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 40px;
-    }
-
-    .prod-flex__head {
-      text-align: center;
-      margin-bottom: 64px;
-    }
-
-    .prod-flex__pill {
-      display: inline-block;
-      font-family: var(--font-data);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #8B71FF;
-      border: 1px solid rgba(116, 53, 253, 0.4);
-      background: rgba(116, 53, 253, 0.1);
-      border-radius: 20px;
-      padding: 6px 16px;
-      margin-bottom: 24px;
-    }
-
-    .prod-flex__headline {
-      font-family: var(--font-heading);
-      font-size: clamp(28px, 3.5vw, 42px);
-      font-weight: 700;
       line-height: 1.15;
-      letter-spacing: -0.02em;
-      color: var(--color-text);
-      max-width: 560px;
-      margin: 0 auto 16px;
-    }
-
-    .prod-flex__sub {
-      font-family: var(--font-body);
-      font-size: 18px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.6);
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    /* ── 4-column grid ── */
-    .prod-flex__grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-      align-items: start;
-    }
-
-    /* ── Individual card ── */
-    .prod-card {
-      background: rgba(20, 16, 31, 0.4);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(139, 113, 255, 0.15);
-      border-radius: 16px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      min-height: 360px;
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.6s var(--ease-out, cubic-bezier(.22,1,.36,1)),
-                  transform 0.6s var(--ease-out, cubic-bezier(.22,1,.36,1)),
-                  border-color 0.3s ease,
-                  box-shadow 0.3s ease;
-    }
-
-    .prod-card.is-revealed {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .prod-card:hover {
-      transform: translateY(-4px) !important;
-      border-color: rgba(139, 113, 255, 0.35);
-      box-shadow: 0 14px 48px rgba(116, 53, 253, 0.18);
-    }
-
-    /* Stagger delays (applied once is-revealed fires) */
-    .prod-card:nth-child(1) { transition-delay: 0s,   0s,   0s, 0s; }
-    .prod-card:nth-child(2) { transition-delay: 0.15s, 0.15s, 0s, 0s; }
-    .prod-card:nth-child(3) { transition-delay: 0.30s, 0.30s, 0s, 0s; }
-    .prod-card:nth-child(4) { transition-delay: 0.45s, 0.45s, 0s, 0s; }
-
-    /* Alternating layout: card 2 & 4 — text on top, image below */
-    .prod-card--flipped { flex-direction: column-reverse; }
-
-    /* ── Image wrapper ── */
-    .prod-card__img-wrap {
-      width: 100%;
-      height: 220px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .prod-card__img-wrap img {
-      width: 100%; height: 100%;
-      object-fit: cover; display: block;
-      transition: transform 0.45s var(--ease-out, cubic-bezier(.22,1,.36,1));
-    }
-
-    .prod-card:hover .prod-card__img-wrap img { transform: scale(1.04); }
-
-    /* ── Text body ── */
-    .prod-card__body {
-      padding: 24px;
-      flex: 1;
-    }
-
-    .prod-card__name {
-      font-family: var(--font-heading);
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--color-text);
-      margin-bottom: 8px;
-    }
-
-    .prod-card__desc {
-      font-family: var(--font-body);
-      font-size: 13px;
-      line-height: 1.65;
-      color: var(--color-text-secondary);
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 960px) {
-      .prod-flex__grid { grid-template-columns: repeat(2, 1fr); }
-      .prod-card--flipped { flex-direction: column; }
-    }
-    @media (max-width: 540px) {
-      .prod-flex { padding: 80px 0; }
-      .prod-flex__inner { padding: 0 24px; }
-      .prod-flex__grid { grid-template-columns: 1fr; }
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 4 — WHERE IT WORKS
-       6-scene grid w/ ambient particle canvas
-    ═══════════════════════════════════════ */
-    .scenes {
-      position: relative;
-      z-index: 3;
-      padding: 120px 60px;
-      overflow: hidden;
-    }
-
-    .scenes__canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, #000 55%, transparent 100%);
-      mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, #000 55%, transparent 100%);
-    }
-
-    .scenes__label { position: relative; z-index: 1; color: var(--color-cyan); }
-
-    .scenes__headline {
-      position: relative;
-      z-index: 1;
-      font-family: var(--font-heading);
-      font-size: 48px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .scenes__always {
-      background: linear-gradient(135deg, var(--color-text-primary) 45%, var(--color-cyan));
+      background: var(--grad-text);
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .roi__note {
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: var(--text-3);
+    }
+    .roi__cta { margin-top: 28px; }
+    @media (max-width: 880px) {
+      .roi-panel { grid-template-columns: 1fr; }
+      .roi-outputs { border-left: 0; border-top: 1px solid var(--border); }
     }
 
-    .scenes__sub {
-      position: relative;
-      z-index: 1;
-      font-family: var(--font-body);
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      text-align: center;
-      max-width: 520px;
-      margin: 0 auto;
-    }
+    /* ── CABINET · VENUES ────────────────────────────────────── */
+    .venue-strip { margin-bottom: clamp(36px, 5vw, 56px); }
+    .venue-strip .media-frame { aspect-ratio: 21 / 8; }
+    .venue-card { padding: 26px 24px; }
+    .venue-card .h3 { font-size: 1.08rem; margin-bottom: 6px; }
+    .venue-card p { font-size: 0.9rem; }
 
-    .scenes__grid {
-      position: relative;
-      z-index: 1;
+    /* ── CABINET · HARDWARE ──────────────────────────────────── */
+    .hw-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 72px;
-    }
-
-    .scenes__card {
-      position: relative;
-      aspect-ratio: 4 / 3;
-      border-radius: 20px;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.5s var(--ease-out), transform 0.4s var(--ease-out);
-    }
-
-    .scenes__card.in-view { opacity: 1; transform: translateY(0); }
-
-    /* Animated conic-gradient glow ring — sits behind the clipped card,
-       1px larger on each side so only a thin border peeks through on hover */
-    .scenes__card::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      background: conic-gradient(from var(--angle, 0deg), transparent, var(--color-accent), var(--color-highlight), transparent);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 0;
-    }
-
-    .scenes__card:hover::before {
-      opacity: 1;
-      animation: rotateAngle 3s linear infinite;
-    }
-
-    .scenes__clip {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      border-radius: inherit;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: var(--color-surface);
-      transition: transform 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
-    }
-
-    .scenes__card:hover .scenes__clip {
-      transform: translateY(-4px);
-      border-color: var(--color-accent);
-    }
-
-    .scenes__img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .scenes__overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent 30%, rgba(20, 16, 31, 0.95) 100%);
-      transition: background 0.4s ease;
-    }
-
-    .scenes__card:hover .scenes__overlay {
-      background: linear-gradient(180deg, transparent 10%, rgba(20, 16, 31, 0.95) 100%);
-    }
-
-    .scenes__tag {
-      position: absolute;
-      top: 16px; right: 16px;
-      z-index: 2;
-      font-family: var(--font-data);
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--color-cyan);
-      background: rgba(20, 16, 31, 0.7);
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid rgba(94, 235, 255, 0.2);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .scenes__content {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      z-index: 2;
-      padding: 24px;
-    }
-
-    .scenes__icon {
-      width: 40px; height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(116, 53, 253, 0.45), rgba(94, 235, 255, 0.30));
-      margin-bottom: 12px;
-      transition: transform 0.3s var(--ease-out);
-    }
-
-    .scenes__card:hover .scenes__icon { transform: translateY(-4px); }
-    .scenes__icon svg { display: block; color: var(--color-cyan); }
-
-    .scenes__name {
-      font-family: var(--font-heading);
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .scenes__desc {
-      font-family: var(--font-body);
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--color-text-secondary);
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease, opacity 0.4s ease;
-    }
-
-    .scenes__card:hover .scenes__desc {
-      max-height: 60px;
-      opacity: 1;
-    }
-
-    @media (max-width: 980px) { .scenes__grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 620px) { .scenes__grid { grid-template-columns: 1fr; } }
-
-    /* ═══════════════════════════════════════
-       SECTION 5 — HARDWARE
-       Two-model spec comparison
-    ═══════════════════════════════════════ */
-    .hardware {
-      position: relative;
-      z-index: 3;
-      padding: 120px 60px;
-    }
-
-    .hardware__label { color: var(--color-highlight); }
-
-    .hardware__headline {
-      font-family: var(--font-heading);
-      font-size: 48px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .hardware__sub {
-      font-family: var(--font-body);
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      text-align: center;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .hardware__grid {
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 32px;
-      margin-top: 72px;
-    }
-
-    .hardware__vs {
-      position: absolute;
-      left: 50%; top: 50%;
-      width: 56px; height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: var(--color-brand);
-      border: 2px solid var(--color-accent);
-      font-family: var(--font-heading);
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--color-highlight);
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0);
-      z-index: 3;
-    }
-
-    .hardware__vs.in-view {
-      animation: vsPop 0.5s cubic-bezier(.34, 1.56, .64, 1) both;
-    }
-
-    .hardware__card {
-      position: relative;
-      background: var(--color-surface);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s var(--ease-out), transform 0.5s var(--ease-out), border-color 0.4s ease;
-    }
-
-    .hardware__card.in-view { opacity: 1; transform: translateY(0); }
-    .hardware__card:hover   { transform: translateY(-4px); border-color: var(--color-accent); }
-
-    .hardware__card--featured { border: 1.5px solid var(--color-highlight); }
-
-    .hardware__badge {
-      position: absolute;
-      top: 20px; right: 20px;
-      z-index: 2;
-      font-family: var(--font-data);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--color-bg);
-      background: linear-gradient(135deg, var(--color-accent), var(--color-highlight) 55%, var(--color-cyan));
-      padding: 5px 14px;
-      border-radius: 20px;
-    }
-
-    .hardware__media {
-      position: relative;
-      aspect-ratio: 4 / 3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(160deg, var(--color-brand), var(--color-bg));
-    }
-
-    .hardware__img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .hardware__body { padding: 32px 28px; }
-
-    .hardware__model-label {
-      font-family: var(--font-data);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--color-highlight);
-      margin-bottom: 10px;
-    }
-
-    .hardware__name {
-      font-family: var(--font-heading);
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .hardware__tagline {
-      font-family: var(--font-body);
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--color-text-secondary);
-      margin-bottom: 24px;
-    }
-
-    .hardware__specs { margin-bottom: 28px; }
-
-    .hardware__spec-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      font-family: var(--font-body);
-      font-size: 14px;
-      opacity: 0;
-      transform: translateX(-8px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    .hardware__spec-row:last-child { border-bottom: none; }
-    .hardware__spec-row.in-view    { opacity: 1; transform: translateX(0); }
-
-    .hardware__spec-label { color: var(--color-text-muted); white-space: nowrap; }
-
-    .hardware__spec-value {
-      font-family: var(--font-data);
-      font-weight: 600;
-      color: var(--color-text-primary);
-      text-align: right;
-    }
-
-    .hardware__cta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      padding: 13px 24px;
-      border-radius: 12px;
-      font-family: var(--font-heading);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .hardware__cta--secondary {
-      background: transparent;
-      border: 1px solid var(--color-border);
-      color: var(--color-text-primary);
-      transition: border-color 0.3s ease, background 0.3s ease;
-    }
-
-    .hardware__cta--secondary:hover {
-      border-color: var(--color-accent);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .hardware__cta--primary {
-      background: linear-gradient(135deg, var(--color-accent), var(--color-highlight));
-      color: var(--color-text-primary);
-      border: none;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .hardware__cta--primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(116, 53, 253, 0.30);
-    }
-
-    .hardware__features {
-      margin: 40px auto 0;
-      max-width: 800px;
-      font-family: var(--font-body);
-      font-size: 13px;
-      line-height: 1.8;
-      color: var(--color-text-muted);
-      text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
-    }
-
-    .hardware__features.in-view { opacity: 1; transform: translateY(0); }
-
-    @media (max-width: 860px) {
-      .hardware__grid { grid-template-columns: 1fr; }
-      .hardware__vs   { display: none; }
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 6 — ROI CALCULATOR
-       2-column glass panel · live sliders
-    ═══════════════════════════════════════ */
-    .roi {
-      position: relative;
-      z-index: 3;
-      padding: 120px 60px;
-    }
-
-    .roi__label { color: var(--color-cyan); }
-
-    .roi__headline {
-      font-family: var(--font-heading);
-      font-size: 48px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .roi__sub {
-      font-family: var(--font-body);
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      text-align: center;
-      max-width: 460px;
-      margin: 0 auto;
-    }
-
-    .roi__panel {
-      position: relative;
-      max-width: 960px;
-      margin: 72px auto 0;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      padding: 48px;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
-    }
-
-    .roi__panel.in-view { opacity: 1; transform: translateY(0); }
-
-    .roi__glow {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 300px; height: 300px;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--color-accent), transparent 70%);
-      filter: blur(100px);
-      opacity: 0.1;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .roi__grid {
-      position: relative;
-      z-index: 1;
-      display: flex;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
       align-items: stretch;
-      gap: 48px;
     }
-
-    .roi__sliders {
-      flex: 0 0 55%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 32px;
+    .hw-card { padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .hw-card__media {
+      aspect-ratio: 16 / 11;
+      overflow: hidden;
+      position: relative;
+      background: var(--bg-raise);
     }
-
-    .roi__slider-row { display: flex; flex-direction: column; gap: 12px; }
-
-    .roi__slider-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .hw-card__media img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s var(--ease);
     }
-
-    .roi__slider-label {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--color-text-secondary);
-    }
-
-    .roi__slider-value {
+    .hw-card:hover .hw-card__media img { transform: scale(1.04); }
+    .hw-card__flag {
+      position: absolute;
+      top: 16px; left: 16px;
+      z-index: 2;
+      padding: 6px 14px;
+      border-radius: 100px;
       font-family: var(--font-data);
-      font-size: 16px;
+      font-size: 0.74rem;
       font-weight: 600;
-      color: var(--color-text-primary);
-    }
-
-    .roi__slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 4px;
-      border-radius: 2px;
-      background: rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-      outline: none;
-    }
-
-    .roi__slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: var(--color-highlight);
-      border: 2px solid #FFFFFF;
-      box-shadow: 0 0 12px rgba(116, 53, 253, 0.4);
-      transition: width 0.2s ease, height 0.2s ease;
-    }
-
-    .roi__slider::-webkit-slider-thumb:hover,
-    .roi__slider::-webkit-slider-thumb:active {
-      width: 22px; height: 22px;
-    }
-
-    .roi__slider::-moz-range-thumb {
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: var(--color-highlight);
-      border: 2px solid #FFFFFF;
-      box-shadow: 0 0 12px rgba(116, 53, 253, 0.4);
-      transition: width 0.2s ease, height 0.2s ease;
-    }
-
-    .roi__slider::-moz-range-thumb:hover,
-    .roi__slider::-moz-range-thumb:active {
-      width: 22px; height: 22px;
-    }
-
-    .roi__slider::-moz-range-track {
-      height: 4px;
-      border-radius: 2px;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .roi__slider::-moz-range-progress {
-      height: 4px;
-      border-radius: 2px;
-      background: linear-gradient(90deg, var(--color-accent), var(--color-highlight));
-    }
-
-    .roi__results {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .roi__card {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 16px;
-      padding: 24px;
-    }
-
-    .roi__card-label {
-      font-family: var(--font-body);
-      font-size: 12px;
-      letter-spacing: 1px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--color-text-muted);
+      color: #fff;
+      background: var(--grad-cta);
+      box-shadow: 0 4px 16px rgba(116,53,253,0.45);
+    }
+    .hw-card__body { padding: 30px 30px 34px; display: flex; flex-direction: column; flex: 1; }
+    .hw-card__kicker {
+      font-family: var(--font-data);
+      font-size: 0.76rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-3);
       margin-bottom: 8px;
     }
-
-    .roi__card-value {
-      font-family: var(--font-data);
-      font-size: 36px;
-      font-weight: 700;
-      line-height: 1;
-      background: linear-gradient(135deg, var(--color-highlight), var(--color-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      transition: opacity 0.15s ease;
-    }
-
-    .roi__disclaimer {
-      position: relative;
-      z-index: 1;
-      font-family: var(--font-body);
-      font-size: 11px;
-      color: var(--color-text-muted);
-      margin-top: 16px;
-    }
-
-    @media (max-width: 860px) {
-      .roi__grid    { flex-direction: column; }
-      .roi__sliders { flex: 1 1 auto; }
-      .roi__results { margin-top: 8px; }
-      .roi__panel   { padding: 32px 24px; }
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 7 — FAQ
-       Single-open accordion
-    ═══════════════════════════════════════ */
-    .faq {
-      position: relative;
-      z-index: 3;
-      padding: 120px 60px;
-    }
-
-    .faq__label { color: var(--color-highlight); }
-
-    .faq__headline {
-      font-family: var(--font-heading);
-      font-size: 48px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .faq__list {
-      max-width: 800px;
-      margin: 64px auto 0;
-    }
-
-    .faq__item {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
-    }
-
-    .faq__item.in-view { opacity: 1; transform: translateY(0); }
-
-    .faq__question {
-      width: 100%;
+    .hw-card__body > p { color: var(--text-2); font-size: 0.95rem; margin-top: 8px; }
+    .hw-specs { margin-top: 24px; display: flex; flex-direction: column; }
+    .hw-specs__row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 24px;
-      padding: 24px 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-align: left;
-      font-family: var(--font-heading);
-      font-size: 17px;
-      font-weight: 500;
-      color: var(--color-text-primary);
+      gap: 18px;
+      padding: 11px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.9rem;
     }
-
-    .faq__toggle {
-      flex-shrink: 0;
-      position: relative;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--color-text-secondary);
-      transition: transform 0.3s ease, border-color 0.3s ease;
-    }
-
-    .faq__toggle::before,
-    .faq__toggle::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      background: currentColor;
-      transform: translate(-50%, -50%);
-      transition: transform 0.3s ease;
-    }
-
-    .faq__toggle::before { width: 8px; height: 1px; }
-    .faq__toggle::after  { width: 1px; height: 8px; }
-
-    .faq__item.is-open .faq__toggle { transform: rotate(45deg); border-color: var(--color-highlight); }
-
-    .faq__answer {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.4s ease;
-    }
-
-    .faq__item.is-open .faq__answer {
-      max-height: 200px;
-      opacity: 1;
-    }
-
-    .faq__answer p {
-      font-family: var(--font-body);
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      padding-bottom: 24px;
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 8 — FINAL CTA
-       Full-width · particle network backdrop
-    ═══════════════════════════════════════ */
-    .final-cta {
-      position: relative;
-      z-index: 3;
-      overflow: hidden;
-      background: linear-gradient(180deg, var(--color-brand) 0%, var(--color-bg) 100%);
-    }
-
-    .final-cta__canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-      mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-    }
-
-    .final-cta__inner {
-      position: relative;
-      z-index: 1;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 120px 60px;
+    .hw-specs__row dt { color: var(--text-3); }
+    .hw-specs__row dd { color: var(--text); text-align: right; font-family: var(--font-data); }
+    .hw-card__body .btn { margin-top: 28px; align-self: flex-start; }
+    .hw__shared {
+      margin-top: 26px;
+      padding: 26px 32px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--surface);
       text-align: center;
+      color: var(--text-2);
+      font-size: 0.97rem;
     }
-
-    .final-cta__label {
-      color: var(--color-cyan);
-      margin-bottom: 20px;
-    }
-
-    .final-cta__headline {
-      font-family: var(--font-heading);
-      font-size: 52px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      margin-bottom: 16px;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
-    }
-
-    .final-cta__headline.in-view { opacity: 1; transform: translateY(0); }
-
-    .final-cta__deploy {
-      background: linear-gradient(135deg, var(--color-highlight), var(--color-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .final-cta__sub {
-      font-family: var(--font-body);
-      font-size: 18px;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      max-width: 480px;
-      margin: 0 auto 48px;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s var(--ease-out) 0.15s, transform 0.6s var(--ease-out) 0.15s;
-    }
-
-    .final-cta__sub.in-view { opacity: 1; transform: translateY(0); }
-
-    .final-cta__actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s var(--ease-out) 0.3s, transform 0.6s var(--ease-out) 0.3s;
-    }
-
-    .final-cta__actions.in-view { opacity: 1; transform: translateY(0); }
-
-    .final-cta__btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-heading);
-      font-size: 16px;
-      font-weight: 600;
-      padding: 16px 36px;
-      border-radius: 14px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .final-cta__btn--primary {
-      background: linear-gradient(135deg, var(--color-accent), var(--color-highlight));
-      color: #FFFFFF;
-      border: none;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .final-cta__btn--primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(116, 53, 253, 0.3);
-    }
-
-    .final-cta__btn--secondary {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--color-text-primary);
-      transition: border-color 0.3s ease, background 0.3s ease;
-    }
-
-    .final-cta__btn--secondary:hover {
-      border-color: var(--color-highlight);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    @media (max-width: 560px) {
-      .final-cta__headline { font-size: 38px; }
-      .final-cta__actions  { flex-direction: column; }
-      .final-cta__btn      { width: 100%; justify-content: center; }
-    }
-
-    /* ═══════════════════════════════════════
-       FOOTER (z-index 1)
-    ═══════════════════════════════════════ */
-    .footer {
-      flex-shrink: 0;
-      background: linear-gradient(to bottom, rgba(116, 53, 253, 0.12) 0%, transparent 60%),
-                  var(--color-bg-footer);
-      border-top: 1px solid var(--color-footer-border);
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer__main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 72px 32px 56px;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-      gap: 40px;
-    }
-
-    .footer__main > * { opacity: 0; transform: translateY(16px); }
-    .footer__main > *.is-visible { animation: fadeUp 0.7s var(--ease-out) both; }
-    .footer__main > *:nth-child(1) { animation-delay: 0ms;   }
-    .footer__main > *:nth-child(2) { animation-delay: 60ms;  }
-    .footer__main > *:nth-child(3) { animation-delay: 120ms; }
-    .footer__main > *:nth-child(4) { animation-delay: 180ms; }
-    .footer__main > *:nth-child(5) { animation-delay: 240ms; }
-
-    .footer__logo         { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-
-    .footer__tagline { font-family: var(--font-body); font-size: 16px; color: rgba(255, 255, 255, 0.6); line-height: 1.6; max-width: 220px; }
-    .footer__col-title    { font-family: var(--font-data); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-primary); margin-bottom: 20px; }
-    .footer__col-links    { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .footer__col-link     { font-family: var(--font-body); font-size: 14px; color: var(--color-text-muted); transition: color var(--transition-base) var(--ease-out); }
-    .footer__col-link:hover { color: var(--color-text-secondary); }
-    .footer__contact-item   { display: flex; flex-direction: column; gap: 2px; }
-    .footer__contact-label  { font-family: var(--font-data); font-size: 10px; font-weight: 500; letter-spacing: 0.10em; text-transform: uppercase; color: rgba(122,122,140,0.55); }
-
-
-    .footer__position-line {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.4);
-      line-height: 1.6;
-      max-width: 220px;
-      margin-top: 8px;
-    }
-    .footer__bottom {
-      border-top: 1px solid var(--color-footer-border);
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .footer__copy { font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); }
-    .footer__social { display: flex; align-items: center; gap: 10px; list-style: none; }
-
-    .footer__social-link {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--color-text-muted);
-      transition: color var(--transition-base) var(--ease-out),
-                  border-color var(--transition-base) var(--ease-out),
-                  background var(--transition-base) var(--ease-out),
-                  box-shadow var(--transition-base) var(--ease-out),
-                  transform var(--transition-base) var(--ease-out);
-    }
-
-    .footer__social-link:hover {
-      color: var(--color-highlight);
-      border-color: var(--color-highlight);
-      background: rgba(116, 53, 253, 0.12);
-      box-shadow: 0 0 16px rgba(116, 53, 253, 0.40);
-      transform: translateY(-2px);
-    }
-
-    .footer__legal      { display: flex; align-items: center; gap: 20px; list-style: none; }
-    .footer__legal-link { font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); transition: color var(--transition-base) var(--ease-out); }
-    .footer__legal-link:hover { color: var(--color-text-secondary); }
-
-    @media (max-width: 1024px) { .footer__main { grid-template-columns: 2fr 1fr 1fr; } }
-    @media (max-width: 900px) {
-      .footer__main { grid-template-columns: 1fr 1fr 1fr; gap: 36px; padding: 56px 24px 48px; }
-      .footer__logo-col { grid-column: 1 / -1; }
-    }
-    @media (max-width: 600px) {
-      .footer__main { grid-template-columns: 1fr 1fr; gap: 32px; padding: 48px 20px 40px; }
-      .footer__logo-col { grid-column: 1 / -1; }
-    }
-    @media (max-width: 440px) {
-      .footer__main { grid-template-columns: 1fr; }
-      .footer__bottom { flex-direction: column; align-items: flex-start; gap: 16px; padding: 20px; }
-    }
-
-    /* ═══════════════════════════════════════
-       BACK-TO-TOP (z-index 500)
-    ═══════════════════════════════════════ */
-    .back-to-top {
-      position: fixed;
-      bottom: 32px; right: 20px;
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: var(--gradient-btn);
-      border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--color-text-primary);
-      box-shadow: 0 4px 16px rgba(116, 53, 253, 0.28);
-      z-index: 500;
-      opacity: 0;
-      transform: scale(0.75) translateY(8px);
-      pointer-events: none;
-      transition: opacity 0.3s var(--ease-out),
-                  transform 0.3s var(--ease-out),
-                  box-shadow 0.3s var(--ease-out);
-    }
-
-    .back-to-top.is-visible {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-      pointer-events: all;
-    }
-
-    .back-to-top:hover {
-      transform: scale(1) translateY(-2px);
-      box-shadow: 0 0 20px rgba(116,53,253,0.50), 0 6px 20px rgba(116,53,253,0.28);
-    }
-
-    .back-to-top:active { transform: scale(0.94) translateY(0); }
-
-    /* ── Cookie Banner ── */
-    .cookie-banner {
-      display: none; position: fixed; bottom: 0; left: 0; right: 0;
-      z-index: 9999; align-items: center; justify-content: space-between; gap: 16px;
-      padding: 16px 32px;
-      background: rgba(20, 16, 31, 0.94);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(116, 53, 253, 0.3);
-      box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
-      transform: translateY(100%);
-      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .cookie-banner.is-visible { transform: translateY(0); }
-    .cookie-banner p { font-family: var(--font-body); font-size: 14px; color: rgba(255,255,255,0.80); line-height: 1.5; flex: 1; }
-    .cookie-banner a { color: var(--color-highlight); text-decoration: underline; }
-    .cookie-accept-btn {
-      flex-shrink: 0; padding: 8px 20px; border-radius: var(--radius-sm);
-      background: var(--color-accent); color: var(--color-text-primary);
-      font-family: var(--font-body); font-size: 13px; font-weight: 600;
-      border: none; cursor: pointer; white-space: nowrap;
-      transition: background var(--transition-base) var(--ease-out), transform var(--transition-base) var(--ease-out);
-    }
-    .cookie-accept-btn:hover { background: var(--color-highlight); transform: translateY(-1px); }
-    @media (max-width: 640px) {
-      .cookie-banner { flex-direction: column; align-items: flex-start; padding: 16px 20px; }
-      .cookie-accept-btn { width: 100%; text-align: center; }
-    }
+    .hw__shared strong { color: var(--text); }
+    @media (max-width: 880px) { .hw-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-  <div class="grain-overlay" aria-hidden="true"></div>
-
-  <!-- ═══════════════════════════════════════
-       NAVIGATION
-  ═══════════════════════════════════════ -->
-  <nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
-    <div class="nav__inner">
-
-      <a href="index.html" class="nav__logo" aria-label="SenseUni home">
-        <img src="assets/images/logo.webp" alt="SenseUni" height="32" width="auto" style="display:block;" />
-      </a>
-
-      <ul class="nav__links" role="list">
-        <li><a href="index.html"            class="nav__link">Home</a></li>
-        <li><a href="ai-smart-cabinet.html" class="nav__link is-active">AI Smart Cabinet</a></li>
-        <li><a href="solutions.html"        class="nav__link">Solutions</a></li>
-        <li><a href="technology.html"       class="nav__link">Technology</a></li>
-        <li><a href="case-studies.html"     class="nav__link">Case Studies</a></li>
-        <li><a href="company.html"          class="nav__link">Company</a></li>
-      </ul>
-
-      <div class="nav__cta">
-        <a href="get-a-demo.html" class="btn--primary">Get a Demo</a>
-      </div>
-
-      <button class="nav__hamburger" id="nav-hamburger"
-              aria-label="Toggle navigation menu"
-              aria-expanded="false" aria-controls="nav-drawer">
-        <span class="nav__hamburger-line"></span>
-        <span class="nav__hamburger-line"></span>
-        <span class="nav__hamburger-line"></span>
-      </button>
-
-    </div>
-  </nav>
-
-  <div class="nav__drawer" id="nav-drawer" aria-hidden="true">
-    <ul class="nav__drawer-links" role="list">
-      <li><a href="index.html"            class="nav__drawer-link">Home</a></li>
-      <li><a href="ai-smart-cabinet.html" class="nav__drawer-link">AI Smart Cabinet</a></li>
-      <li><a href="solutions.html"        class="nav__drawer-link">Solutions</a></li>
-      <li><a href="technology.html"       class="nav__drawer-link">Technology</a></li>
-      <li><a href="case-studies.html"     class="nav__drawer-link">Case Studies</a></li>
-      <li><a href="company.html"          class="nav__drawer-link">Company</a></li>
-    </ul>
-    <a href="get-a-demo.html" class="btn--primary nav__drawer-cta">Get a Demo</a>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__orb ambient__orb--a" data-parallax="0.06"></div>
+    <div class="ambient__orb ambient__orb--b" data-parallax="0.09"></div>
   </div>
 
-
-  <!-- ═══════════════════════════════════════
-       MAIN CONTENT
-  ═══════════════════════════════════════ -->
-  <main id="main">
-
-    <!-- ──────────────────────────────────────
-         SECTION 1A — HERO (CENTRED)
-         Full-viewport · all content centred
-         Large product image (16:10) below the text block
-         Brand copy: docs/brand-guide.md §5
-    ─────────────────────────────────────── -->
-    <section class="cabinet-hero" id="hero" aria-labelledby="hero-headline">
-
-      <!-- Particle network — covers full hero including behind the product image -->
-      <canvas id="hero-canvas" aria-hidden="true"></canvas>
-
-      <div class="section-wrap">
-        <div class="cabinet-hero__inner">
-
-          <!-- Centred text block — unchanged -->
-          <div class="cabinet-hero__text">
-
-            <p class="cabinet-hero__eyebrow">AI Smart Cabinet</p>
-
-            <h1 class="t-display gradient-text cabinet-hero__headline" id="hero-headline">
-              Smart Cabinets for<br>Modern Retail Operations.
-            </h1>
-
-            <p class="cabinet-hero__sub">
-              Deploy autonomous retail, manage every location from one platform,
-              and scale your business with confidence.
-            </p>
-
-            <div class="cabinet-hero__divider" aria-hidden="true"></div>
-
-          </div>
-
-          <!-- ── Product Showcase Module ── -->
-          <div class="product-showcase" id="product-showcase">
-
-            <!-- Left: Image Gallery -->
-            <div class="product-showcase__gallery">
-              <div class="product-showcase__main-wrap">
-                <img class="product-showcase__main-img" id="ps-main-img"
-                     src="assets/images/product-1.webp"
-                     alt="Halo Max AI Smart Cabinet — front view"
-                     loading="eager" fetchpriority="high" />
-              </div>
-              <div class="product-showcase__thumbs">
-                <img class="product-showcase__thumb is-active" src="assets/images/product-1.webp"     alt="Front view" />
-                <img class="product-showcase__thumb"           src="assets/images/cabinet-hero.webp"  alt="Open door view" />
-                <img class="product-showcase__thumb"           src="assets/images/how-it-works-1.jpg" alt="Payment detail" />
-                <img class="product-showcase__thumb"           src="assets/images/how-it-works-2.jpg" alt="AI vision detail" />
-              </div>
-            </div>
-
-            <!-- Right: Product Info -->
-            <div class="product-showcase__info">
-
-              <!-- Model toggle -->
-              <div class="product-showcase__toggle">
-                <button class="product-showcase__toggle-btn is-active" data-model="max">Halo Max</button>
-                <button class="product-showcase__toggle-btn"           data-model="mini">Halo Mini</button>
-              </div>
-
-              <!-- Product name -->
-              <h2 class="product-showcase__name" id="ps-name">
-                Halo Max <span class="product-showcase__capacity">608L</span>
-              </h2>
-
-              <!-- Tagline -->
-              <p class="product-showcase__tagline" id="ps-tagline">
-                Built for volume — cafeterias, gyms, transit hubs, and high-traffic lobbies.
-              </p>
-
-              <!-- Quick specs 2×2 -->
-              <div class="product-showcase__specs">
-
-                <div class="product-showcase__spec">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20"/></svg>
-                  <div>
-                    <p class="product-showcase__spec-val" data-max="608L" data-mini="508L">608L</p>
-                    <p class="product-showcase__spec-lbl">Capacity</p>
-                  </div>
-                </div>
-
-                <div class="product-showcase__spec">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-                  <div>
-                    <p class="product-showcase__spec-val">99.6%</p>
-                    <p class="product-showcase__spec-lbl">AI Accuracy</p>
-                  </div>
-                </div>
-
-                <div class="product-showcase__spec">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M8 6l4-4 4 4M8 18l4 4 4-4"/></svg>
-                  <div>
-                    <p class="product-showcase__spec-val">32°F – 68°F</p>
-                    <p class="product-showcase__spec-lbl">Temp Range</p>
-                  </div>
-                </div>
-
-                <div class="product-showcase__spec">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 12h4m4 0h4"/></svg>
-                  <div>
-                    <p class="product-showcase__spec-val" data-max="28.6&Prime; HD Display" data-mini="No Display">28.6″ HD Display</p>
-                    <p class="product-showcase__spec-lbl">Touch Screen</p>
-                  </div>
-                </div>
-
-              </div><!-- /specs -->
-
-              <!-- Price -->
-              <div class="product-showcase__price-block">
-                <p class="product-showcase__price" id="ps-price">From $4,999</p>
-                <p class="product-showcase__price-note">Excludes shipping &amp; installation</p>
-              </div>
-
-              <!-- CTAs -->
-              <div class="product-showcase__ctas">
-                <a href="get-a-demo.html" class="btn--primary btn--lg">Request a Quote</a>
-                <a href="#spec-sheet" class="btn--secondary btn--lg">
-                  Download Spec Sheet
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                  </svg>
-                </a>
-              </div>
-
-            </div><!-- /product-showcase__info -->
-
-          </div><!-- /product-showcase -->
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ──────────────────────────────────────
-         SECTION 1B — DATA ANCHORS
-         Horizontal trust-metric bar, flush below hero
-         Count-up triggered by IntersectionObserver
-    ─────────────────────────────────────── -->
-    <div class="data-anchors" id="data-anchors" aria-label="Key statistics">
-      <div class="data-anchors__inner">
-
-        <div class="data-anchors__stat">
-          <div class="data-anchors__number"
-               data-target="10"
-               data-suffix="+"
-               data-decimals="0">10+</div>
-          <div class="data-anchors__label">Years in Retail Technology</div>
-        </div>
-
-        <div class="data-anchors__stat">
-          <div class="data-anchors__number"
-               data-target="99.6"
-               data-suffix="%"
-               data-decimals="1">99.6%</div>
-          <div class="data-anchors__label">AI Recognition Accuracy</div>
-        </div>
-
-        <div class="data-anchors__stat">
-          <div class="data-anchors__number"
-               data-target="99"
-               data-suffix="+"
-               data-decimals="0">99+</div>
-          <div class="data-anchors__label">Companies Deployed</div>
-        </div>
-
-        <div class="data-anchors__stat">
-          <div class="data-anchors__number"
-               data-target="100000"
-               data-suffix="+"
-               data-comma="true">100,000+</div>
-          <div class="data-anchors__label">Units Deployed Globally</div>
-        </div>
-
-      </div>
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="SenseUni home">
+        <img src="assets/images/logo.webp" alt="SenseUni" width="160" height="34" />
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a class="nav__link" href="index.html">Home</a>
+        <a class="nav__link is-active" href="ai-smart-cabinet.html">AI Smart Cabinet</a>
+        <a class="nav__link" href="solutions.html">Solutions</a>
+        <a class="nav__link" href="technology.html">Technology</a>
+        <a class="nav__link" href="case-studies.html">Case Studies</a>
+        <a class="nav__link" href="company.html">Company</a>
+        <a class="btn btn--primary btn--sm nav__cta" href="get-a-demo.html">Get a Demo</a>
+      </nav>
+      <button class="nav__hamburger" id="nav-hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav-drawer">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </header>
+  <div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+    <a class="nav-drawer__link" href="index.html">Home</a>
+    <a class="nav-drawer__link is-active" href="ai-smart-cabinet.html">AI Smart Cabinet</a>
+    <a class="nav-drawer__link" href="solutions.html">Solutions</a>
+    <a class="nav-drawer__link" href="technology.html">Technology</a>
+    <a class="nav-drawer__link" href="case-studies.html">Case Studies</a>
+    <a class="nav-drawer__link" href="company.html">Company</a>
+    <a class="btn btn--primary nav-drawer__cta" href="get-a-demo.html">Get a Demo</a>
+  </div>
 
-    <!-- ──────────────────────────────────────
-         SECTION 2 — THE EXPERIENCE
-         3-step horizontal walkthrough of the
-         end-consumer shopping flow
-    ─────────────────────────────────────── -->
-    <section class="experience" id="experience" aria-labelledby="experience-headline">
-      <div class="section-inner">
+  <main>
 
-        <div class="experience__head">
-          <p class="section-label experience__label">The Experience</p>
-          <h2 class="experience__headline" id="experience-headline">
-            Tap. Take. <span class="experience__go">Go.</span>
-          </h2>
-          <p class="experience__sub">
-            AI vision tracks every item. No scanning, no queuing.
-            Payment settles the moment the door closes.
-          </p>
-        </div>
-
-        <div class="experience__steps" id="experience-steps" data-reveal-group="experience">
-          <div class="experience__line" data-reveal aria-hidden="true"></div>
-
-          <div class="experience__step" data-reveal>
-            <div class="experience__circle" aria-hidden="true">1</div>
-            <div class="experience__image">
-              <img src="assets/images/how-it-works-1.jpg"
-                   alt="Consumer tapping a card or phone to unlock the smart cabinet door"
-                   loading="lazy" />
+    <!-- ══ HERO ══════════════════════════════════════════════ -->
+    <section class="hero cab-hero" id="hero">
+      <div class="container">
+        <div class="cab-hero__grid">
+          <div>
+            <span class="eyebrow hero-enter" style="--enter-delay: 0s">AI Smart Cabinet</span>
+            <h1 class="display hero-enter" style="--enter-delay: 0.1s">Smart Cabinets for <span class="text-grad">Modern Retail Operations.</span></h1>
+            <p class="lead hero-enter" style="--enter-delay: 0.2s">Deploy autonomous retail, manage every location from one platform, and scale your business with confidence.</p>
+            <div class="hero__actions hero-enter" style="--enter-delay: 0.3s">
+              <a class="btn btn--primary" href="get-a-demo.html">Get a Demo</a>
+              <a class="btn btn--ghost" href="get-a-demo.html">Download Spec Sheet</a>
             </div>
-            <h3 class="experience__step-title">Tap to Open</h3>
-            <p class="experience__step-desc">Credit card, debit, or mobile pay. One tap unlocks the door.</p>
           </div>
-
-          <div class="experience__step" data-reveal>
-            <div class="experience__circle" aria-hidden="true">2</div>
-            <div class="experience__image">
-              <img src="assets/images/how-it-works-2.jpg"
-                   alt="Consumer taking products from the cabinet while AI vision identifies each item"
-                   loading="lazy" />
+          <div class="cab-hero__media hero-enter" style="--enter-delay: 0.35s">
+            <div class="cab-hero__media-glow" aria-hidden="true"></div>
+            <div class="media-frame">
+              <img src="assets/images/cabinet-hero.webp" alt="SenseUni AI Smart Cabinet deployed in a modern retail space" fetchpriority="high" />
             </div>
-            <h3 class="experience__step-title">Take What You Want</h3>
-            <p class="experience__step-desc">AI cameras identify every item in real time. Grab freely.</p>
-          </div>
-
-          <div class="experience__step" data-reveal>
-            <div class="experience__circle" aria-hidden="true">3</div>
-            <div class="experience__image">
-              <img src="assets/images/how-it-works-3.jpg"
-                   alt="Cabinet door closing with an automatic charge and instant mobile receipt"
-                   loading="lazy" />
+            <div class="cab-hero__badge">
+              <strong>99.6%</strong>
+              <span>AI Recognition Accuracy</span>
             </div>
-            <h3 class="experience__step-title">Close & Done</h3>
-            <p class="experience__step-desc">Door closes. Charged automatically. Receipt sent instantly.</p>
           </div>
         </div>
 
-        <hr class="section-divider" />
-      </div>
-    </section>
-
-    <!-- ──────────────────────────────────────
-         SECTION 3 — WHY SENSEUNI
-         4-card value-proposition grid
-         Floating gradient orbs · count-up metrics
-    ─────────────────────────────────────── -->
-    <section class="why-operate" id="why-operate" aria-labelledby="why-operate-headline">
-
-      <div class="why-operate__orb why-operate__orb--1" aria-hidden="true"></div>
-      <div class="why-operate__orb why-operate__orb--2" aria-hidden="true"></div>
-
-      <div class="section-inner">
-
-        <div class="why-operate__head">
-          <p class="section-label why-operate__label">Why SenseUni</p>
-          <h2 class="why-operate__headline" id="why-operate-headline">
-            Built to <span class="gradient-text">Operate.</span>
-          </h2>
-          <p class="why-operate__sub">
-            Not just hardware. A complete autonomous retail system —
-            deploy, manage, and scale from one platform.
-          </p>
-        </div>
-
-        <div class="why-operate__grid" id="why-operate-grid" data-reveal-group="why-operate">
-
-          <article class="why-operate__card" data-reveal>
-            <div class="why-operate__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-              </svg>
-            </div>
-            <h3 class="why-operate__card-title">AI Vision Engine</h3>
-            <p class="why-operate__card-desc">Recognizes every product. No barcodes, no weight sensors, no errors.</p>
-            <div class="why-operate__metric">
-              <p class="why-operate__metric-value" data-target="99.6" data-decimals="1" data-suffix="%">0.0%</p>
-              <p class="why-operate__metric-label">Recognition accuracy</p>
-            </div>
-          </article>
-
-          <article class="why-operate__card" data-reveal>
-            <div class="why-operate__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2"/>
-                <path d="M8 21h8m-4-4v4"/>
-              </svg>
-            </div>
-            <h3 class="why-operate__card-title">Cloud Fleet Control</h3>
-            <p class="why-operate__card-desc">Inventory, pricing, promotions — manage every unit from one dashboard.</p>
-            <div class="why-operate__metric">
-              <p class="why-operate__metric-value">24/7</p>
-              <p class="why-operate__metric-label">Remote management</p>
-            </div>
-          </article>
-
-          <article class="why-operate__card" data-reveal>
-            <div class="why-operate__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12a9 9 0 11-6.219-8.56"/>
-                <path d="M21 3v5h-5"/>
-              </svg>
-            </div>
-            <h3 class="why-operate__card-title">Revenue Intelligence</h3>
-            <p class="why-operate__card-desc">Know what sells, when, and where. AI optimizes product mix per location.</p>
-            <div class="why-operate__metric">
-              <p class="why-operate__metric-value" data-target="40" data-prefix="+" data-suffix="%">+0%</p>
-              <p class="why-operate__metric-label">Average revenue uplift</p>
-            </div>
-          </article>
-
-          <article class="why-operate__card" data-reveal>
-            <div class="why-operate__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-              </svg>
-            </div>
-            <h3 class="why-operate__card-title">Plug & Operate</h3>
-            <p class="why-operate__card-desc">Pre-configured hardware. Connect power, go live. Add units without adding headcount.</p>
-            <div class="why-operate__metric">
-              <p class="why-operate__metric-value" data-target="30" data-from="60" data-prefix="&lt;" data-suffix="s">&lt;60s</p>
-              <p class="why-operate__metric-label">Average transaction</p>
-            </div>
-          </article>
-
+        <div class="cab-anchors" data-stagger>
+          <div class="stat">
+            <div class="stat__value"><span data-count="10">0</span>+</div>
+            <div class="stat__label">Years in Retail Technology</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value"><span data-count="99.6">0</span>%</div>
+            <div class="stat__label">AI Recognition Accuracy</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value"><span data-count="100000">0</span>+</div>
+            <div class="stat__label">Units Deployed Globally</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value"><span data-count="99">0</span>+</div>
+            <div class="stat__label">Companies Deployed Worldwide</div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         SECTION 3b — PRODUCT FLEXIBILITY
-         4-card staggered category grid
-    ─────────────────────────────────────── -->
-    <section class="prod-flex" id="product-flexibility" aria-labelledby="prod-flex-headline">
-      <div class="prod-flex__inner">
-
-        <div class="prod-flex__head" data-reveal>
-          <span class="prod-flex__pill">Product Flexibility</span>
-          <h2 class="prod-flex__headline" id="prod-flex-headline">
-            Flexible Product Support.
-          </h2>
-          <p class="prod-flex__sub">
-            Not limited by slots — sell what your customers actually want.
-          </p>
+    <!-- ══ BENEFITS ══════════════════════════════════════════ -->
+    <section class="section" id="why-operate">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Why Operators Choose It</span>
+          <h2 class="h2">More revenue. Less work. <span class="text-grad">No surprises.</span></h2>
         </div>
 
-        <div class="prod-flex__grid" id="prod-flex-grid">
-
-          <!-- Card 1: Snacks & Drinks — image top, text bottom -->
-          <div class="prod-card">
-            <div class="prod-card__img-wrap">
-              <img src="assets/images/product-(1).jpg"
-                   alt="Snacks and drinks stocked in AI Smart Cabinet"
-                   loading="lazy" />
-            </div>
-            <div class="prod-card__body">
-              <p class="prod-card__name">Snacks &amp; Drinks</p>
-              <p class="prod-card__desc">High-frequency items that drive consistent daily sales.</p>
-            </div>
-          </div>
-
-          <!-- Card 2: Fresh Food — text top, image bottom -->
-          <div class="prod-card prod-card--flipped">
-            <div class="prod-card__img-wrap">
-              <img src="assets/images/product-(2).jpg"
-                   alt="Fresh food options in AI Smart Cabinet"
-                   loading="lazy" />
-            </div>
-            <div class="prod-card__body">
-              <p class="prod-card__name">Fresh Food</p>
-              <p class="prod-card__desc">Higher-value products that increase average order size.</p>
-            </div>
-          </div>
-
-          <!-- Card 3: Daily Essentials — image top, text bottom -->
-          <div class="prod-card">
-            <div class="prod-card__img-wrap">
-              <img src="assets/images/product-(3).jpg"
-                   alt="Daily essentials in AI Smart Cabinet"
-                   loading="lazy" />
-            </div>
-            <div class="prod-card__body">
-              <p class="prod-card__name">Daily Essentials</p>
-              <p class="prod-card__desc">Convenience-driven purchases for immediate needs.</p>
-            </div>
-          </div>
-
-          <!-- Card 4: Non-Standard Products — text top, image bottom -->
-          <div class="prod-card prod-card--flipped">
-            <div class="prod-card__img-wrap">
-              <img src="assets/images/product-(4).jpg"
-                   alt="Non-standard specialty products in AI Smart Cabinet"
-                   loading="lazy" />
-            </div>
-            <div class="prod-card__body">
-              <p class="prod-card__name">Non-Standard Products</p>
-              <p class="prod-card__desc">Flexible offerings tailored to your location and audience.</p>
-            </div>
-          </div>
-
-        </div><!-- /prod-flex__grid -->
-      </div><!-- /prod-flex__inner -->
-    </section>
-
-    <!-- ──────────────────────────────────────
-         SECTION 4 — WHERE IT WORKS
-         6-scene grid · particle dot-grid backdrop
-         Conic-gradient hover glow · reveal-on-hover copy
-    ─────────────────────────────────────── -->
-    <section class="scenes" id="scenes" aria-labelledby="scenes-headline">
-
-      <canvas class="scenes__canvas" id="scenes-canvas" aria-hidden="true"></canvas>
-
-      <div class="section-inner">
-
-        <div class="scenes__head">
-          <p class="section-label scenes__label">Where It Works</p>
-          <h2 class="scenes__headline" id="scenes-headline">
-            Every Space. <span class="scenes__always">Always Selling.</span>
-          </h2>
-          <p class="scenes__sub">
-            From corporate towers to campus dorms, SenseUni cabinets adapt
-            to wherever people gather — and keep selling around the clock.
-          </p>
-        </div>
-
-        <div class="scenes__grid" id="scenes-grid" data-reveal-group="scenes">
-
-          <article class="scenes__card" data-reveal>
-            <div class="scenes__clip">
-              <img class="scenes__img" src="assets/images/Universities.jpg"
-                   alt="SenseUni smart cabinet placed in a corporate office break room" loading="lazy" />
-              <div class="scenes__overlay" aria-hidden="true"></div>
-              <span class="scenes__tag">24/7 Access</span>
-              <div class="scenes__content">
-                <div class="scenes__icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                    <path d="M9 21V9h6v12"/>
-                  </svg>
-                </div>
-                <h3 class="scenes__name">Corporate Offices</h3>
-                <p class="scenes__desc">Break rooms and lobbies stocked around the clock — no vending contracts to manage.</p>
-              </div>
-            </div>
+        <div class="grid grid--4" data-stagger>
+          <article class="card benefit-card">
+            <span class="benefit-card__kicker">Revenue</span>
+            <h3 class="h3">Sell more per location</h3>
+            <p>Open shelves outsell spiral machines. Customers see it, they buy it.</p>
           </article>
-
-          <article class="scenes__card" data-reveal>
-            <div class="scenes__clip">
-              <img class="scenes__img" src="assets/images/lookUniversities.jpg"
-                   alt="SenseUni smart cabinet on a university campus" loading="lazy" />
-              <div class="scenes__overlay" aria-hidden="true"></div>
-              <span class="scenes__tag">Campus Ready</span>
-              <div class="scenes__content">
-                <div class="scenes__icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 10L12 5 2 10l10 5 10-5z"/>
-                    <path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>
-                  </svg>
-                </div>
-                <h3 class="scenes__name">Universities</h3>
-                <p class="scenes__desc">Dorms, libraries, and student unions — late-night demand, served instantly.</p>
-              </div>
-            </div>
+          <article class="card benefit-card">
+            <span class="benefit-card__kicker">Labor</span>
+            <h3 class="h3">No staff. Ever.</h3>
+            <p>No cashier, no shift schedule, no labor cost per transaction.</p>
           </article>
-
-          <article class="scenes__card" data-reveal>
-            <div class="scenes__clip">
-              <img class="scenes__img" src="assets/images/senunilab.jpg"
-                   alt="SenseUni smart cabinet inside a gym and fitness center" loading="lazy" />
-              <div class="scenes__overlay" aria-hidden="true"></div>
-              <span class="scenes__tag">High Turnover</span>
-              <div class="scenes__content">
-                <div class="scenes__icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6.5 6.5l11 11M3 14l3-3 3 3-3 3-3-3zm12-12l3 3-3 3-3-3 3-3z"/>
-                  </svg>
-                </div>
-                <h3 class="scenes__name">Gyms &amp; Fitness</h3>
-                <p class="scenes__desc">Hydration and recovery, right at the floor — fueling every session.</p>
-              </div>
-            </div>
+          <article class="card benefit-card">
+            <span class="benefit-card__kicker">Operations</span>
+            <h3 class="h3">Know before you go</h3>
+            <p>Live inventory and alerts tell you what's low before you make the drive.</p>
           </article>
-
-          <article class="scenes__card" data-reveal>
-            <div class="scenes__clip">
-              <img class="scenes__img" src="assets/images/home-9.jpg"
-                   alt="SenseUni smart cabinet placed in a hotel lobby" loading="lazy" />
-              <div class="scenes__overlay" aria-hidden="true"></div>
-              <span class="scenes__tag">Guest Convenience</span>
-              <div class="scenes__content">
-                <div class="scenes__icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 21V8l9-5 9 5v13"/>
-                    <path d="M9 21v-6h6v6"/>
-                  </svg>
-                </div>
-                <h3 class="scenes__name">Hotels</h3>
-                <p class="scenes__desc">Replace the minibar — fresher selection, lower overhead, happier guests.</p>
-              </div>
-            </div>
+          <article class="card benefit-card">
+            <span class="benefit-card__kicker">Reliability</span>
+            <h3 class="h3">Built to last in the field</h3>
+            <p>Tempered glass. Steel housing. Runs 24/7 without intervention.</p>
           </article>
-
-          <article class="scenes__card" data-reveal>
-            <div class="scenes__clip">
-              <img class="scenes__img" src="assets/images/lookhospital.jpg"
-                   alt="SenseUni smart cabinet in a healthcare facility corridor" loading="lazy" />
-              <div class="scenes__overlay" aria-hidden="true"></div>
-              <span class="scenes__tag">Always Open</span>
-              <div class="scenes__content">
-                <div class="scenes__icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2v6m0 8v6M2 12h6m8 0h6"/>
-                    <circle cx="12" cy="12" r="9"/>
-                  </svg>
-                </div>
-                <h3 class="scenes__name">Healthcare</h3>
-                <p class="scenes__desc">Staff and visitors get round-the-clock access — no break-room run required.</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="scenes__card" data-reveal>
-            <div class="scenes__clip">
-              <img class="scenes__img" src="assets/images/lookairports-transit.jpg"
-                   alt="SenseUni smart cabinet at an airport or transit hub" loading="lazy" />
-              <div class="scenes__overlay" aria-hidden="true"></div>
-              <span class="scenes__tag">High Footfall</span>
-              <div class="scenes__content">
-                <div class="scenes__icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 11l18-5-5 18-3-7-7-3z"/>
-                  </svg>
-                </div>
-                <h3 class="scenes__name">Transit Hubs</h3>
-                <p class="scenes__desc">Airports, stations, and terminals — capture travelers on the move.</p>
-              </div>
-            </div>
-          </article>
-
         </div>
       </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         SECTION 5 — HARDWARE
-         Halo Mini vs Halo Max comparison
-    ─────────────────────────────────────── -->
-    <section class="hardware" id="hardware" aria-labelledby="hardware-headline">
-      <div class="section-inner">
-
-        <div class="hardware__head">
-          <p class="section-label hardware__label">Hardware</p>
-          <h2 class="hardware__headline" id="hardware-headline">
-            Two Models. <span class="gradient-text-cyan">One Platform.</span>
-          </h2>
-          <p class="hardware__sub">
-            Choose the footprint that fits your space — both run the
-            same AI vision platform and the same fleet dashboard.
-          </p>
+    <!-- ══ STEPS ═════════════════════════════════════════════ -->
+    <section class="section section--flush-top" id="experience">
+      <div class="container">
+        <div class="section-head section-head--center reveal">
+          <span class="eyebrow">The Experience</span>
+          <h2 class="h2">Three steps. <span class="text-grad">Under 30 seconds.</span></h2>
         </div>
 
-        <div class="hardware__grid" id="hardware-grid" data-reveal-group="hardware">
+        <div class="grid grid--3" data-stagger>
+          <article class="card step-card">
+            <span class="step-card__num">1</span>
+            <h3 class="h3">Tap</h3>
+            <p>Card, Apple Pay, or Google Pay. Door opens.</p>
+          </article>
+          <article class="card step-card">
+            <span class="step-card__num">2</span>
+            <h3 class="h3">Grab</h3>
+            <p>Browse freely. AI tracks every item in real time.</p>
+          </article>
+          <article class="card step-card">
+            <span class="step-card__num">3</span>
+            <h3 class="h3">Go</h3>
+            <p>Door closes. Charged automatically. Receipt by text or email.</p>
+          </article>
+        </div>
 
-          <span class="hardware__vs" data-reveal aria-hidden="true">VS</span>
+        <p class="steps__payments reveal">Visa · Mastercard · Apple Pay · Google Pay · NFC</p>
+      </div>
+    </section>
 
-          <article class="hardware__card" data-reveal>
-            <div class="hardware__media">
-              <img class="hardware__img" src="assets/images/product-2.webp"
-                   alt="Halo Mini smart vending cabinet" loading="lazy" />
-            </div>
-            <div class="hardware__body">
-              <p class="hardware__model-label">Compact Footprint</p>
-              <h3 class="hardware__name">Halo Mini</h3>
-              <p class="hardware__tagline">Built for tight spaces — break rooms, hallways, and shared lobbies.</p>
-              <div class="hardware__specs" data-reveal-group="hardware-mini">
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Capacity</span>
-                  <span class="hardware__spec-value">508L</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Dimensions</span>
-                  <span class="hardware__spec-value">26.0×27.2×74.4 in</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Power</span>
-                  <span class="hardware__spec-value">110V 60Hz</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Temperature</span>
-                  <span class="hardware__spec-value">32°F–68°F (adjustable)</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Ad Display</span>
-                  <span class="hardware__spec-value">None</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Payment</span>
-                  <span class="hardware__spec-value gradient-text-cyan">Visa / Mastercard / NFC / Mobile Wallet</span>
-                </div>
+    <!-- ══ ROI ═══════════════════════════════════════════════ -->
+    <section class="section section--flush-top" id="roi">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">ROI Estimator</span>
+          <h2 class="h2">See your return <span class="text-grad">before you commit.</span></h2>
+        </div>
+
+        <div class="roi-panel reveal">
+          <div class="roi-inputs">
+            <div>
+              <div class="roi-input__head">
+                <label for="roi-traffic">Daily foot traffic</label>
+                <span class="roi-input__value" id="roi-traffic-val">500</span>
               </div>
-              <button type="button" class="hardware__cta hardware__cta--secondary">Download Spec Sheet</button>
+              <input class="slider" type="range" id="roi-traffic" min="50" max="5000" step="50" value="500" />
+            </div>
+            <div>
+              <div class="roi-input__head">
+                <label for="roi-conversion">Conversion rate</label>
+                <span class="roi-input__value" id="roi-conversion-val">5%</span>
+              </div>
+              <input class="slider" type="range" id="roi-conversion" min="1" max="20" step="0.5" value="5" />
+            </div>
+            <div>
+              <div class="roi-input__head">
+                <label for="roi-basket">Avg. basket size</label>
+                <span class="roi-input__value" id="roi-basket-val">$5.00</span>
+              </div>
+              <input class="slider" type="range" id="roi-basket" min="1" max="20" step="0.5" value="5" />
+            </div>
+            <div>
+              <div class="roi-input__head">
+                <label for="roi-margin">Gross margin</label>
+                <span class="roi-input__value" id="roi-margin-val">45%</span>
+              </div>
+              <input class="slider" type="range" id="roi-margin" min="10" max="80" step="1" value="45" />
+            </div>
+          </div>
+          <div class="roi-outputs" aria-live="polite">
+            <div>
+              <p class="roi-output__label">Monthly transactions</p>
+              <p class="roi-output__value" id="roi-out-tx">0</p>
+            </div>
+            <div>
+              <p class="roi-output__label">Monthly gross revenue</p>
+              <p class="roi-output__value" id="roi-out-rev">$0</p>
+            </div>
+            <div>
+              <p class="roi-output__label">Monthly gross profit</p>
+              <p class="roi-output__value" id="roi-out-profit">$0</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="roi__note reveal">Estimates are illustrative. Actual results vary by location, product mix, and pricing.</p>
+        <div class="roi__cta reveal">
+          <a class="link-arrow" href="get-a-demo.html">Get a detailed ROI analysis →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ VENUES ════════════════════════════════════════════ -->
+    <section class="section section--flush-top" id="scenes">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Where It Works</span>
+          <h2 class="h2">Any location <span class="text-grad">with foot traffic.</span></h2>
+        </div>
+
+        <div class="venue-strip reveal">
+          <div class="media-frame">
+            <img src="assets/images/home-9.jpg" alt="AI Smart Cabinet operating around the clock in an office lobby" loading="lazy" />
+          </div>
+        </div>
+
+        <div class="grid grid--4" data-stagger>
+          <article class="card venue-card">
+            <h3 class="h3">Office Buildings</h3>
+            <p>24/7 access. No cafeteria needed.</p>
+          </article>
+          <article class="card venue-card">
+            <h3 class="h3">Hotels</h3>
+            <p>Replace the minibar. Higher margins, zero overhead.</p>
+          </article>
+          <article class="card venue-card">
+            <h3 class="h3">Universities</h3>
+            <p>High frequency. Multiple locations compound daily volume.</p>
+          </article>
+          <article class="card venue-card">
+            <h3 class="h3">Warehouses &amp; Factories</h3>
+            <p>Odd-hour access. No vendor required on-site.</p>
+          </article>
+          <article class="card venue-card">
+            <h3 class="h3">Apartment Complexes</h3>
+            <p>Captive audience. Low competition.</p>
+          </article>
+          <article class="card venue-card">
+            <h3 class="h3">Hospitals</h3>
+            <p>Cafeterias close. Halo doesn't.</p>
+          </article>
+          <article class="card venue-card">
+            <h3 class="h3">Airports &amp; Transit</h3>
+            <p>High footfall. Under 30 seconds per transaction.</p>
+          </article>
+          <article class="card venue-card">
+            <h3 class="h3">Gyms &amp; Fitness</h3>
+            <p>Hydration and recovery, right at the floor.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ HARDWARE ══════════════════════════════════════════ -->
+    <section class="section section--flush-top" id="hardware">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Hardware</span>
+          <h2 class="h2">Two sizes. <span class="text-grad">One platform.</span></h2>
+        </div>
+
+        <div class="hw-grid" data-stagger>
+          <article class="card hw-card">
+            <div class="hw-card__media">
+              <img src="assets/images/product-1.webp" alt="Halo Mini AI smart cabinet" loading="lazy" />
+            </div>
+            <div class="hw-card__body">
+              <p class="hw-card__kicker">Compact Footprint</p>
+              <h3 class="h3">Halo Mini</h3>
+              <p>For locations where space is tight — break rooms, hallways, and shared lobbies.</p>
+              <dl class="hw-specs">
+                <div class="hw-specs__row"><dt>Capacity</dt><dd>508L</dd></div>
+                <div class="hw-specs__row"><dt>Dimensions</dt><dd>26.0 × 27.2 × 74.4 in</dd></div>
+                <div class="hw-specs__row"><dt>Power</dt><dd>110V 60Hz</dd></div>
+                <div class="hw-specs__row"><dt>Temperature</dt><dd>32°F – 68°F (adjustable)</dd></div>
+                <div class="hw-specs__row"><dt>Ad Display</dt><dd>None</dd></div>
+                <div class="hw-specs__row"><dt>Payment</dt><dd>Visa / Mastercard / NFC / Mobile Wallet</dd></div>
+              </dl>
+              <a class="btn btn--ghost btn--sm" href="get-a-demo.html">Download Spec Sheet</a>
             </div>
           </article>
 
-          <article class="hardware__card hardware__card--featured" data-reveal>
-            <span class="hardware__badge">Best Seller</span>
-            <div class="hardware__media">
-              <img class="hardware__img" src="assets/images/product-1.webp"
-                   alt="Halo Max smart vending cabinet" loading="lazy" />
+          <article class="card hw-card">
+            <div class="hw-card__media">
+              <span class="hw-card__flag">Best Seller</span>
+              <img src="assets/images/product-2.webp" alt="Halo Max AI smart cabinet with HD advertising display" loading="lazy" />
             </div>
-            <div class="hardware__body">
-              <p class="hardware__model-label">Full-Scale Deployment</p>
-              <h3 class="hardware__name">Halo Max</h3>
-              <p class="hardware__tagline">Built for volume — cafeterias, gyms, transit hubs, and high-traffic lobbies.</p>
-              <div class="hardware__specs" data-reveal-group="hardware-max">
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Capacity</span>
-                  <span class="hardware__spec-value">608L</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Dimensions</span>
-                  <span class="hardware__spec-value">25.0×31.5×79.1 in</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Power</span>
-                  <span class="hardware__spec-value">110V 60Hz</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Temperature</span>
-                  <span class="hardware__spec-value">32°F–68°F (adjustable)</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Ad Display</span>
-                  <span class="hardware__spec-value">28.6&Prime; HD touch display</span>
-                </div>
-                <div class="hardware__spec-row" data-reveal>
-                  <span class="hardware__spec-label">Payment</span>
-                  <span class="hardware__spec-value gradient-text-cyan">Visa / Mastercard / NFC / Mobile Wallet</span>
-                </div>
-              </div>
-              <button type="button" class="hardware__cta hardware__cta--primary">Get a Demo</button>
+            <div class="hw-card__body">
+              <p class="hw-card__kicker">Full-Scale Deployment</p>
+              <h3 class="h3">Halo Max</h3>
+              <p>More capacity. A 28.6&Prime; HD display runs ads while it sells — built for cafeterias, gyms, and transit hubs.</p>
+              <dl class="hw-specs">
+                <div class="hw-specs__row"><dt>Capacity</dt><dd>608L</dd></div>
+                <div class="hw-specs__row"><dt>Dimensions</dt><dd>25.0 × 31.5 × 79.1 in</dd></div>
+                <div class="hw-specs__row"><dt>Power</dt><dd>110V 60Hz</dd></div>
+                <div class="hw-specs__row"><dt>Temperature</dt><dd>32°F – 68°F (adjustable)</dd></div>
+                <div class="hw-specs__row"><dt>Ad Display</dt><dd>28.6&Prime; HD touch display</dd></div>
+                <div class="hw-specs__row"><dt>Payment</dt><dd>Visa / Mastercard / NFC / Mobile Wallet</dd></div>
+              </dl>
+              <a class="btn btn--primary btn--sm" href="get-a-demo.html">Get a Demo</a>
             </div>
           </article>
-
         </div>
 
-        <p class="hardware__features" data-reveal-group="hardware-features" data-reveal>
-          Both models share the same AI recognition engine, cloud fleet dashboard,
-          remote diagnostics, OTA software updates, and tap-to-pay checkout —
-          so your team operates one system, at any scale.
-        </p>
-
+        <p class="hw__shared reveal">Both models share the same <strong>AI recognition engine, cloud fleet dashboard, remote diagnostics, OTA software updates, and tap-to-pay checkout</strong> — so your team operates one system, at any scale.</p>
       </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         SECTION 6 — ROI CALCULATOR
-         Live sliders · gradient result cards
-    ─────────────────────────────────────── -->
-    <section class="roi" id="roi" aria-labelledby="roi-headline">
-      <div class="section-inner">
-
-        <div class="roi__head">
-          <p class="section-label roi__label">ROI Calculator</p>
-          <h2 class="roi__headline" id="roi-headline">
-            Run Your <span class="gradient-text-cyan">Numbers.</span>
-          </h2>
-          <p class="roi__sub">See what autonomous retail can deliver for your business.</p>
+    <!-- ══ FAQ ═══════════════════════════════════════════════ -->
+    <section class="section section--flush-top" id="faq">
+      <div class="container--narrow">
+        <div class="section-head section-head--center reveal">
+          <span class="eyebrow">FAQ</span>
+          <h2 class="h2">Common <span class="text-grad">Questions.</span></h2>
         </div>
 
-        <div class="roi__panel" data-reveal-group="roi" data-reveal>
-          <div class="roi__glow" aria-hidden="true"></div>
-
-          <div class="roi__grid">
-            <div class="roi__sliders">
-
-              <div class="roi__slider-row">
-                <div class="roi__slider-head">
-                  <span class="roi__slider-label">Number of Cabinets</span>
-                  <span class="roi__slider-value" data-value-for="cabinets">5 units</span>
-                </div>
-                <input type="range" class="roi__slider" id="roi-cabinets"
-                       min="1" max="100" step="1" value="5" data-roi="cabinets" />
-              </div>
-
-              <div class="roi__slider-row">
-                <div class="roi__slider-head">
-                  <span class="roi__slider-label">Daily Transactions per Cabinet</span>
-                  <span class="roi__slider-value" data-value-for="txPerDay">50 / day</span>
-                </div>
-                <input type="range" class="roi__slider" id="roi-txPerDay"
-                       min="10" max="200" step="5" value="50" data-roi="txPerDay" />
-              </div>
-
-              <div class="roi__slider-row">
-                <div class="roi__slider-head">
-                  <span class="roi__slider-label">Average Transaction Value</span>
-                  <span class="roi__slider-value" data-value-for="avgValue">$5.00</span>
-                </div>
-                <input type="range" class="roi__slider" id="roi-avgValue"
-                       min="1" max="20" step="0.5" value="5" data-roi="avgValue" />
-              </div>
-
-              <div class="roi__slider-row">
-                <div class="roi__slider-head">
-                  <span class="roi__slider-label">Gross Margin</span>
-                  <span class="roi__slider-value" data-value-for="margin">45%</span>
-                </div>
-                <input type="range" class="roi__slider" id="roi-margin"
-                       min="20" max="80" step="5" value="45" data-roi="margin" />
-              </div>
-
-            </div>
-
-            <div class="roi__results">
-              <div class="roi__card">
-                <p class="roi__card-label">Monthly Revenue</p>
-                <p class="roi__card-value" id="roi-monthly">$0</p>
-              </div>
-              <div class="roi__card">
-                <p class="roi__card-label">Annual Revenue</p>
-                <p class="roi__card-value" id="roi-annual">$0</p>
-              </div>
-              <div class="roi__card">
-                <p class="roi__card-label">Estimated Monthly Profit</p>
-                <p class="roi__card-value" id="roi-profit">$0</p>
-              </div>
-            </div>
+        <div class="reveal">
+          <div class="faq-item">
+            <button class="faq-item__q" aria-expanded="false">
+              How accurate is the AI recognition?
+              <span class="faq-item__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+            </button>
+            <div class="faq-item__a"><p>99.6%. Every disputed transaction resolved with session-level video evidence.</p></div>
           </div>
-
-          <p class="roi__disclaimer">* Estimates based on input assumptions. Actual results vary by location and product mix.</p>
+          <div class="faq-item">
+            <button class="faq-item__q" aria-expanded="false">
+              What payment methods are supported?
+              <span class="faq-item__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+            </button>
+            <div class="faq-item__a"><p>Visa, Mastercard, Apple Pay, Google Pay, and NFC contactless.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-item__q" aria-expanded="false">
+              Can I manage multiple machines from one place?
+              <span class="faq-item__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+            </button>
+            <div class="faq-item__a"><p>Yes. One dashboard for your entire fleet — inventory, sales, alerts, price updates.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-item__q" aria-expanded="false">
+              Do I need to retrain the AI for new products?
+              <span class="faq-item__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+            </button>
+            <div class="faq-item__a"><p>No. New SKUs are updated via the cloud. No hardware changes required.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-item__q" aria-expanded="false">
+              Is my data secure?
+              <span class="faq-item__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+            </button>
+            <div class="faq-item__a"><p>Hosted on AWS. Private deployment available for enterprise accounts.</p></div>
+          </div>
         </div>
-
-        <hr class="section-divider" />
       </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         SECTION 7 — FAQ
-         Single-open accordion, 7 questions
-    ─────────────────────────────────────── -->
-    <section class="faq" id="faq" aria-labelledby="faq-headline">
-      <div class="section-inner">
-
-        <div class="faq__head">
-          <p class="section-label faq__label">FAQ</p>
-          <h2 class="faq__headline" id="faq-headline">
-            Common <span class="gradient-text">Questions.</span>
-          </h2>
-        </div>
-
-        <div class="faq__list" id="faq-list" data-reveal-group="faq">
-
-          <div class="faq__item is-open" data-reveal>
-            <button type="button" class="faq__question" aria-expanded="true">
-              <span>How does the AI recognition work?</span>
-              <span class="faq__toggle" aria-hidden="true"></span>
-            </button>
-            <div class="faq__answer">
-              <p>Each cabinet uses multiple HD cameras and deep-learning vision models to identify products as they're taken or returned — no barcodes or weight sensors required. The system continuously improves through over-the-air model updates.</p>
-            </div>
+    <!-- ══ FINAL CTA ═════════════════════════════════════════ -->
+    <section class="cta-band" id="get-started">
+      <div class="container cta-band__inner">
+        <div class="reveal">
+          <span class="eyebrow" style="margin-bottom: 22px;">Get Started</span>
+          <h2 class="display">Ready to <span class="text-grad">add a location?</span></h2>
+          <p class="lead">Talk to our team. We'll walk you through deployment options and next steps.</p>
+          <div class="cta-band__actions">
+            <a class="btn btn--primary" href="get-a-demo.html">Request a Demo</a>
+            <a class="btn btn--ghost" href="get-a-demo.html">Download Spec Sheet</a>
           </div>
-
-          <div class="faq__item" data-reveal>
-            <button type="button" class="faq__question" aria-expanded="false">
-              <span>What products can I sell in the cabinet?</span>
-              <span class="faq__toggle" aria-hidden="true"></span>
-            </button>
-            <div class="faq__answer">
-              <p>Beverages, snacks, fresh food, cosmetics, electronics accessories, and more. If it fits on a shelf and stays within the 32°F–68°F temperature range, the cabinet can sell it. Our team helps configure optimal planograms for your product mix.</p>
-            </div>
-          </div>
-
-          <div class="faq__item" data-reveal>
-            <button type="button" class="faq__question" aria-expanded="false">
-              <span>What happens if the AI makes a recognition error?</span>
-              <span class="faq__toggle" aria-hidden="true"></span>
-            </button>
-            <div class="faq__answer">
-              <p>With 99.6% accuracy, errors are rare. When they do occur, our system flags the transaction for review. Customers are never overcharged — disputed charges are resolved automatically through the platform.</p>
-            </div>
-          </div>
-
-          <div class="faq__item" data-reveal>
-            <button type="button" class="faq__question" aria-expanded="false">
-              <span>What connectivity does the cabinet need?</span>
-              <span class="faq__toggle" aria-hidden="true"></span>
-            </button>
-            <div class="faq__answer">
-              <p>A 4G cellular connection is built in — no Wi-Fi dependency. The cabinet operates and processes payments even during brief connectivity interruptions, syncing data when the connection restores.</p>
-            </div>
-          </div>
-
-          <div class="faq__item" data-reveal>
-            <button type="button" class="faq__question" aria-expanded="false">
-              <span>How long does deployment take?</span>
-              <span class="faq__toggle" aria-hidden="true"></span>
-            </button>
-            <div class="faq__answer">
-              <p>Cabinets arrive pre-configured with your product catalog and payment settings. Typical setup: unbox, position, plug in power, and go live in under an hour. No specialized technicians required.</p>
-            </div>
-          </div>
-
-          <div class="faq__item" data-reveal>
-            <button type="button" class="faq__question" aria-expanded="false">
-              <span>How does restocking work?</span>
-              <span class="faq__toggle" aria-hidden="true"></span>
-            </button>
-            <div class="faq__answer">
-              <p>The cloud dashboard tracks real-time inventory and sends predictive restock alerts before products run out. Operators simply open the service door, restock shelves, and the AI automatically updates inventory — no manual scanning.</p>
-            </div>
-          </div>
-
-          <div class="faq__item" data-reveal>
-            <button type="button" class="faq__question" aria-expanded="false">
-              <span>What support and warranty are included?</span>
-              <span class="faq__toggle" aria-hidden="true"></span>
-            </button>
-            <div class="faq__answer">
-              <p>All cabinets include hardware warranty, 24/7 remote diagnostics, OTA software updates, and dedicated account support. Our team monitors machine health proactively and can resolve most issues remotely.</p>
-            </div>
-          </div>
-
-        </div>
-
-        <hr class="section-divider" />
-      </div>
-    </section>
-
-    <!-- ──────────────────────────────────────
-         SECTION 8 — FINAL CTA
-         Full-width · particle network backdrop
-    ─────────────────────────────────────── -->
-    <section class="final-cta" id="final-cta" aria-labelledby="final-cta-headline">
-
-      <canvas class="final-cta__canvas" id="final-cta-canvas" aria-hidden="true"></canvas>
-
-      <div class="final-cta__inner">
-        <p class="section-label final-cta__label">Get Started</p>
-        <h2 class="final-cta__headline" id="final-cta-headline" data-reveal>
-          Ready to <span class="final-cta__deploy">Deploy?</span>
-        </h2>
-        <p class="final-cta__sub" data-reveal>
-          Talk to our team about your first cabinet — or your next hundred.
-        </p>
-        <div class="final-cta__actions" data-reveal>
-          <a href="#" class="final-cta__btn final-cta__btn--primary">Get a Demo</a>
-          <a href="#" class="final-cta__btn final-cta__btn--secondary">
-            Download Spec Sheet
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/>
-            </svg>
-          </a>
+          <p class="cta-band__note">Ships to the U.S. · Runs on AWS · Support included</p>
         </div>
       </div>
     </section>
 
   </main>
 
-
-  <!-- ═══════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════ -->
   <footer class="footer" role="contentinfo">
-    <div class="footer__main" id="footer-main">
-
-      <div class="footer__logo-col">
+    <div class="footer__main">
+      <div class="footer__brand">
         <a href="index.html" class="footer__logo" aria-label="SenseUni home">
-          <img src="assets/images/logo.webp" alt="SenseUni" style="width:160px;height:auto;display:block;" />
+          <img src="assets/images/logo.webp" alt="SenseUni" width="160" height="34" />
         </a>
         <p class="footer__tagline">Building Smarter Retail Networks.</p>
-        <p class="footer__position-line">AI-powered retail infrastructure for global markets.</p>
+        <p class="footer__desc">AI-powered retail infrastructure for global markets.</p>
       </div>
-
-      <div>
-        <p class="footer__col-title">Product</p>
-        <ul class="footer__col-links" role="list">
-          <li><a href="ai-smart-cabinet.html"      class="footer__col-link">AI Smart Cabinet</a></li>
-          <li><a href="solutions.html#showcase"    class="footer__col-link">Smart Showcase</a></li>
-          <li><a href="solutions.html#advertising" class="footer__col-link">Smart Advertising</a></li>
-          <li><a href="technology.html"            class="footer__col-link">AIoT Platform</a></li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Product</h3>
+        <ul>
+          <li><a href="ai-smart-cabinet.html">AI Smart Cabinet</a></li>
+          <li><a href="solutions.html#showcase">Smart Showcase</a></li>
+          <li><a href="solutions.html#advertising">Smart Advertising</a></li>
+          <li><a href="technology.html">AIoT Platform</a></li>
         </ul>
       </div>
-
-      <div>
-        <p class="footer__col-title">Company</p>
-        <ul class="footer__col-links" role="list">
-          <li><a href="company.html"           class="footer__col-link">About SenseUni</a></li>
-          <li><a href="case-studies.html"      class="footer__col-link">Case Studies</a></li>
-          <li><a href="technology.html"        class="footer__col-link">Technology</a></li>
-          <li><a href="company.html#partners"  class="footer__col-link">Partners</a></li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Company</h3>
+        <ul>
+          <li><a href="company.html">About SenseUni</a></li>
+          <li><a href="case-studies.html">Case Studies</a></li>
+          <li><a href="technology.html">Technology</a></li>
+          <li><a href="get-a-demo.html">Get a Demo</a></li>
         </ul>
       </div>
-
-      <div>
-        <p class="footer__col-title">Global Presence</p>
-        <ul class="footer__col-links" role="list">
-          <li><span class="footer__col-link">North America</span></li>
-          <li><span class="footer__col-link">Europe</span></li>
-          <li><span class="footer__col-link">Middle East</span></li>
-          <li><span class="footer__col-link">Asia Pacific</span></li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Global Presence</h3>
+        <ul>
+          <li><span>North America</span></li>
+          <li><span>Europe</span></li>
+          <li><span>Middle East</span></li>
+          <li><span>Asia Pacific</span></li>
         </ul>
       </div>
-
-      <div>
-        <p class="footer__col-title">Contact</p>
-        <ul class="footer__col-links" role="list">
-          <li>
-            <div class="footer__contact-item">
-              <span class="footer__contact-label">General</span>
-              <a href="mailto:hello@senseuni.ai" class="footer__col-link">hello@senseuni.ai</a>
-            </div>
-          </li>
-          <li>
-            <div class="footer__contact-item">
-              <span class="footer__contact-label">Sales</span>
-              <a href="mailto:sales@senseuni.ai" class="footer__col-link">sales@senseuni.ai</a>
-            </div>
-          </li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Contact</h3>
+        <ul>
+          <li><a href="mailto:hello@senseuni.ai">hello@senseuni.ai</a></li>
+          <li><a href="mailto:sales@senseuni.ai">sales@senseuni.ai</a></li>
         </ul>
       </div>
-
     </div>
-
     <div class="footer__bottom">
-      <p class="footer__copy">© 2026 SenseUni. All rights reserved.</p>
-
-      <ul class="footer__social" role="list" aria-label="Social media links">
-        <li>
-          <a href="https://linkedin.com/company/senseuni" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://tiktok.com/@senseuni" class="footer__social-link" aria-label="TikTok" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.79a8.18 8.18 0 0 0 4.78 1.52V6.85a4.85 4.85 0 0 1-1-.16z"/></svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://youtube.com/@senseuni" class="footer__social-link" aria-label="YouTube" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://instagram.com/senseuni" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://x.com/senseuni" class="footer__social-link" aria-label="X (Twitter)" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-        </li>
-      </ul>
-
-      <ul class="footer__legal" role="list">
-        <li><a href="privacy-policy.html" class="footer__legal-link">Privacy Policy</a></li>
-        <li><a href="terms-of-service.html" class="footer__legal-link">Terms of Service</a></li>
-      </ul>
+      <div class="footer__bottom-inner">
+        <p class="footer__copyright">© <span id="footer-year">2026</span> SenseUni. All rights reserved.</p>
+        <div class="footer__legal">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+        </div>
+      </div>
     </div>
-
   </footer>
 
-
-  <!-- Back-to-top -->
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <polyline points="18 15 12 9 6 15"/>
-    </svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
   </button>
 
-
-  <!-- ═══════════════════════════════════════
-       JAVASCRIPT
-  ═══════════════════════════════════════ -->
-  <script>
-    (() => {
-
-      /* ════════════════════════════════════
-         NAV — SCROLL + HAMBURGER
-      ════════════════════════════════════ */
-      const nav       = document.getElementById('nav');
-      const hamburger = document.getElementById('nav-hamburger');
-      const drawer    = document.getElementById('nav-drawer');
-      const backToTop = document.getElementById('back-to-top');
-
-      let lastScrollY = 0, ticking = false;
-      const HIDE_THRESHOLD = 120, DELTA = 5;
-
-      function onScroll() {
-        const y = window.scrollY;
-        if (y < HIDE_THRESHOLD) {
-          nav.classList.remove('is-hidden');
-          nav.classList.toggle('is-scrolled', y > 12);
-        } else if (y > lastScrollY + DELTA) {
-          nav.classList.add('is-hidden');
-          nav.classList.add('is-scrolled');
-        } else if (y < lastScrollY - DELTA) {
-          nav.classList.remove('is-hidden');
-        }
-        if (backToTop) backToTop.classList.toggle('is-visible', y > 400);
-        lastScrollY = y;
-        ticking = false;
-      }
-
-      window.addEventListener('scroll', () => {
-        if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
-      }, { passive: true });
-
-      document.addEventListener('mousemove', (e) => {
-        if (e.clientY < 80 && window.scrollY >= HIDE_THRESHOLD) nav.classList.remove('is-hidden');
-      });
-
-      nav.addEventListener('animationend', () => { nav.style.animation = 'none'; }, { once: true });
-      onScroll();
-
-      const toggleDrawer = (open) => {
-        nav.classList.toggle('is-open', open);
-        drawer.classList.toggle('is-open', open);
-        hamburger.setAttribute('aria-expanded', String(open));
-        drawer.setAttribute('aria-hidden', String(!open));
-        document.body.style.overflow = open ? 'hidden' : '';
-      };
-
-      hamburger.addEventListener('click', () => toggleDrawer(!drawer.classList.contains('is-open')));
-      document.addEventListener('click', (e) => {
-        if (drawer.classList.contains('is-open') && !nav.contains(e.target) && !drawer.contains(e.target)) toggleDrawer(false);
-      });
-      window.addEventListener('resize', () => { if (window.innerWidth > 900) toggleDrawer(false); });
-      drawer.querySelectorAll('a').forEach(l => l.addEventListener('click', () => toggleDrawer(false)));
-
-      if (backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-      /* ════════════════════════════════════
-         FOOTER COLUMN ENTRANCE
-      ════════════════════════════════════ */
-      const footerCols = document.querySelectorAll('#footer-main > *');
-      if ('IntersectionObserver' in window) {
-        const obs = new IntersectionObserver((entries) => {
-          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } });
-        }, { threshold: 0.15 });
-        footerCols.forEach(c => obs.observe(c));
-      } else {
-        footerCols.forEach(c => c.classList.add('is-visible'));
-      }
-
-      /* ════════════════════════════════════
-         PARTICLE NODE NETWORK — CANVAS
-         50 particles, rgba(139,113,255,0.4)
-         Connected when < 150px apart
-         Respects prefers-reduced-motion
-      ════════════════════════════════════ */
-      (function initParticles() {
-        const canvas = document.getElementById('hero-canvas');
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const PARTICLE_COUNT = 50;
-        const CONNECT_DIST   = 150;
-
-        let particles = [];
-        let rafId     = null;
-
-        function resize() {
-          const hero = canvas.parentElement;
-          canvas.width  = hero.offsetWidth;
-          canvas.height = hero.offsetHeight;
-        }
-
-        function rand(min, max) { return min + Math.random() * (max - min); }
-
-        function spawn() {
-          particles = [];
-          for (let i = 0; i < PARTICLE_COUNT; i++) {
-            particles.push({
-              x:  rand(0, canvas.width),
-              y:  rand(0, canvas.height),
-              r:  rand(1.5, 2.5),
-              vx: reduced ? 0 : rand(-0.3, 0.3),
-              vy: reduced ? 0 : rand(-0.3, 0.3),
-            });
-          }
-        }
-
-        function draw() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          /* Connections */
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const dx   = particles[i].x - particles[j].x;
-              const dy   = particles[i].y - particles[j].y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < CONNECT_DIST) {
-                const alpha = (1 - dist / CONNECT_DIST) * 0.55;
-                ctx.beginPath();
-                ctx.strokeStyle = `rgba(116, 53, 253, ${alpha.toFixed(3)})`;
-                ctx.lineWidth   = 0.5;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-              }
-            }
-          }
-
-          /* Dots */
-          for (const p of particles) {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(139, 113, 255, 0.40)';
-            ctx.fill();
-          }
-        }
-
-        function update() {
-          for (const p of particles) {
-            p.x += p.vx;
-            p.y += p.vy;
-            /* Bounce off edges */
-            if (p.x < p.r || p.x > canvas.width  - p.r) { p.vx *= -1; p.x = Math.max(p.r, Math.min(canvas.width  - p.r, p.x)); }
-            if (p.y < p.r || p.y > canvas.height - p.r)  { p.vy *= -1; p.y = Math.max(p.r, Math.min(canvas.height - p.r, p.y)); }
-          }
-        }
-
-        function loop() {
-          update();
-          draw();
-          rafId = requestAnimationFrame(loop);
-        }
-
-        /* Init */
-        resize();
-        spawn();
-
-        if (reduced) {
-          draw(); /* static — one frame, no animation */
-        } else {
-          loop();
-        }
-
-        /* Resize: debounced 200ms */
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-            resize();
-            spawn();
-            if (reduced) { draw(); } else { loop(); }
-          }, 200);
-        }, { passive: true });
-      }());
-
-      /* ════════════════════════════════════
-         COUNT-UP ANIMATION
-         Triggered once by IntersectionObserver (threshold 0.3)
-         Easing: ease-out cubic  t = 1 - (1-p)^3
-         Formats: integer+suffix | decimal+suffix | comma+suffix
-      ════════════════════════════════════ */
-      (function initCountUp() {
-        const numbers = document.querySelectorAll('[data-target]');
-        if (!numbers.length) return;
-
-        const DURATION = 2000; /* ms */
-
-        function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
-
-        function format(el, value) {
-          const suffix   = el.dataset.suffix   || '';
-          const decimals = parseInt(el.dataset.decimals || '0', 10);
-          const useComma = el.dataset.comma === 'true';
-
-          let str;
-          if (useComma) {
-            str = Math.floor(value).toLocaleString('en-US');
-          } else if (decimals > 0) {
-            str = value.toFixed(decimals);
-          } else {
-            str = String(Math.floor(value));
-          }
-
-          return str + suffix;
-        }
-
-        function animateOne(el) {
-          const target = parseFloat(el.dataset.target);
-          const t0     = performance.now();
-
-          function tick(now) {
-            const progress = Math.min((now - t0) / DURATION, 1);
-            const eased    = easeOut(progress);
-            el.textContent = format(el, eased * target);
-            if (progress < 1) {
-              requestAnimationFrame(tick);
-            } else {
-              el.textContent = format(el, target); /* exact final value */
-            }
-          }
-
-          requestAnimationFrame(tick);
-        }
-
-        if ('IntersectionObserver' in window) {
-          /* Observe the whole anchors bar — trigger when 30% visible */
-          const bar = document.getElementById('data-anchors');
-          if (!bar) return;
-
-          const obs = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                numbers.forEach(animateOne);
-                obs.disconnect(); /* only once */
-              }
-            });
-          }, { threshold: 0.3 });
-
-          obs.observe(bar);
-        } else {
-          /* Fallback: show final values immediately */
-          numbers.forEach(el => { el.textContent = format(el, parseFloat(el.dataset.target)); });
-        }
-      }());
-
-      /* ════════════════════════════════════
-         SCROLL REVEAL — SECTIONS 2 THROUGH 5
-         One shared observer (threshold 0.15,
-         rootMargin '0px 0px -60px 0px') drives
-         every [data-reveal] element. Groups
-         (marked with [data-reveal-group]) stagger
-         their children via setTimeout on entry.
-      ════════════════════════════════════ */
-      (function initScrollReveal() {
-        const GROUP_DELAYS = {
-          experience:        [0, 0, 150, 300],   /* line, step 1-3 */
-          'why-operate':     [100, 180, 260, 340],
-          scenes:            [80, 160, 240, 80, 160, 240],
-          hardware:          [0, 0, 150],          /* vs badge, mini card, max card */
-          'hardware-mini':   [60, 120, 180, 240, 300, 360],
-          'hardware-max':    [60, 120, 180, 240, 300, 360],
-          'hardware-features': [0],
-          roi:               [0],
-          faq:               [0, 50, 100, 150, 200, 250, 300]
-        };
-
-        const groups = document.querySelectorAll('[data-reveal-group]');
-        const lone   = document.querySelectorAll('[data-reveal]:not([data-reveal-group] [data-reveal])');
-
-        const reveal = (el, delay) => setTimeout(() => el && el.classList.add('in-view'), delay);
-
-        if (!('IntersectionObserver' in window)) {
-          document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('in-view'));
-          return;
-        }
-
-        const obs = new IntersectionObserver((entries, observer) => {
-          entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            const target = entry.target;
-
-            if (target.hasAttribute('data-reveal-group')) {
-              const key      = target.dataset.revealGroup;
-              const delays   = GROUP_DELAYS[key] || [];
-              const children = target.matches('[data-reveal]')
-                ? [target]
-                : target.querySelectorAll(':scope > [data-reveal], :scope > * > [data-reveal]');
-              children.forEach((child, i) => reveal(child, delays[i] != null ? delays[i] : i * 80));
-            } else {
-              reveal(target, 0);
-            }
-
-            observer.unobserve(target);
-          });
-        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-
-        groups.forEach(g => obs.observe(g));
-        lone.forEach(el => obs.observe(el));
-      }());
-
-      /* ════════════════════════════════════
-         AMBIENT PARTICLE DOT-GRID — SECTION 4
-         Sparse static-ish dot field with short-
-         range connection lines, masked at the
-         section edges via CSS (see .scenes__canvas)
-      ════════════════════════════════════ */
-      (function initScenesParticles() {
-        const canvas = document.getElementById('scenes-canvas');
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const PARTICLE_COUNT = 36;
-        const CONNECT_DIST   = 120;
-
-        let particles = [];
-        let rafId     = null;
-
-        function resize() {
-          const section = canvas.parentElement;
-          canvas.width  = section.offsetWidth;
-          canvas.height = section.offsetHeight;
-        }
-
-        function rand(min, max) { return min + Math.random() * (max - min); }
-
-        function spawn() {
-          particles = [];
-          for (let i = 0; i < PARTICLE_COUNT; i++) {
-            particles.push({
-              x:  rand(0, canvas.width),
-              y:  rand(0, canvas.height),
-              r:  1.5,
-              vx: reduced ? 0 : rand(-0.15, 0.15),
-              vy: reduced ? 0 : rand(-0.15, 0.15),
-            });
-          }
-        }
-
-        function draw() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const dx   = particles[i].x - particles[j].x;
-              const dy   = particles[i].y - particles[j].y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < CONNECT_DIST) {
-                ctx.beginPath();
-                ctx.strokeStyle = 'rgba(116, 53, 253, 0.06)';
-                ctx.lineWidth   = 1;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-              }
-            }
-          }
-
-          for (const p of particles) {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(116, 53, 253, 0.15)';
-            ctx.fill();
-          }
-        }
-
-        function update() {
-          for (const p of particles) {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < p.r || p.x > canvas.width  - p.r) { p.vx *= -1; p.x = Math.max(p.r, Math.min(canvas.width  - p.r, p.x)); }
-            if (p.y < p.r || p.y > canvas.height - p.r)  { p.vy *= -1; p.y = Math.max(p.r, Math.min(canvas.height - p.r, p.y)); }
-          }
-        }
-
-        function loop() {
-          update();
-          draw();
-          rafId = requestAnimationFrame(loop);
-        }
-
-        resize();
-        spawn();
-
-        if (reduced) {
-          draw();
-        } else {
-          loop();
-        }
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-            resize();
-            spawn();
-            if (reduced) { draw(); } else { loop(); }
-          }, 200);
-        }, { passive: true });
-      }());
-
-      /* ════════════════════════════════════
-         METRIC COUNT-UP — WHY SENSEUNI CARDS
-         Triggered once per metric on scroll in
-         Easing: ease-out cubic, ~1.5s duration
-         Supports prefix/suffix/decimals/from
-         ("24/7" has no [data-target] → static)
-      ════════════════════════════════════ */
-      (function initMetricCountUp() {
-        const metrics = document.querySelectorAll('.why-operate__metric-value[data-target]');
-        if (!metrics.length) return;
-
-        const DURATION = 1500; /* ms */
-
-        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-        function format(el, value) {
-          const decimals = parseInt(el.dataset.decimals || '0', 10);
-          const prefix   = el.dataset.prefix || '';
-          const suffix   = el.dataset.suffix || '';
-          const str = decimals > 0 ? value.toFixed(decimals) : String(Math.round(value));
-          return prefix + str + suffix;
-        }
-
-        function animateOne(el) {
-          const target = parseFloat(el.dataset.target);
-          const from   = el.dataset.from !== undefined ? parseFloat(el.dataset.from) : 0;
-          const t0     = performance.now();
-
-          function tick(now) {
-            const progress = Math.min((now - t0) / DURATION, 1);
-            const eased    = easeOutCubic(progress);
-            el.textContent = format(el, from + (target - from) * eased);
-            if (progress < 1) {
-              requestAnimationFrame(tick);
-            } else {
-              el.textContent = format(el, target);
-            }
-          }
-
-          requestAnimationFrame(tick);
-        }
-
-        if ('IntersectionObserver' in window) {
-          const obs = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                animateOne(entry.target);
-                observer.unobserve(entry.target);
-              }
-            });
-          }, { threshold: 0.4 });
-
-          metrics.forEach(el => obs.observe(el));
-        } else {
-          metrics.forEach(el => { el.textContent = format(el, parseFloat(el.dataset.target)); });
-        }
-      }());
-
-      /* ════════════════════════════════════
-         ROI CALCULATOR — SECTION 6
-         Live sliders drive gradient result cards.
-         Filled-track effect via background-size;
-         result numbers tween over ~150ms on input.
-      ════════════════════════════════════ */
-      (function initRoiCalculator() {
-        const panel = document.querySelector('.roi__panel');
-        if (!panel) return;
-
-        const sliders = panel.querySelectorAll('.roi__slider');
-        const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-
-        const state = {};
-        sliders.forEach(s => { state[s.dataset.roi] = parseFloat(s.value); });
-
-        function paintTrack(slider) {
-          const min = parseFloat(slider.min);
-          const max = parseFloat(slider.max);
-          const pct = ((parseFloat(slider.value) - min) / (max - min)) * 100;
-          slider.style.background =
-            `linear-gradient(90deg, var(--color-accent) 0%, var(--color-highlight) ${pct}%, rgba(255,255,255,0.1) ${pct}%, rgba(255,255,255,0.1) 100%)`;
-        }
-
-        function formatSliderValue(key, value) {
-          switch (key) {
-            case 'cabinets':  return `${Math.round(value)} units`;
-            case 'txPerDay':  return `${Math.round(value)} / day`;
-            case 'avgValue':  return `$${value.toFixed(2)}`;
-            case 'margin':    return `${Math.round(value)}%`;
-            default:          return String(value);
-          }
-        }
-
-        const DURATION = 150; /* ms — brief tween between result values */
-        const tweens = {};
-
-        function tweenTo(el, from, to) {
-          if (tweens[el.id]) cancelAnimationFrame(tweens[el.id]);
-          const t0 = performance.now();
-          function tick(now) {
-            const progress = Math.min((now - t0) / DURATION, 1);
-            el.textContent = currency.format(from + (to - from) * progress);
-            if (progress < 1) {
-              tweens[el.id] = requestAnimationFrame(tick);
-            } else {
-              el.textContent = currency.format(to);
-              delete tweens[el.id];
-            }
-          }
-          tweens[el.id] = requestAnimationFrame(tick);
-        }
-
-        const monthlyEl = document.getElementById('roi-monthly');
-        const annualEl  = document.getElementById('roi-annual');
-        const profitEl  = document.getElementById('roi-profit');
-        const prevValues = { monthly: 0, annual: 0, profit: 0 };
-
-        function recalc() {
-          const monthly = state.cabinets * state.txPerDay * state.avgValue * 30;
-          const annual  = monthly * 12;
-          const profit  = monthly * (state.margin / 100);
-
-          tweenTo(monthlyEl, prevValues.monthly, monthly);
-          tweenTo(annualEl,  prevValues.annual,  annual);
-          tweenTo(profitEl,  prevValues.profit,  profit);
-
-          prevValues.monthly = monthly;
-          prevValues.annual  = annual;
-          prevValues.profit  = profit;
-        }
-
-        sliders.forEach(slider => {
-          const key      = slider.dataset.roi;
-          const valueEl  = panel.querySelector(`[data-value-for="${key}"]`);
-
-          paintTrack(slider);
-
-          slider.addEventListener('input', () => {
-            const value = parseFloat(slider.value);
-            state[key] = value;
-            if (valueEl) valueEl.textContent = formatSliderValue(key, value);
-            paintTrack(slider);
-            recalc();
-          });
-        });
-
-        recalc();
-        monthlyEl.textContent = currency.format(prevValues.monthly);
-        annualEl.textContent  = currency.format(prevValues.annual);
-        profitEl.textContent  = currency.format(prevValues.profit);
-      }());
-
-      /* ════════════════════════════════════
-         FAQ ACCORDION — SECTION 7
-         Event delegation · single item open
-      ════════════════════════════════════ */
-      (function initFaqAccordion() {
-        const list = document.getElementById('faq-list');
-        if (!list) return;
-
-        list.addEventListener('click', (e) => {
-          const btn = e.target.closest('.faq__question');
-          if (!btn) return;
-
-          const item    = btn.closest('.faq__item');
-          const wasOpen = item.classList.contains('is-open');
-
-          list.querySelectorAll('.faq__item.is-open').forEach(open => {
-            open.classList.remove('is-open');
-            open.querySelector('.faq__question').setAttribute('aria-expanded', 'false');
-          });
-
-          if (!wasOpen) {
-            item.classList.add('is-open');
-            btn.setAttribute('aria-expanded', 'true');
-          }
-        });
-      }());
-
-      /* ════════════════════════════════════
-         FINAL CTA PARTICLE NETWORK — SECTION 8
-         Sparse drifting dots w/ connection lines,
-         mirrors the hero canvas at a lighter weight
-      ════════════════════════════════════ */
-      (function initFinalCtaParticles() {
-        const canvas = document.getElementById('final-cta-canvas');
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const PARTICLE_COUNT = 36;
-        const CONNECT_DIST   = 100;
-
-        let particles = [];
-        let rafId     = null;
-
-        function resize() {
-          const section = canvas.parentElement;
-          canvas.width  = section.offsetWidth;
-          canvas.height = section.offsetHeight;
-        }
-
-        function rand(min, max) { return min + Math.random() * (max - min); }
-
-        function spawn() {
-          particles = [];
-          for (let i = 0; i < PARTICLE_COUNT; i++) {
-            particles.push({
-              x:  rand(0, canvas.width),
-              y:  rand(0, canvas.height),
-              r:  1.5,
-              vx: reduced ? 0 : rand(-0.2, 0.2),
-              vy: reduced ? 0 : rand(-0.2, 0.2),
-            });
-          }
-        }
-
-        function draw() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const dx   = particles[i].x - particles[j].x;
-              const dy   = particles[i].y - particles[j].y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < CONNECT_DIST) {
-                const alpha = (1 - dist / CONNECT_DIST) * 0.35;
-                ctx.beginPath();
-                ctx.strokeStyle = `rgba(116, 53, 253, ${alpha.toFixed(3)})`;
-                ctx.lineWidth   = 0.5;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-              }
-            }
-          }
-
-          for (const p of particles) {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(116, 53, 253, 0.2)';
-            ctx.fill();
-          }
-        }
-
-        function update() {
-          for (const p of particles) {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < p.r || p.x > canvas.width  - p.r) { p.vx *= -1; p.x = Math.max(p.r, Math.min(canvas.width  - p.r, p.x)); }
-            if (p.y < p.r || p.y > canvas.height - p.r)  { p.vy *= -1; p.y = Math.max(p.r, Math.min(canvas.height - p.r, p.y)); }
-          }
-        }
-
-        function loop() {
-          update();
-          draw();
-          rafId = requestAnimationFrame(loop);
-        }
-
-        resize();
-        spawn();
-
-        if (reduced) {
-          draw();
-        } else {
-          loop();
-        }
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-            resize();
-            spawn();
-            if (reduced) { draw(); } else { loop(); }
-          }, 200);
-        }, { passive: true });
-      }());
-
-      /* ── Product Flexibility Cards — stagger reveal ── */
-      (function() {
-        var grid = document.getElementById('prod-flex-grid');
-        if (!grid) return;
-        var cards = grid.querySelectorAll('.prod-card');
-        if ('IntersectionObserver' in window) {
-          var io = new IntersectionObserver(function(entries) {
-            entries.forEach(function(e) {
-              if (e.isIntersecting) {
-                cards.forEach(function(card) { card.classList.add('is-revealed'); });
-                io.unobserve(e.target);
-              }
-            });
-          }, { threshold: 0.12 });
-          io.observe(grid);
-        } else {
-          cards.forEach(function(card) { card.classList.add('is-revealed'); });
-        }
-      }());
-
-      /* ── Cookie Banner ── */
-      (function() {
-        var banner = document.getElementById('cookie-banner');
-        var btn    = document.getElementById('cookie-accept');
-        if (!banner || !btn) return;
-        if (!localStorage.getItem('senseuni_cookie_accepted')) {
-          banner.style.display = 'flex';
-          requestAnimationFrame(function() {
-            requestAnimationFrame(function() { banner.classList.add('is-visible'); });
-          });
-        }
-        btn.addEventListener('click', function() {
-          banner.classList.remove('is-visible');
-          setTimeout(function() { banner.style.display = 'none'; }, 400);
-          localStorage.setItem('senseuni_cookie_accepted', 'true');
-        });
-      }());
-
-      /* ════════════════════════════════════
-         PRODUCT SHOWCASE — Model Toggle + Gallery
-      ════════════════════════════════════ */
-      (function initProductShowcase() {
-        var showcase = document.getElementById('product-showcase');
-        if (!showcase) return;
-
-        var modelData = {
-          max: {
-            name:     'Halo Max',
-            capacity: '608L',
-            tagline:  'Built for volume — cafeterias, gyms, transit hubs, and high-traffic lobbies.',
-            price:    'From $4,999',
-            images: [
-              'assets/images/product-1.webp',
-              'assets/images/cabinet-hero.webp',
-              'assets/images/how-it-works-1.jpg',
-              'assets/images/how-it-works-2.jpg'
-            ]
-          },
-          mini: {
-            name:     'Halo Mini',
-            capacity: '508L',
-            tagline:  'Built for tight spaces — break rooms, hallways, and shared lobbies.',
-            price:    'From $3,999',
-            images: [
-              'assets/images/product-2.webp',
-              'assets/images/cabinet-hero.webp',
-              'assets/images/how-it-works-1.jpg',
-              'assets/images/how-it-works-3.jpg'
-            ]
-          }
-        };
-
-        var toggleBtns = showcase.querySelectorAll('.product-showcase__toggle-btn');
-        var nameEl     = document.getElementById('ps-name');
-        var taglineEl  = document.getElementById('ps-tagline');
-        var priceEl    = document.getElementById('ps-price');
-        var mainImg    = document.getElementById('ps-main-img');
-        var thumbs     = showcase.querySelectorAll('.product-showcase__thumb');
-        var specVals   = showcase.querySelectorAll('.product-showcase__spec-val[data-max]');
-
-        function switchModel(model) {
-          var data = modelData[model];
-
-          toggleBtns.forEach(function(b) { b.classList.remove('is-active'); });
-          showcase.querySelector('[data-model="' + model + '"]').classList.add('is-active');
-
-          nameEl.innerHTML = data.name + ' <span class="product-showcase__capacity">' + data.capacity + '</span>';
-          taglineEl.textContent = data.tagline;
-          priceEl.textContent   = data.price;
-
-          specVals.forEach(function(el) { el.textContent = el.dataset[model]; });
-
-          mainImg.style.opacity = '0';
-          setTimeout(function() {
-            mainImg.src = data.images[0];
-            mainImg.alt = data.name + ' AI Smart Cabinet — front view';
-            mainImg.style.opacity = '1';
-          }, 250);
-
-          thumbs.forEach(function(thumb, i) {
-            thumb.src = data.images[i];
-            thumb.classList.toggle('is-active', i === 0);
-          });
-        }
-
-        toggleBtns.forEach(function(btn) {
-          btn.addEventListener('click', function() { switchModel(btn.dataset.model); });
-        });
-
-        thumbs.forEach(function(thumb) {
-          thumb.addEventListener('click', function() {
-            mainImg.style.opacity = '0';
-            setTimeout(function() {
-              mainImg.src = thumb.src;
-              mainImg.alt = thumb.alt;
-              mainImg.style.opacity = '1';
-            }, 250);
-            thumbs.forEach(function(t) { t.classList.remove('is-active'); });
-            thumb.classList.add('is-active');
-          });
-        });
-      }());
-
-    })();
-  </script>
-
-  <!-- Cookie Banner -->
-  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Cookie notice">
-    <p>We use essential cookies to ensure our website functions properly. No tracking or advertising cookies are used.
-      <a href="privacy-policy.html#cookies">Learn more</a>
-    </p>
-    <button id="cookie-accept" class="cookie-accept-btn">Got It</button>
+  <div class="cookie-notice" id="cookie-notice" hidden>
+    <p>We use essential cookies to ensure our website functions properly. No tracking or advertising cookies are used. <a href="privacy-policy.html">Learn more</a></p>
+    <button class="btn btn--ghost btn--sm" data-cookie-accept>Got It</button>
   </div>
 
+  <script src="assets/js/main.js" defer></script>
+  <script>
+    /* ROI estimator — live calc from the four sliders */
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const inputs = {
+        traffic:    $('roi-traffic'),
+        conversion: $('roi-conversion'),
+        basket:     $('roi-basket'),
+        margin:     $('roi-margin'),
+      };
+      if (!inputs.traffic) return;
+
+      const money = (n) => '$' + Math.round(n).toLocaleString('en-US');
+
+      function update() {
+        const traffic    = +inputs.traffic.value;
+        const conversion = +inputs.conversion.value / 100;
+        const basket     = +inputs.basket.value;
+        const margin     = +inputs.margin.value / 100;
+
+        $('roi-traffic-val').textContent    = traffic.toLocaleString('en-US');
+        $('roi-conversion-val').textContent = (+inputs.conversion.value) + '%';
+        $('roi-basket-val').textContent     = '$' + (+inputs.basket.value).toFixed(2);
+        $('roi-margin-val').textContent     = (+inputs.margin.value) + '%';
+
+        const txMonthly = traffic * conversion * 30;
+        const revenue   = txMonthly * basket;
+        const profit    = revenue * margin;
+
+        $('roi-out-tx').textContent     = Math.round(txMonthly).toLocaleString('en-US');
+        $('roi-out-rev').textContent    = money(revenue);
+        $('roi-out-profit').textContent = money(profit);
+      }
+
+      Object.values(inputs).forEach(el => el.addEventListener('input', update));
+      update();
+    })();
+  </script>
 </body>
 </html>

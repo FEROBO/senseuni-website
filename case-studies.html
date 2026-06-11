@@ -1,1922 +1,323 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Explore real-world deployments of SenseUni AI-powered retail solutions. See results from smart vending, display networks, and digital advertising projects." />
+  <meta name="description" content="SenseUni case studies — real deployments of AI Smart Cabinets, smart display networks, and retail media across global markets." />
   <title>Case Studies — SenseUni</title>
 
   <link rel="icon" type="image/webp" href="assets/images/logomini.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/main.css" />
 
   <style>
-    /* ═══════════════════════════════════════
-       DESIGN TOKENS
-    ═══════════════════════════════════════ */
-    :root {
-      --color-bg:              #14101F;
-      --color-bg-footer:       #0F0C18;
-      --color-brand:           #2C2069;
-      --color-accent:          #7435FD;
-      --color-highlight:       #8B71FF;
-      --color-cyan:            #5EEBFF;
-
-      --color-nav-bg:          rgba(20, 16, 31, 0.55);
-      --color-nav-bg-scrolled: rgba(20, 16, 31, 0.72);
-      --color-nav-border:      rgba(255, 255, 255, 0.08);
-      --color-footer-border:   rgba(255, 255, 255, 0.06);
-
-      --color-border:          rgba(255, 255, 255, 0.10);
-      --color-border-glow:     rgba(116, 53, 253, 0.40);
-      --color-surface:         rgba(255, 255, 255, 0.04);
-
-      --color-text-primary:    #FFFFFF;
-      --color-text-secondary:  #C8C8D4;
-      --color-text-muted:      #7A7A8C;
-      --color-text-tertiary:   #555568;
-
-      --gradient-btn:  linear-gradient(135deg, var(--color-accent), var(--color-highlight));
-      --gradient-card: linear-gradient(135deg, rgba(44, 32, 105, 0.20) 0%, rgba(116, 53, 253, 0.06) 100%);
-
-      --font-heading: 'Sora', sans-serif;
-      --font-body:    'Inter', sans-serif;
-      --font-data:    'Space Grotesk', sans-serif;
-
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-
-      --nav-height: 80px;
-
-      --ease-out:        cubic-bezier(0.22, 1, 0.36, 1);
-      --transition-base: 0.3s;
-      --transition-slow: 0.5s;
-    }
-
-    /* ─── Reset ─── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      scrollbar-color: var(--color-highlight) rgba(20, 16, 31, 0.4);
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-color: var(--color-bg);
-      color: var(--color-text-primary);
-      font-family: var(--font-body);
-      overflow-x: hidden;
-    }
-
-    a { text-decoration: none; }
-
-    ::-webkit-scrollbar        { width: 6px; }
-    ::-webkit-scrollbar-track  { background: rgba(20, 16, 31, 0.4); }
-    ::-webkit-scrollbar-thumb  {
-      background: linear-gradient(to bottom, var(--color-accent), var(--color-highlight));
-      border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: var(--color-highlight); }
-
-    /* ─── Ambient glow ─── */
-    body::before {
+    /* ── CASES · HERO ────────────────────────────────────────── */
+    .cs-hero { text-align: center; }
+    .cs-hero .display, .cs-hero .lead { margin-inline: auto; }
+    .cs-hero .eyebrow::after {
       content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 90vh;
-      background: radial-gradient(
-        ellipse 160% 65% at 50% -8%,
-        rgba(116, 53, 253, 0.28) 0%,
-        rgba(116, 53, 253, 0.10) 42%,
-        rgba(116, 53, 253, 0.03) 68%,
-        transparent 80%
-      );
-      pointer-events: none;
-      z-index: 0;
+      width: 22px; height: 1px;
+      background: var(--highlight);
+      opacity: 0.7;
     }
 
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -10%; left: -15%;
-      width: 70vw; height: 70vh;
-      background: radial-gradient(
-        ellipse at center,
-        rgba(139, 113, 255, 0.10) 0%,
-        rgba(116, 53, 253, 0.04) 50%,
-        transparent 75%
-      );
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .grain-overlay {
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 200px 200px;
-      opacity: 0.035;
-      mix-blend-mode: overlay;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    /* ─── Keyframes ─── */
-    @keyframes navSlideDown {
-      from { opacity: 0; transform: translateY(-8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ═══════════════════════════════════════
-       NAVIGATION
-    ═══════════════════════════════════════ */
-    .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      height: var(--nav-height);
-      background: var(--color-nav-bg);
-      backdrop-filter: blur(28px) saturate(160%);
-      -webkit-backdrop-filter: blur(28px) saturate(160%);
-      border-bottom: 1px solid var(--color-nav-border);
-      box-shadow: 0 1px 0 0 rgba(116, 53, 253, 0.18), 0 4px 32px rgba(0, 0, 0, 0.30);
-      transition: transform 0.4s var(--ease-out), background 0.4s var(--ease-out),
-                  border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
-      animation: navSlideDown 0.7s var(--ease-out) both;
-    }
-    .nav.is-scrolled {
-      background: var(--color-nav-bg-scrolled);
-      border-bottom-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 1px 0 0 rgba(116, 53, 253, 0.22), 0 8px 48px rgba(0, 0, 0, 0.50);
-    }
-    .nav.is-hidden { transform: translateY(-100%); pointer-events: none; }
-
-    .nav__inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 40px;
-      height: 100%;
-      display: flex;
+    /* ── CASE ROW ────────────────────────────────────────────── */
+    .case {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 80px);
       align-items: center;
-      position: relative;
     }
-
-    .nav__logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-
-    .nav__links {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      list-style: none;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-    }
-
-    .nav__link {
-      position: relative;
-      display: inline-block;
-      padding: 6px 13px;
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      border-radius: var(--radius-sm);
-      transition: color var(--transition-base) var(--ease-out),
-                  background var(--transition-base) var(--ease-out);
-      white-space: nowrap;
-    }
-
-    .nav__link::after {
+    .case + .case { margin-top: clamp(88px, 11vw, 150px); }
+    .case--flip .case__media { order: 2; }
+    .case__media { position: relative; }
+    .case__media .media-frame { aspect-ratio: 4 / 3; }
+    .case__media::after {
       content: '';
       position: absolute;
-      bottom: 0;
-      left: 13px; right: 13px;
-      height: 1.5px;
-      background: var(--gradient-btn);
-      border-radius: 2px;
-      transform: scaleX(0);
-      transform-origin: center;
-      transition: transform var(--transition-base) var(--ease-out);
+      inset: 12% -8% -10%;
+      z-index: -1;
+      background: radial-gradient(ellipse 55% 55% at 50% 55%, rgba(116,53,253,0.26), transparent 70%);
+      filter: blur(46px);
     }
-
-    .nav__link:hover               { color: var(--color-text-primary); background: rgba(255,255,255,0.05); }
-    .nav__link:hover::after        { transform: scaleX(1); }
-    .nav__link.is-active           { color: var(--color-text-primary); }
-    .nav__link.is-active::after    { transform: scaleX(1); }
-
-    .nav__cta { flex-shrink: 0; margin-left: auto; }
-
-    .btn--primary {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 10px 22px;
-      border-radius: var(--radius-sm);
-      font-family: var(--font-heading);
-      font-size: 14px; font-weight: 600;
-      color: var(--color-text-primary);
-      background: var(--gradient-btn);
-      border: none; cursor: pointer;
-      box-shadow: 0 2px 12px rgba(116, 53, 253, 0.28);
-      transition: transform var(--transition-base) var(--ease-out),
-                  box-shadow var(--transition-base) var(--ease-out);
-      position: relative; overflow: hidden; white-space: nowrap;
-    }
-    .btn--primary::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 55%);
-      opacity: 0;
-      transition: opacity var(--transition-base) var(--ease-out);
-    }
-    .btn--primary:hover         { transform: translateY(-2px); box-shadow: 0 0 20px rgba(116,53,253,0.55), 0 6px 24px rgba(116,53,253,0.32); }
-    .btn--primary:hover::before { opacity: 1; }
-    .btn--primary:active        { transform: translateY(0); }
-
-    .nav__hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-      width: 36px; height: 36px;
-      padding: 6px;
-      background: none; border: none; cursor: pointer;
-      margin-left: auto;
-      border-radius: var(--radius-sm);
-      transition: background var(--transition-base) var(--ease-out);
-    }
-    .nav__hamburger:hover { background: rgba(255,255,255,0.06); }
-    .nav__hamburger-line {
-      display: block;
-      width: 100%; height: 1.5px;
-      background: var(--color-text-secondary);
-      border-radius: 2px;
-      transform-origin: center;
-      transition: transform var(--transition-base) var(--ease-out),
-                  opacity var(--transition-base) var(--ease-out);
-    }
-    .nav.is-open .nav__hamburger-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .nav.is-open .nav__hamburger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .nav.is-open .nav__hamburger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-    .nav__drawer {
-      display: none;
-      position: fixed;
-      top: var(--nav-height); left: 0; right: 0;
-      background: rgba(15, 12, 24, 0.97);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--color-nav-border);
-      padding: 16px 24px 24px;
-      transform: translateY(-8px);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform var(--transition-slow) var(--ease-out),
-                  opacity var(--transition-slow) var(--ease-out);
-      z-index: 999;
-    }
-    .nav__drawer.is-open { transform: translateY(0); opacity: 1; pointer-events: all; }
-    .nav__drawer-links { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-    .nav__drawer-link {
-      display: block;
-      padding: 12px 8px;
-      font-family: var(--font-body); font-size: 15px; font-weight: 500;
-      color: var(--color-text-secondary);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      transition: color var(--transition-base) var(--ease-out);
-    }
-    .nav__drawer-link:hover { color: var(--color-text-primary); }
-    .nav__drawer-cta { margin-top: 20px; width: 100%; justify-content: center; }
-
-    @media (max-width: 900px) {
-      .nav__links { display: none; }
-      .nav__cta { display: none; }
-      .nav__hamburger { display: flex; }
-      .nav__drawer { display: block; }
-    }
-    @media (max-width: 480px) { .nav__inner { padding: 0 20px; } }
-
-    /* ═══════════════════════════════════════
-       LAYOUT UTILITIES
-    ═══════════════════════════════════════ */
-    main {
-      flex: 1 0 auto;
-      position: relative;
-      z-index: 3;
-    }
-
-    .section-wrap  { max-width: 1280px; margin: 0 auto; padding: 0 60px; }
-    .section-inner { max-width: 1280px; margin: 0 auto; }
-
-    .section-label {
-      display: block;
-      font-family: var(--font-data);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .section-divider {
-      display: block;
-      height: 1px;
-      max-width: 1280px;
-      margin: 0 auto;
-      border: none;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), var(--color-accent), rgba(255,255,255,0.08), transparent);
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, var(--color-text-primary) 45%, var(--color-highlight));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .gradient-text-cyan {
-      background: linear-gradient(135deg, var(--color-text-primary) 45%, var(--color-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Shared scroll-reveal */
-    [data-reveal] {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
-    }
-    [data-reveal].in-view { opacity: 1; transform: translateY(0); }
-
-    /* ═══════════════════════════════════════
-       GLOBAL STARFIELD CANVAS
-    ═══════════════════════════════════════ */
-    #home-starfield {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 1 — HERO
-    ═══════════════════════════════════════ */
-    .cs-hero {
-      position: relative;
-      z-index: 3;
-      padding: 120px 60px 80px;
-      text-align: center;
-      padding-top: calc(var(--nav-height) + 80px);
-    }
-
-    .cs-hero__label {
-      font-family: var(--font-data);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--color-cyan);
-      margin-bottom: 20px;
-      animation: fadeUp 0.7s var(--ease-out) 0.15s both;
-    }
-
-    .cs-hero__headline {
-      font-family: var(--font-heading);
-      font-size: clamp(36px, 5.5vw, 56px);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 20px;
-      animation: fadeUp 0.8s var(--ease-out) 0.28s both;
-    }
-
-    .cs-hero__sub {
-      font-family: var(--font-body);
-      font-size: 18px;
-      line-height: 1.75;
-      color: var(--color-text-secondary);
-      max-width: 580px;
-      margin: 0 auto;
-      animation: fadeUp 0.8s var(--ease-out) 0.40s both;
-    }
-
-    /* ── Hero metrics ── */
-    .cs-hero__metrics {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 56px;
-      margin-top: 48px;
-      animation: fadeUp 0.8s var(--ease-out) 0.56s both;
-    }
-
-    .cs-hero__metric { text-align: center; }
-
-    .cs-hero__number {
-      font-family: var(--font-data);
-      font-size: 36px;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    .cs-hero__metric-label {
-      font-family: var(--font-body);
-      font-size: 13px;
-      color: var(--color-text-muted);
-      margin-top: 8px;
-    }
-
-    @media (max-width: 640px) {
-      .cs-hero { padding: 80px 24px 60px; padding-top: calc(var(--nav-height) + 56px); }
-      .cs-hero__metrics { gap: 32px; }
-      .cs-hero__number { font-size: 28px; }
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 2 — FILTER TABS
-    ═══════════════════════════════════════ */
-    .cs-filter {
-      position: relative;
-      z-index: 3;
-      padding: 0 60px 48px;
-    }
-
-    .cs-filter__bar {
-      display: flex;
-      flex-wrap: wrap;
+    .case__tag {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
-    }
-
-    .cs-filter__tab {
-      padding: 10px 24px;
-      border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      cursor: pointer;
-      background: transparent;
-      transition: background 0.3s var(--ease-out),
-                  border-color 0.3s var(--ease-out),
-                  color 0.3s var(--ease-out);
-    }
-
-    .cs-filter__tab:hover {
-      background: rgba(116, 53, 253, 0.08);
-      border-color: rgba(116, 53, 253, 0.25);
-      color: var(--color-text-primary);
-    }
-
-    .cs-filter__tab.is-active {
-      background: rgba(116, 53, 253, 0.15);
-      border-color: rgba(116, 53, 253, 0.40);
-      color: var(--color-text-primary);
-    }
-
-    @media (max-width: 640px) { .cs-filter { padding: 0 24px 40px; } }
-
-    /* ═══════════════════════════════════════
-       SECTION 3 — CASE STUDY CARDS
-    ═══════════════════════════════════════ */
-    .cs-list {
-      position: relative;
-      z-index: 3;
-      padding: 0 60px 120px;
-    }
-
-    .cs-list__inner {
-      max-width: 1280px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 80px;
-    }
-
-    /* ── Single case block ── */
-    .cs-block {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      transition: border-color 0.4s var(--ease-out), transform 0.4s var(--ease-out);
-    }
-
-    .cs-block:hover {
-      border-color: rgba(116, 53, 253, 0.40);
-      transform: translateY(-3px);
-    }
-
-    /* Reverse column order for even blocks (image right, text left) */
-    .cs-block--reverse { direction: rtl; }
-    .cs-block--reverse > * { direction: ltr; }
-
-    /* Hidden when filtered out */
-    .cs-block.is-hidden {
-      display: none;
-    }
-
-    /* ── Image column ── */
-    .cs-block__gallery {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      min-height: 480px;
-    }
-
-    .cs-block__main-img {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cs-block__main-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: opacity 0.3s ease;
-    }
-
-    .cs-block__main-img img.is-fading {
-      opacity: 0;
-    }
-
-    /* ── Thumbnails ── */
-    .cs-block__thumbs {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      display: flex;
-      gap: 10px;
-      padding: 16px;
-      background: linear-gradient(to top, rgba(10, 8, 20, 0.90) 0%, transparent 100%);
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-    .cs-block__thumbs::-webkit-scrollbar { display: none; }
-
-    .cs-block__thumb {
-      width: 64px;
-      height: 64px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-      cursor: pointer;
-      opacity: 0.60;
-      flex-shrink: 0;
-      transition: opacity 0.25s ease, border-color 0.25s ease;
-    }
-
-    .cs-block__thumb img {
-      width: 100%; height: 100%;
-      object-fit: cover; display: block;
-    }
-
-    .cs-block__thumb:hover { opacity: 0.85; }
-    .cs-block__thumb.is-active {
-      opacity: 1;
-      border-color: var(--color-accent);
-    }
-
-    /* ── Content column ── */
-    .cs-block__content {
-      padding: 48px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .cs-block__tag {
-      display: inline-block;
+      padding: 7px 16px;
+      border-radius: 100px;
+      border: 1px solid rgba(139,113,255,0.4);
+      background: var(--accent-soft);
       font-family: var(--font-data);
-      font-size: 10px;
+      font-size: 0.76rem;
       font-weight: 600;
-      letter-spacing: 1.5px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--color-cyan);
-      background: rgba(94, 235, 255, 0.08);
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-bottom: 16px;
-      align-self: flex-start;
+      color: var(--highlight);
+      margin-bottom: 18px;
     }
-
-    .cs-block__title {
-      font-family: var(--font-heading);
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 8px;
-    }
-
-    .cs-block__client {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--color-text-muted);
-      margin-bottom: 20px;
-    }
-
-    .cs-block__summary {
-      font-family: var(--font-body);
-      font-size: 15px;
-      line-height: 1.75;
-      color: var(--color-text-secondary);
-      margin-bottom: 28px;
-    }
-
-    /* ── Results mini-grid ── */
-    .cs-block__results {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .cs-result {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--color-border);
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .cs-result__number {
+    .case .h2 { margin-bottom: 8px; }
+    .case__client {
       font-family: var(--font-data);
-      font-size: 22px;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      color: var(--text-3);
+      margin-bottom: 18px;
+    }
+    .case__desc { color: var(--text-2); font-size: 1rem; }
+    .case__metrics {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .case-metric {
+      padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .case-metric strong {
+      display: block;
+      font-family: var(--font-data);
+      font-size: 1.3rem;
       font-weight: 700;
-      line-height: 1;
+      letter-spacing: -0.01em;
+      background: var(--grad-text);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .case-metric span { font-size: 0.82rem; color: var(--text-3); }
+    .case__caps {
+      margin-top: 24px;
+      font-size: 0.88rem;
+      color: var(--text-3);
+    }
+    .case__caps strong {
+      color: var(--text-2);
+      font-weight: 600;
+      font-family: var(--font-data);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      display: block;
       margin-bottom: 6px;
     }
-
-    .cs-result__label {
-      font-family: var(--font-body);
-      font-size: 11px;
-      color: var(--color-text-muted);
-    }
-
-    /* ── Key capabilities ── */
-    .cs-block__divider {
-      height: 1px;
-      background: rgba(255, 255, 255, 0.06);
-      margin: 24px 0 16px;
-    }
-
-    .cs-block__caps {
-      font-family: var(--font-body);
-      font-size: 13px;
-      color: var(--color-text-muted);
-      line-height: 1.6;
-    }
-
-    .cs-block__caps strong {
-      color: var(--color-text-secondary);
-      font-weight: 500;
-    }
-
-    /* Responsive */
-    @media (max-width: 960px) {
-      .cs-block { grid-template-columns: 1fr; }
-      .cs-block--reverse { direction: ltr; }
-      .cs-block__gallery { min-height: 280px; }
-      .cs-block__content { padding: 32px; }
-    }
-
-    @media (max-width: 640px) {
-      .cs-list { padding: 0 24px 88px; }
-      .cs-list__inner { gap: 48px; }
-      .cs-block__content { padding: 24px; }
-      .cs-block__title { font-size: 22px; }
-      .cs-block__results { grid-template-columns: 1fr 1fr; gap: 8px; }
-    }
-
-    /* ═══════════════════════════════════════
-       SECTION 4 — FINAL CTA
-    ═══════════════════════════════════════ */
-    .final-cta {
-      position: relative;
-      z-index: 3;
-      overflow: hidden;
-      background: linear-gradient(to bottom, transparent, rgba(44, 32, 105, 0.20));
-    }
-
-    #final-cta-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .final-cta__inner {
-      position: relative;
-      z-index: 1;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 120px 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .final-cta__label { color: var(--color-cyan); margin-bottom: 16px; }
-
-    .final-cta__headline {
-      font-family: var(--font-heading);
-      font-size: clamp(32px, 5.5vw, 52px);
-      font-weight: 700;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-    }
-
-    .final-cta__sub {
-      font-family: var(--font-body);
-      font-size: 18px;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      max-width: 480px;
-      margin-bottom: 48px;
-    }
-
-    .final-cta__ctas { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
-
-    .cta-btn--primary {
-      background: var(--gradient-btn);
-      color: #fff;
-      font-family: var(--font-heading);
-      font-size: 16px;
-      font-weight: 600;
-      padding: 16px 36px;
-      border-radius: 14px;
-      transition: transform var(--transition-base) var(--ease-out),
-                  box-shadow var(--transition-base) var(--ease-out);
-    }
-    .cta-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(116,53,253,0.30); }
-
-    .cta-btn--secondary {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--color-text-primary);
-      font-family: var(--font-heading);
-      font-size: 16px;
-      font-weight: 600;
-      padding: 16px 36px;
-      border-radius: 14px;
-      transition: border-color var(--transition-base) var(--ease-out),
-                  background var(--transition-base) var(--ease-out);
-    }
-    .cta-btn--secondary:hover { border-color: var(--color-highlight); background: rgba(255,255,255,0.05); }
-
-    @media (max-width: 640px) { .final-cta__inner { padding: 88px 24px; } }
-
-    /* ═══════════════════════════════════════
-       FOOTER
-    ═══════════════════════════════════════ */
-    .footer {
-      flex-shrink: 0;
-      background: linear-gradient(to bottom, rgba(116, 53, 253, 0.12) 0%, transparent 60%),
-                  var(--color-bg-footer);
-      border-top: 1px solid var(--color-footer-border);
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer__main {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-      gap: 40px;
-      padding: 64px 40px 56px;
-    }
-
-    .footer__logo-col { display: flex; flex-direction: column; gap: 16px; }
-
-    .footer__tagline {
-      font-family: var(--font-body);
-      font-size: 16px;
-      color: rgba(255, 255, 255, 0.6);
-      line-height: 1.5;
-      max-width: 220px;
-    }
-
-    .footer__col-title {
-      font-family: var(--font-data);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-      margin-bottom: 16px;
-    }
-
-    .footer__col-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-
-    .footer__col-link {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--color-text-secondary);
-      transition: color var(--transition-base) var(--ease-out);
-    }
-    .footer__col-link:hover { color: var(--color-text-primary); }
-
-    .footer__contact-item { display: flex; flex-direction: column; gap: 2px; }
-
-    .footer__contact-label {
-      font-family: var(--font-data);
-      font-size: 10px;
-      color: var(--color-text-muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-
-    .footer__position-line {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.4);
-      line-height: 1.6;
-      max-width: 220px;
-      margin-top: 8px;
-    }
-    .footer__bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 20px 40px;
-      border-top: 1px solid var(--color-footer-border);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .footer__copy { font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); }
-
-    .footer__social { list-style: none; display: flex; align-items: center; gap: 8px; }
-
-    .footer__social-link {
-      display: flex; align-items: center; justify-content: center;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      border: 1px solid var(--color-border);
-      color: var(--color-text-muted);
-      transition: color var(--transition-base) var(--ease-out),
-                  border-color var(--transition-base) var(--ease-out),
-                  background var(--transition-base) var(--ease-out);
-    }
-    .footer__social-link:hover { color: var(--color-text-primary); border-color: var(--color-highlight); background: rgba(139,113,255,0.10); }
-
-    .footer__legal { list-style: none; display: flex; gap: 16px; }
-    .footer__legal-link {
-      font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted);
-      transition: color var(--transition-base) var(--ease-out);
-    }
-    .footer__legal-link:hover { color: var(--color-text-primary); }
-
-    /* Footer col entrance */
-    .footer__main > * {
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
-    }
-    .footer__main > *.is-visible { opacity: 1; transform: translateY(0); }
-
-    @media (max-width: 1024px) { .footer__main { grid-template-columns: 2fr 1fr 1fr; } }
-    @media (max-width: 900px) {
-      .footer__main { grid-template-columns: 1fr 1fr 1fr; gap: 36px; padding: 56px 24px 48px; }
-      .footer__logo-col { grid-column: 1 / -1; }
-    }
-    @media (max-width: 600px) {
-      .footer__main { grid-template-columns: 1fr 1fr; gap: 32px; padding: 48px 20px 40px; }
-      .footer__logo-col { grid-column: 1 / -1; }
-    }
-    @media (max-width: 440px) {
-      .footer__main { grid-template-columns: 1fr; }
-      .footer__bottom { flex-direction: column; align-items: flex-start; gap: 16px; padding: 20px; }
-    }
-
-    /* ─── Back to top ─── */
-    .back-to-top {
-      position: fixed;
-      bottom: 32px; right: 20px;
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: var(--gradient-btn);
-      border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--color-text-primary);
-      box-shadow: 0 4px 16px rgba(116, 53, 253, 0.28);
-      z-index: 500;
-      opacity: 0;
-      transform: scale(0.75) translateY(8px);
-      pointer-events: none;
-      transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
-    }
-    .back-to-top.is-visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: all; }
-    .back-to-top:hover { transform: scale(1) translateY(-2px); box-shadow: 0 0 20px rgba(116,53,253,0.50), 0 6px 20px rgba(116,53,253,0.28); }
-    .back-to-top:active { transform: scale(0.94) translateY(0); }
-
-    /* ── Cookie Banner ── */
-    .cookie-banner {
-      display: none; position: fixed; bottom: 0; left: 0; right: 0;
-      z-index: 9999; align-items: center; justify-content: space-between; gap: 16px;
-      padding: 16px 32px;
-      background: rgba(20, 16, 31, 0.94);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(116, 53, 253, 0.3);
-      box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
-      transform: translateY(100%);
-      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .cookie-banner.is-visible { transform: translateY(0); }
-    .cookie-banner p { font-family: var(--font-body); font-size: 14px; color: rgba(255,255,255,0.80); line-height: 1.5; flex: 1; }
-    .cookie-banner a { color: var(--color-highlight); text-decoration: underline; }
-    .cookie-accept-btn {
-      flex-shrink: 0; padding: 8px 20px; border-radius: var(--radius-sm);
-      background: var(--color-accent); color: var(--color-text-primary);
-      font-family: var(--font-body); font-size: 13px; font-weight: 600;
-      border: none; cursor: pointer; white-space: nowrap;
-      transition: background var(--transition-base) var(--ease-out), transform var(--transition-base) var(--ease-out);
-    }
-    .cookie-accept-btn:hover { background: var(--color-highlight); transform: translateY(-1px); }
-    @media (max-width: 640px) {
-      .cookie-banner { flex-direction: column; align-items: flex-start; padding: 16px 20px; }
-      .cookie-accept-btn { width: 100%; text-align: center; }
+    @media (max-width: 880px) {
+      .case { grid-template-columns: 1fr; }
+      .case--flip .case__media { order: 0; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Grain texture overlay -->
-  <div class="grain-overlay" aria-hidden="true"></div>
-
-  <!-- ═══════════════════════════════════════
-       NAVIGATION BAR
-  ═══════════════════════════════════════ -->
-  <nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
-    <div class="nav__inner">
-
-      <a href="index.html" class="nav__logo" aria-label="SenseUni home">
-        <img src="assets/images/logo.webp" alt="SenseUni" height="32" width="auto" style="display:block;" />
-      </a>
-
-      <ul class="nav__links" role="list">
-        <li><a href="index.html"            class="nav__link">Home</a></li>
-        <li><a href="ai-smart-cabinet.html" class="nav__link">AI Smart Cabinet</a></li>
-        <li><a href="solutions.html"        class="nav__link">Solutions</a></li>
-        <li><a href="technology.html"       class="nav__link">Technology</a></li>
-        <li><a href="case-studies.html"     class="nav__link is-active">Case Studies</a></li>
-        <li><a href="company.html"          class="nav__link">Company</a></li>
-      </ul>
-
-      <div class="nav__cta">
-        <a href="get-a-demo.html" class="btn--primary">Get a Demo</a>
-      </div>
-
-      <button class="nav__hamburger" id="nav-hamburger"
-              aria-label="Toggle navigation menu"
-              aria-expanded="false" aria-controls="nav-drawer">
-        <span class="nav__hamburger-line"></span>
-        <span class="nav__hamburger-line"></span>
-        <span class="nav__hamburger-line"></span>
-      </button>
-
-    </div>
-  </nav>
-
-  <div class="nav__drawer" id="nav-drawer" aria-hidden="true">
-    <ul class="nav__drawer-links" role="list">
-      <li><a href="index.html"            class="nav__drawer-link">Home</a></li>
-      <li><a href="ai-smart-cabinet.html" class="nav__drawer-link">AI Smart Cabinet</a></li>
-      <li><a href="solutions.html"        class="nav__drawer-link">Solutions</a></li>
-      <li><a href="technology.html"       class="nav__drawer-link">Technology</a></li>
-      <li><a href="case-studies.html"     class="nav__drawer-link">Case Studies</a></li>
-      <li><a href="company.html"          class="nav__drawer-link">Company</a></li>
-    </ul>
-    <a href="get-a-demo.html" class="btn--primary nav__drawer-cta">Get a Demo</a>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__orb ambient__orb--a" data-parallax="0.06"></div>
+    <div class="ambient__orb ambient__orb--b" data-parallax="0.09"></div>
   </div>
 
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="SenseUni home">
+        <img src="assets/images/logo.webp" alt="SenseUni" width="160" height="34" />
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a class="nav__link" href="index.html">Home</a>
+        <a class="nav__link" href="ai-smart-cabinet.html">AI Smart Cabinet</a>
+        <a class="nav__link" href="solutions.html">Solutions</a>
+        <a class="nav__link" href="technology.html">Technology</a>
+        <a class="nav__link is-active" href="case-studies.html">Case Studies</a>
+        <a class="nav__link" href="company.html">Company</a>
+        <a class="btn btn--primary btn--sm nav__cta" href="get-a-demo.html">Get a Demo</a>
+      </nav>
+      <button class="nav__hamburger" id="nav-hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav-drawer">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+    <a class="nav-drawer__link" href="index.html">Home</a>
+    <a class="nav-drawer__link" href="ai-smart-cabinet.html">AI Smart Cabinet</a>
+    <a class="nav-drawer__link" href="solutions.html">Solutions</a>
+    <a class="nav-drawer__link" href="technology.html">Technology</a>
+    <a class="nav-drawer__link is-active" href="case-studies.html">Case Studies</a>
+    <a class="nav-drawer__link" href="company.html">Company</a>
+    <a class="btn btn--primary nav-drawer__cta" href="get-a-demo.html">Get a Demo</a>
+  </div>
 
-  <!-- ═══════════════════════════════════════
-       MAIN CONTENT
-  ═══════════════════════════════════════ -->
-  <main id="main">
+  <main>
 
-    <!-- Global starfield canvas -->
-    <canvas id="home-starfield" aria-hidden="true"></canvas>
-
-    <!-- ──────────────────────────────────────
-         SECTION 1 — HERO
-    ─────────────────────────────────────── -->
-    <section class="cs-hero" id="cs-hero" aria-labelledby="cs-hero-headline">
-
-      <p class="cs-hero__label">Case Studies</p>
-
-      <h1 class="cs-hero__headline" id="cs-hero-headline">
-        Real Results. <span class="gradient-text">Real Deployments.</span>
-      </h1>
-
-      <p class="cs-hero__sub">
-        See how operators and brands are using SenseUni technology to transform retail operations at scale.
-      </p>
-
-      <!-- Hero metrics -->
-      <div class="cs-hero__metrics" id="cs-metrics">
-
-        <div class="cs-hero__metric">
-          <div class="cs-hero__number gradient-text-cyan" data-target="3" data-suffix="">0</div>
-          <div class="cs-hero__metric-label">Deployments Featured</div>
-        </div>
-
-        <div class="cs-hero__metric">
-          <div class="cs-hero__number gradient-text-cyan" data-target="100000" data-suffix="+" data-comma="true">0</div>
-          <div class="cs-hero__metric-label">Devices in Field</div>
-        </div>
-
-        <div class="cs-hero__metric">
-          <div class="cs-hero__number gradient-text-cyan" data-target="99.6" data-suffix="%" data-decimals="1">0</div>
-          <div class="cs-hero__metric-label">System Uptime</div>
-        </div>
-
-        <div class="cs-hero__metric">
-          <div class="cs-hero__number gradient-text-cyan" style="-webkit-text-fill-color: inherit; background: none; color: var(--color-cyan);">Multiple</div>
-          <div class="cs-hero__metric-label">Countries</div>
-        </div>
-
-      </div>
-
-    </section>
-
-    <hr class="section-divider" />
-
-    <!-- ──────────────────────────────────────
-         SECTION 2 — FILTER TABS
-    ─────────────────────────────────────── -->
-    <section class="cs-filter" aria-label="Filter case studies by category">
-      <div class="cs-filter__bar" role="tablist">
-        <button class="cs-filter__tab is-active" data-filter="all"              role="tab" aria-selected="true">All</button>
-        <button class="cs-filter__tab"           data-filter="autonomous-retail" role="tab" aria-selected="false">Autonomous Retail</button>
-        <button class="cs-filter__tab"           data-filter="smart-display"     role="tab" aria-selected="false">Smart Display</button>
-        <button class="cs-filter__tab"           data-filter="retail-media"      role="tab" aria-selected="false">Retail Media</button>
+    <!-- ══ HERO ══════════════════════════════════════════════ -->
+    <section class="hero cs-hero" id="hero">
+      <div class="container">
+        <span class="eyebrow hero-enter" style="--enter-delay: 0s">Case Studies</span>
+        <h1 class="display hero-enter" style="--enter-delay: 0.1s">Real Results. <span class="text-grad">Real Deployments.</span></h1>
+        <p class="lead hero-enter" style="--enter-delay: 0.2s">See how operators and brands are using SenseUni technology to transform retail operations at scale.</p>
       </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         SECTION 3 — CASE STUDIES
-    ─────────────────────────────────────── -->
-    <section class="cs-list" id="case-studies" aria-label="Case study list">
-      <div class="cs-list__inner">
-
-        <!-- ─── CASE 1 — Red Bull Smart Display Network ─── -->
-        <article class="cs-block" data-category="smart-display" data-reveal>
-
-          <!-- Image column (left) -->
-          <div class="cs-block__gallery">
-            <div class="cs-block__main-img" id="gallery-1-main">
-              <img src="assets/images/ScreenShot_2026-06-09_103924_355.webp"
-                   alt="Red Bull Smart Display Network deployment"
-                   loading="eager" />
+    <!-- ══ CASE 1 · AUTONOMOUS RETAIL ════════════════════════ -->
+    <section class="section" id="autonomous-retail">
+      <div class="container">
+        <div class="case">
+          <div class="reveal">
+            <span class="case__tag">Autonomous Retail</span>
+            <h2 class="h2">AI Smart <span class="text-grad">Vending Cabinet</span></h2>
+            <p class="case__client">Multi-location operators · Hotels, offices, campuses</p>
+            <p class="case__desc">Replaced traditional spring-coil vending with AI vision cabinets. Customers scan to open, take freely, and get charged automatically — eliminating mechanical jams, expanding product variety, and cutting operational costs.</p>
+            <div class="case__metrics">
+              <div class="case-metric"><strong>99.6%</strong><span>Recognition Accuracy</span></div>
+              <div class="case-metric"><strong>−60%</strong><span>Operational Cost</span></div>
+              <div class="case-metric"><strong>3×</strong><span>Product Variety</span></div>
+              <div class="case-metric"><strong>&lt;30s</strong><span>Transaction Time</span></div>
             </div>
-
-            <div class="cs-block__thumbs" role="list" aria-label="Case 1 image gallery">
-              <div class="cs-block__thumb is-active" role="listitem"
-                   data-gallery="1" data-src="assets/images/ScreenShot_2026-06-09_103924_355.webp"
-                   data-alt="Red Bull Smart Display Network overview">
-                <img src="assets/images/ScreenShot_2026-06-09_103924_355.webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="1" data-src="assets/images/redbull (3).jpg"
-                   data-alt="Red Bull Smart Display view 2">
-                <img src="assets/images/redbull (3).jpg" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="1" data-src="assets/images/redbull (4).jpg"
-                   data-alt="Red Bull Smart Display view 3">
-                <img src="assets/images/redbull (4).jpg" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="1" data-src="assets/images/redbull (1).jpg"
-                   data-alt="Red Bull Smart Display view 4">
-                <img src="assets/images/redbull (1).jpg" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="1" data-src="assets/images/redbull (2).jpg"
-                   data-alt="Red Bull Smart Display view 5">
-                <img src="assets/images/redbull (2).jpg" alt="" />
-              </div>
+            <p class="case__caps"><strong>Key Capabilities</strong>AI Vision · Scan-to-Open · Auto Billing · Remote Fleet Management</p>
+          </div>
+          <div class="case__media reveal">
+            <div class="media-frame">
+              <img src="assets/images/solutioncas-2.webp" alt="SenseUni AI Smart Cabinet deployment" loading="lazy" />
             </div>
           </div>
-
-          <!-- Content column (right) -->
-          <div class="cs-block__content">
-            <span class="cs-block__tag">Smart Display</span>
-            <h2 class="cs-block__title">Red Bull Smart Display Network</h2>
-            <p class="cs-block__client">Leading energy drink brand · Asia Pacific</p>
-            <p class="cs-block__summary">
-              Deployed AIoT-powered smart display fridges across thousands of retail terminals, replacing manual merchandising with real-time monitoring, temperature control, and centralized brand compliance management.
-            </p>
-
-            <div class="cs-block__results">
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">10,000+</div>
-                <div class="cs-result__label">Units Deployed</div>
-              </div>
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">Real-time</div>
-                <div class="cs-result__label">Remote Monitoring</div>
-              </div>
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">100%</div>
-                <div class="cs-result__label">Brand Compliance</div>
-              </div>
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">Nationwide</div>
-                <div class="cs-result__label">Coverage</div>
-              </div>
-            </div>
-
-            <div class="cs-block__divider"></div>
-            <p class="cs-block__caps">
-              <strong>Key Capabilities:</strong>
-              AIoT Sensing · Cloud Dashboard · Temperature Control · Brand Display Standards
-            </p>
-          </div>
-
-        </article>
-
-        <!-- ─── CASE 2 — AI Smart Vending Cabinet ─── -->
-        <article class="cs-block cs-block--reverse" data-category="autonomous-retail" data-reveal>
-
-          <!-- Image column (right when reversed) -->
-          <div class="cs-block__gallery">
-            <div class="cs-block__main-img" id="gallery-2-main">
-              <img src="assets/images/cabinet-hero.webp"
-                   alt="AI Smart Vending Cabinet deployment overview"
-                   loading="lazy" />
-            </div>
-
-            <div class="cs-block__thumbs" role="list" aria-label="Case 2 image gallery">
-              <div class="cs-block__thumb is-active" role="listitem"
-                   data-gallery="2" data-src="assets/images/cabinet-hero.webp"
-                   data-alt="AI Smart Vending Cabinet overview">
-                <img src="assets/images/cabinet-hero.webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="2" data-src="assets/images/vending-(1).webp"
-                   data-alt="AI Smart Vending Cabinet view 1">
-                <img src="assets/images/vending-(1).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="2" data-src="assets/images/vending-(2).webp"
-                   data-alt="AI Smart Vending Cabinet view 2">
-                <img src="assets/images/vending-(2).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="2" data-src="assets/images/vending-(3).webp"
-                   data-alt="AI Smart Vending Cabinet view 3">
-                <img src="assets/images/vending-(3).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="2" data-src="assets/images/vending-(4).webp"
-                   data-alt="AI Smart Vending Cabinet view 4">
-                <img src="assets/images/vending-(4).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="2" data-src="assets/images/vending-(5).webp"
-                   data-alt="AI Smart Vending Cabinet view 5">
-                <img src="assets/images/vending-(5).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="2" data-src="assets/images/vending-(6).webp"
-                   data-alt="AI Smart Vending Cabinet view 6">
-                <img src="assets/images/vending-(6).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="2" data-src="assets/images/vending-(7).webp"
-                   data-alt="AI Smart Vending Cabinet view 7">
-                <img src="assets/images/vending-(7).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="2" data-src="assets/images/vending-(8).webp"
-                   data-alt="AI Smart Vending Cabinet view 8">
-                <img src="assets/images/vending-(8).webp" alt="" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Content column (left when reversed) -->
-          <div class="cs-block__content">
-            <span class="cs-block__tag">Autonomous Retail</span>
-            <h2 class="cs-block__title">AI Smart Vending Cabinet</h2>
-            <p class="cs-block__client">Multi-location operators · Hotels, offices, campuses</p>
-            <p class="cs-block__summary">
-              Replaced traditional spring-coil vending with AI vision cabinets. Customers scan to open, take freely, and get charged automatically — eliminating mechanical jams, expanding product variety, and cutting operational costs.
-            </p>
-
-            <div class="cs-block__results">
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">99.6%</div>
-                <div class="cs-result__label">Recognition Accuracy</div>
-              </div>
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">−60%</div>
-                <div class="cs-result__label">Operational Cost</div>
-              </div>
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">3×</div>
-                <div class="cs-result__label">Product Variety</div>
-              </div>
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">&lt;30s</div>
-                <div class="cs-result__label">Transaction Time</div>
-              </div>
-            </div>
-
-            <div class="cs-block__divider"></div>
-            <p class="cs-block__caps">
-              <strong>Key Capabilities:</strong>
-              AI Vision · Scan-to-Open · Auto Billing · Remote Fleet Management
-            </p>
-          </div>
-
-        </article>
-
-        <!-- ─── CASE 3 — Jakarta Digital Advertising Network ─── -->
-        <article class="cs-block" data-category="retail-media" data-reveal>
-
-          <!-- Image column (left) -->
-          <div class="cs-block__gallery">
-            <div class="cs-block__main-img" id="gallery-3-main">
-              <img src="assets/images/id (5).webp"
-                   alt="Jakarta Digital Advertising Network screens in wholesale market"
-                   loading="lazy" />
-            </div>
-
-            <div class="cs-block__thumbs" role="list" aria-label="Case 3 image gallery">
-              <div class="cs-block__thumb is-active" role="listitem"
-                   data-gallery="3" data-src="assets/images/id (5).webp"
-                   data-alt="Jakarta advertising network overview">
-                <img src="assets/images/id (5).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="3" data-src="assets/images/id (1).webp"
-                   data-alt="Jakarta network deployment view 1">
-                <img src="assets/images/id (1).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="3" data-src="assets/images/id (2).webp"
-                   data-alt="Jakarta network deployment view 2">
-                <img src="assets/images/id (2).webp" alt="" />
-              </div>
-              <div class="cs-block__thumb" role="listitem"
-                   data-gallery="3" data-src="assets/images/id (4).webp"
-                   data-alt="Jakarta network deployment view 3">
-                <img src="assets/images/id (4).webp" alt="" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Content column (right) -->
-          <div class="cs-block__content">
-            <span class="cs-block__tag">Retail Media</span>
-            <h2 class="cs-block__title">Jakarta Digital Advertising Network</h2>
-            <p class="cs-block__client">GrosirOne · Indonesia wholesale markets</p>
-            <p class="cs-block__summary">
-              Deployed a network of AIoT-powered digital advertising screens across high-traffic wholesale markets, enabling centralized content scheduling, real-time playback analytics, and scalable market-by-market expansion.
-            </p>
-
-            <div class="cs-block__results">
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">20,000+</div>
-                <div class="cs-result__label">Screens Deployed</div>
-              </div>
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">5M+</div>
-                <div class="cs-result__label">Daily Impressions</div>
-              </div>
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">Real-Time</div>
-                <div class="cs-result__label">Content Control</div>
-              </div>
-              <div class="cs-result">
-                <div class="cs-result__number gradient-text-cyan">512+</div>
-                <div class="cs-result__label">Markets Covered</div>
-              </div>
-            </div>
-
-            <div class="cs-block__divider"></div>
-            <p class="cs-block__caps">
-              <strong>Key Capabilities:</strong>
-              Digital Signage · Cloud CMS · Playback Analytics · Remote Scheduling
-            </p>
-          </div>
-
-        </article>
-
+        </div>
       </div>
     </section>
 
-    <!-- ──────────────────────────────────────
-         SECTION 4 — FINAL CTA
-    ─────────────────────────────────────── -->
-    <section class="final-cta" id="final-cta" aria-labelledby="final-cta-headline">
-      <canvas id="final-cta-canvas" aria-hidden="true"></canvas>
-      <div class="final-cta__inner" data-reveal-group="final-cta">
-
-        <p class="section-label final-cta__label" data-reveal>Get Started</p>
-        <h2 class="final-cta__headline" id="final-cta-headline" data-reveal>
-          Ready to See <span class="gradient-text">Similar Results?</span>
-        </h2>
-        <p class="final-cta__sub" data-reveal>
-          Talk to our team about deploying SenseUni solutions for your business.
-        </p>
-
-        <div class="final-cta__ctas" data-reveal>
-          <a href="get-a-demo.html"        class="cta-btn--primary">Get a Demo</a>
-          <a href="ai-smart-cabinet.html" class="cta-btn--secondary">Explore AI Smart Cabinet</a>
+    <!-- ══ CASE 2 · SMART DISPLAY ════════════════════════════ -->
+    <section class="section section--flush-top" id="smart-display">
+      <div class="container">
+        <div class="case case--flip">
+          <div class="reveal">
+            <span class="case__tag">Smart Display</span>
+            <h2 class="h2">Red Bull Smart <span class="text-grad">Display Network</span></h2>
+            <p class="case__client">Leading energy drink brand · Asia Pacific</p>
+            <p class="case__desc">Deployed AIoT-powered smart display fridges across thousands of retail terminals, replacing manual merchandising with real-time monitoring, temperature control, and centralized brand compliance management.</p>
+            <div class="case__metrics">
+              <div class="case-metric"><strong>10,000+</strong><span>Units Deployed</span></div>
+              <div class="case-metric"><strong>Real-time</strong><span>Remote Monitoring</span></div>
+              <div class="case-metric"><strong>100%</strong><span>Brand Compliance</span></div>
+              <div class="case-metric"><strong>Nationwide</strong><span>Coverage</span></div>
+            </div>
+            <p class="case__caps"><strong>Key Capabilities</strong>AIoT Sensing · Cloud Dashboard · Temperature Control · Brand Display Standards</p>
+          </div>
+          <div class="case__media reveal">
+            <div class="media-frame">
+              <img src="assets/images/redbull (1).jpg" alt="Red Bull smart display fridge network" loading="lazy" />
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
 
+    <!-- ══ CASE 3 · RETAIL MEDIA ═════════════════════════════ -->
+    <section class="section section--flush-top" id="retail-media">
+      <div class="container">
+        <div class="case">
+          <div class="reveal">
+            <span class="case__tag">Retail Media</span>
+            <h2 class="h2">Jakarta Digital <span class="text-grad">Advertising Network</span></h2>
+            <p class="case__client">GrosirOne · Indonesia wholesale markets</p>
+            <p class="case__desc">Deployed a network of AIoT-powered digital advertising screens across high-traffic wholesale markets, enabling centralized content scheduling, real-time playback analytics, and scalable market-by-market expansion.</p>
+            <div class="case__metrics">
+              <div class="case-metric"><strong>20,000+</strong><span>Screens Deployed</span></div>
+              <div class="case-metric"><strong>5M+</strong><span>Daily Impressions</span></div>
+              <div class="case-metric"><strong>Real-Time</strong><span>Content Control</span></div>
+              <div class="case-metric"><strong>512+</strong><span>Markets Covered</span></div>
+            </div>
+            <p class="case__caps"><strong>Key Capabilities</strong>Digital Signage · Cloud CMS · Playback Analytics · Remote Scheduling</p>
+          </div>
+          <div class="case__media reveal">
+            <div class="media-frame">
+              <img src="assets/images/solutioncas-1.webp" alt="Digital advertising screens in Jakarta wholesale markets" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FINAL CTA ═════════════════════════════════════════ -->
+    <section class="cta-band" id="get-started">
+      <div class="container cta-band__inner">
+        <div class="reveal">
+          <span class="eyebrow" style="margin-bottom: 22px;">Get Started</span>
+          <h2 class="display">Ready to See<br /><span class="text-grad">Similar Results?</span></h2>
+          <p class="lead">Talk to our team about deploying SenseUni solutions for your business.</p>
+          <div class="cta-band__actions">
+            <a class="btn btn--primary" href="get-a-demo.html">Get a Demo</a>
+            <a class="btn btn--ghost" href="ai-smart-cabinet.html">Explore AI Smart Cabinet</a>
+          </div>
+        </div>
       </div>
     </section>
 
   </main>
 
-
-  <!-- ═══════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════ -->
   <footer class="footer" role="contentinfo">
-    <div class="footer__main" id="footer-main">
-
-      <!-- Column 1 — Logo + tagline -->
-      <div class="footer__logo-col">
+    <div class="footer__main">
+      <div class="footer__brand">
         <a href="index.html" class="footer__logo" aria-label="SenseUni home">
-          <img src="assets/images/logo.webp" alt="SenseUni" style="width:160px;height:auto;display:block;" />
+          <img src="assets/images/logo.webp" alt="SenseUni" width="160" height="34" />
         </a>
         <p class="footer__tagline">Building Smarter Retail Networks.</p>
-        <p class="footer__position-line">AI-powered retail infrastructure for global markets.</p>
+        <p class="footer__desc">AI-powered retail infrastructure for global markets.</p>
       </div>
-
-      <!-- Column 2 — Product -->
-      <div>
-        <p class="footer__col-title">Product</p>
-        <ul class="footer__col-links" role="list">
-          <li><a href="ai-smart-cabinet.html"      class="footer__col-link">AI Smart Cabinet</a></li>
-          <li><a href="solutions.html#showcase"    class="footer__col-link">Smart Showcase</a></li>
-          <li><a href="solutions.html#advertising" class="footer__col-link">Smart Advertising</a></li>
-          <li><a href="technology.html"            class="footer__col-link">AIoT Platform</a></li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Product</h3>
+        <ul>
+          <li><a href="ai-smart-cabinet.html">AI Smart Cabinet</a></li>
+          <li><a href="solutions.html#showcase">Smart Showcase</a></li>
+          <li><a href="solutions.html#advertising">Smart Advertising</a></li>
+          <li><a href="technology.html">AIoT Platform</a></li>
         </ul>
       </div>
-
-      <!-- Column 3 — Company -->
-      <div>
-        <p class="footer__col-title">Company</p>
-        <ul class="footer__col-links" role="list">
-          <li><a href="company.html"           class="footer__col-link">About SenseUni</a></li>
-          <li><a href="case-studies.html"      class="footer__col-link">Case Studies</a></li>
-          <li><a href="technology.html"        class="footer__col-link">Technology</a></li>
-          <li><a href="company.html#partners"  class="footer__col-link">Partners</a></li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Company</h3>
+        <ul>
+          <li><a href="company.html">About SenseUni</a></li>
+          <li><a href="case-studies.html">Case Studies</a></li>
+          <li><a href="technology.html">Technology</a></li>
+          <li><a href="get-a-demo.html">Get a Demo</a></li>
         </ul>
       </div>
-
-      <!-- Column 4 — Global Presence -->
-      <div>
-        <p class="footer__col-title">Global Presence</p>
-        <ul class="footer__col-links" role="list">
-          <li><span class="footer__col-link">North America</span></li>
-          <li><span class="footer__col-link">Europe</span></li>
-          <li><span class="footer__col-link">Middle East</span></li>
-          <li><span class="footer__col-link">Asia Pacific</span></li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Global Presence</h3>
+        <ul>
+          <li><span>North America</span></li>
+          <li><span>Europe</span></li>
+          <li><span>Middle East</span></li>
+          <li><span>Asia Pacific</span></li>
         </ul>
       </div>
-
-      <!-- Column 5 — Contact -->
-      <div>
-        <p class="footer__col-title">Contact</p>
-        <ul class="footer__col-links" role="list">
-          <li>
-            <div class="footer__contact-item">
-              <span class="footer__contact-label">General</span>
-              <a href="mailto:hello@senseuni.ai" class="footer__col-link">hello@senseuni.ai</a>
-            </div>
-          </li>
-          <li>
-            <div class="footer__contact-item">
-              <span class="footer__contact-label">Sales</span>
-              <a href="mailto:sales@senseuni.ai" class="footer__col-link">sales@senseuni.ai</a>
-            </div>
-          </li>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Contact</h3>
+        <ul>
+          <li><a href="mailto:hello@senseuni.ai">hello@senseuni.ai</a></li>
+          <li><a href="mailto:sales@senseuni.ai">sales@senseuni.ai</a></li>
         </ul>
       </div>
-
     </div>
-
-    <!-- Bottom bar -->
     <div class="footer__bottom">
-
-      <p class="footer__copy">© 2026 SenseUni. All rights reserved.</p>
-
-      <ul class="footer__social" role="list" aria-label="Social media links">
-        <li>
-          <a href="https://linkedin.com/company/senseuni" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://tiktok.com/@senseuni" class="footer__social-link" aria-label="TikTok" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.79a8.18 8.18 0 0 0 4.78 1.52V6.85a4.85 4.85 0 0 1-1-.16z"/>
-            </svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://youtube.com/@senseuni" class="footer__social-link" aria-label="YouTube" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-            </svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://instagram.com/senseuni" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-            </svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://x.com/senseuni" class="footer__social-link" aria-label="X (Twitter)" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-        </li>
-      </ul>
-
-      <ul class="footer__legal" role="list">
-        <li><a href="privacy-policy.html" class="footer__legal-link">Privacy Policy</a></li>
-        <li><a href="terms-of-service.html"   class="footer__legal-link">Terms of Service</a></li>
-      </ul>
-
+      <div class="footer__bottom-inner">
+        <p class="footer__copyright">© <span id="footer-year">2026</span> SenseUni. All rights reserved.</p>
+        <div class="footer__legal">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+        </div>
+      </div>
     </div>
-
   </footer>
 
-
-  <!-- Back-to-top button -->
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <polyline points="18 15 12 9 6 15"/>
-    </svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
   </button>
 
-
-  <!-- ═══════════════════════════════════════
-       JAVASCRIPT
-  ═══════════════════════════════════════ -->
-  <script>
-    (() => {
-      const nav       = document.getElementById('nav');
-      const hamburger = document.getElementById('nav-hamburger');
-      const drawer    = document.getElementById('nav-drawer');
-      const backToTop = document.getElementById('back-to-top');
-
-      let lastScrollY = 0;
-      let ticking     = false;
-      const HIDE_THRESHOLD = 120;
-      const DELTA          = 5;
-
-      /* ── Scroll: frosted state + smart hide/reveal ── */
-      function onScroll() {
-        const y = window.scrollY;
-        if (y < HIDE_THRESHOLD) {
-          nav.classList.remove('is-hidden');
-          nav.classList.toggle('is-scrolled', y > 12);
-        } else if (y > lastScrollY + DELTA) {
-          nav.classList.add('is-hidden');
-          nav.classList.add('is-scrolled');
-        } else if (y < lastScrollY - DELTA) {
-          nav.classList.remove('is-hidden');
-        }
-        if (backToTop) backToTop.classList.toggle('is-visible', y > 400);
-        lastScrollY = y;
-        ticking = false;
-      }
-      window.addEventListener('scroll', () => {
-        if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
-      }, { passive: true });
-      document.addEventListener('mousemove', (e) => {
-        if (e.clientY < 80 && window.scrollY >= HIDE_THRESHOLD) nav.classList.remove('is-hidden');
-      });
-      nav.addEventListener('animationend', () => { nav.style.animation = 'none'; }, { once: true });
-      onScroll();
-
-      /* ── Hamburger ── */
-      const toggleDrawer = (open) => {
-        nav.classList.toggle('is-open', open);
-        drawer.classList.toggle('is-open', open);
-        hamburger.setAttribute('aria-expanded', String(open));
-        drawer.setAttribute('aria-hidden', String(!open));
-        document.body.style.overflow = open ? 'hidden' : '';
-      };
-      hamburger.addEventListener('click', () => toggleDrawer(!drawer.classList.contains('is-open')));
-      document.addEventListener('click', (e) => {
-        if (drawer.classList.contains('is-open') && !nav.contains(e.target) && !drawer.contains(e.target))
-          toggleDrawer(false);
-      });
-      window.addEventListener('resize', () => { if (window.innerWidth > 900) toggleDrawer(false); });
-      drawer.querySelectorAll('a').forEach(l => l.addEventListener('click', () => toggleDrawer(false)));
-
-      /* ── Back-to-top ── */
-      if (backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-      /* ── Footer column entrance ── */
-      const footerCols = document.querySelectorAll('#footer-main > *');
-      if ('IntersectionObserver' in window) {
-        const obs = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) { entry.target.classList.add('is-visible'); obs.unobserve(entry.target); }
-          });
-        }, { threshold: 0.15 });
-        footerCols.forEach(col => obs.observe(col));
-      } else {
-        footerCols.forEach(col => col.classList.add('is-visible'));
-      }
-
-      /* ════════════════════════════════════
-         GLOBAL STARFIELD
-      ════════════════════════════════════ */
-      (function initGlobalStarfield() {
-        const canvas = document.getElementById('home-starfield');
-        if (!canvas) return;
-
-        const ctx     = canvas.getContext('2d');
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const isMobile = () => window.innerWidth < 768;
-
-        const COUNT = 70;
-        let stars   = [];
-        let mouse   = { x: 0, y: 0 };
-        let target  = { x: 0, y: 0 };
-        const LERP  = 0.02;
-
-        function rand(a, b) { return a + Math.random() * (b - a); }
-
-        function resize() {
-          canvas.width  = window.innerWidth;
-          canvas.height = window.innerHeight;
-        }
-
-        function spawn() {
-          stars = [];
-          for (let i = 0; i < COUNT; i++) {
-            stars.push({
-              x: rand(0, canvas.width), y: rand(0, canvas.height),
-              r: rand(0.6, 1.8),
-              vx: rand(-0.08, 0.08), vy: rand(-0.08, 0.08),
-              alpha: rand(0.3, 0.9),
-              dAlpha: rand(0.003, 0.008) * (Math.random() < 0.5 ? 1 : -1),
-              px: 0, py: 0,
-              depth: rand(0.3, 1.0),
-            });
-          }
-        }
-
-        function draw() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          for (const s of stars) {
-            ctx.beginPath();
-            ctx.arc(s.x + s.px, s.y + s.py, s.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(139, 113, 255, ${s.alpha.toFixed(3)})`;
-            ctx.fill();
-          }
-        }
-
-        function update() {
-          if (!isMobile()) {
-            mouse.x += (target.x - mouse.x) * LERP;
-            mouse.y += (target.y - mouse.y) * LERP;
-          }
-          for (const s of stars) {
-            s.x += s.vx; s.y += s.vy;
-            if (s.x < -2) s.x = canvas.width + 2;
-            if (s.x > canvas.width + 2) s.x = -2;
-            if (s.y < -2) s.y = canvas.height + 2;
-            if (s.y > canvas.height + 2) s.y = -2;
-            s.alpha += s.dAlpha;
-            if (s.alpha > 0.9 || s.alpha < 0.15) s.dAlpha *= -1;
-            if (!isMobile()) {
-              s.px = mouse.x * s.depth * 4;
-              s.py = mouse.y * s.depth * 4;
-            }
-          }
-        }
-
-        function loop() { update(); draw(); requestAnimationFrame(loop); }
-
-        window.addEventListener('mousemove', (e) => {
-          if (isMobile()) return;
-          target.x = (e.clientX / window.innerWidth  - 0.5) * 2;
-          target.y = (e.clientY / window.innerHeight - 0.5) * 2;
-        }, { passive: true });
-
-        resize(); spawn();
-        if (reduced) draw(); else requestAnimationFrame(loop);
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => { resize(); spawn(); if (reduced) draw(); }, 200);
-        }, { passive: true });
-      }());
-
-      /* ════════════════════════════════════
-         COUNT-UP — HERO METRICS
-      ════════════════════════════════════ */
-      (function initCountUp() {
-        const numbers  = document.querySelectorAll('[data-target]');
-        if (!numbers.length) return;
-
-        const DURATION = 2000;
-        const easeOut  = t => 1 - Math.pow(1 - t, 3);
-
-        function format(el, value) {
-          const suffix   = el.dataset.suffix   || '';
-          const decimals = parseInt(el.dataset.decimals || '0', 10);
-          const useComma = el.dataset.comma === 'true';
-          let str;
-          if (useComma)          str = Math.floor(value).toLocaleString('en-US');
-          else if (decimals > 0) str = value.toFixed(decimals);
-          else                   str = String(Math.floor(value));
-          return str + suffix;
-        }
-
-        function animateOne(el) {
-          const t0     = performance.now();
-          const tgt    = parseFloat(el.dataset.target);
-          function tick(now) {
-            const p = Math.min((now - t0) / DURATION, 1);
-            el.textContent = format(el, easeOut(p) * tgt);
-            if (p < 1) requestAnimationFrame(tick);
-            else el.textContent = format(el, tgt);
-          }
-          requestAnimationFrame(tick);
-        }
-
-        const metricsEl = document.getElementById('cs-metrics');
-        if (!metricsEl) return;
-
-        if ('IntersectionObserver' in window) {
-          const obs = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) { numbers.forEach(animateOne); obs.disconnect(); }
-            });
-          }, { threshold: 0.3 });
-          obs.observe(metricsEl);
-        } else {
-          numbers.forEach(el => { el.textContent = format(el, parseFloat(el.dataset.target)); });
-        }
-      }());
-
-      /* ════════════════════════════════════
-         FILTER TABS
-      ════════════════════════════════════ */
-      (function initFilter() {
-        const tabs   = document.querySelectorAll('.cs-filter__tab');
-        const blocks = document.querySelectorAll('.cs-block');
-
-        function setFilter(filter) {
-          /* Update tab states */
-          tabs.forEach(t => {
-            const active = t.dataset.filter === filter;
-            t.classList.toggle('is-active', active);
-            t.setAttribute('aria-selected', String(active));
-          });
-
-          /* Show / hide cards */
-          blocks.forEach(block => {
-            const cat     = block.dataset.category;
-            const visible = filter === 'all' || cat === filter;
-            if (visible) {
-              block.classList.remove('is-hidden');
-            } else {
-              block.classList.add('is-hidden');
-            }
-          });
-        }
-
-        tabs.forEach(tab => {
-          tab.addEventListener('click', () => setFilter(tab.dataset.filter));
-        });
-      }());
-
-      /* ════════════════════════════════════
-         THUMBNAIL GALLERY SWAP
-      ════════════════════════════════════ */
-      (function initGallery() {
-        const thumbs = document.querySelectorAll('.cs-block__thumb');
-
-        thumbs.forEach(thumb => {
-          thumb.addEventListener('click', () => {
-            const galleryId = thumb.dataset.gallery;
-            const newSrc    = thumb.dataset.src;
-            const newAlt    = thumb.dataset.alt || '';
-            const mainWrap  = document.getElementById(`gallery-${galleryId}-main`);
-            if (!mainWrap) return;
-
-            const mainImg = mainWrap.querySelector('img');
-            if (!mainImg || mainImg.src.includes(newSrc.split('/').pop())) return;
-
-            /* Crossfade: fade out → swap → fade in */
-            mainImg.classList.add('is-fading');
-            setTimeout(() => {
-              mainImg.src = newSrc;
-              mainImg.alt = newAlt;
-              mainImg.classList.remove('is-fading');
-            }, 300);
-
-            /* Update active thumb */
-            document.querySelectorAll(`.cs-block__thumb[data-gallery="${galleryId}"]`)
-              .forEach(t => t.classList.remove('is-active'));
-            thumb.classList.add('is-active');
-          });
-        });
-      }());
-
-      /* ════════════════════════════════════
-         SCROLL REVEAL — CASE BLOCKS + CTA
-      ════════════════════════════════════ */
-      (function initScrollReveal() {
-        const GROUP_DELAYS = {
-          'final-cta': [0, 80, 160, 240],
-        };
-
-        const groups = document.querySelectorAll('[data-reveal-group]');
-        const lone   = document.querySelectorAll('[data-reveal]:not([data-reveal-group]):not([data-reveal-group] [data-reveal])');
-
-        const reveal = (el, delay) => setTimeout(() => el && el.classList.add('in-view'), delay);
-
-        if (!('IntersectionObserver' in window)) {
-          document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('in-view'));
-          return;
-        }
-
-        const obs = new IntersectionObserver((entries, observer) => {
-          entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            const target = entry.target;
-
-            if (target.hasAttribute('data-reveal-group')) {
-              const key      = target.dataset.revealGroup;
-              const delays   = GROUP_DELAYS[key] || [];
-              const children = target.matches('[data-reveal]')
-                ? [target]
-                : target.querySelectorAll(':scope > [data-reveal], :scope > * > [data-reveal]');
-              children.forEach((child, i) => reveal(child, delays[i] != null ? delays[i] : i * 80));
-            } else {
-              reveal(target, 0);
-            }
-
-            observer.unobserve(target);
-          });
-        }, { threshold: 0.10, rootMargin: '0px 0px -60px 0px' });
-
-        groups.forEach(g => obs.observe(g));
-        lone.forEach(el => obs.observe(el));
-      }());
-
-      /* ════════════════════════════════════
-         FINAL CTA — SPARSE PARTICLE CANVAS
-      ════════════════════════════════════ */
-      (function initFinalCtaParticles() {
-        const canvas = document.getElementById('final-cta-canvas');
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const PARTICLE_COUNT = 30;
-        const CONNECT_DIST   = 140;
-
-        let particles = [];
-        let rafId     = null;
-
-        function resize() {
-          const section = canvas.parentElement;
-          canvas.width  = section.offsetWidth;
-          canvas.height = section.offsetHeight;
-        }
-
-        function rand(min, max) { return min + Math.random() * (max - min); }
-
-        function spawn() {
-          particles = [];
-          for (let i = 0; i < PARTICLE_COUNT; i++) {
-            particles.push({
-              x: rand(0, canvas.width), y: rand(0, canvas.height),
-              r: rand(1.2, 2.2),
-              vx: reduced ? 0 : rand(-0.12, 0.12),
-              vy: reduced ? 0 : rand(-0.12, 0.12),
-            });
-          }
-        }
-
-        function draw() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const dx = particles[i].x - particles[j].x;
-              const dy = particles[i].y - particles[j].y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < CONNECT_DIST) {
-                const alpha = (1 - dist / CONNECT_DIST) * 0.18;
-                ctx.beginPath();
-                ctx.strokeStyle = `rgba(139, 113, 255, ${alpha.toFixed(3)})`;
-                ctx.lineWidth = 0.5;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-              }
-            }
-          }
-          for (const p of particles) {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(139, 113, 255, 0.30)';
-            ctx.fill();
-          }
-        }
-
-        function update() {
-          for (const p of particles) {
-            p.x += p.vx; p.y += p.vy;
-            if (p.x < p.r || p.x > canvas.width  - p.r) { p.vx *= -1; p.x = Math.max(p.r, Math.min(canvas.width  - p.r, p.x)); }
-            if (p.y < p.r || p.y > canvas.height - p.r)  { p.vy *= -1; p.y = Math.max(p.r, Math.min(canvas.height - p.r, p.y)); }
-          }
-        }
-
-        function loop() { update(); draw(); rafId = requestAnimationFrame(loop); }
-
-        resize(); spawn();
-        if (reduced) draw(); else loop();
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-            resize(); spawn();
-            if (reduced) draw(); else loop();
-          }, 200);
-        }, { passive: true });
-      }());
-
-      /* ── Cookie Banner ── */
-      (function() {
-        var banner = document.getElementById('cookie-banner');
-        var btn    = document.getElementById('cookie-accept');
-        if (!banner || !btn) return;
-        if (!localStorage.getItem('senseuni_cookie_accepted')) {
-          banner.style.display = 'flex';
-          requestAnimationFrame(function() {
-            requestAnimationFrame(function() { banner.classList.add('is-visible'); });
-          });
-        }
-        btn.addEventListener('click', function() {
-          banner.classList.remove('is-visible');
-          setTimeout(function() { banner.style.display = 'none'; }, 400);
-          localStorage.setItem('senseuni_cookie_accepted', 'true');
-        });
-      }());
-
-    })();
-  </script>
-
-  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Cookie notice">
-    <p>We use essential cookies to ensure our website functions properly. No tracking or advertising cookies are used.
-      <a href="privacy-policy.html#cookies">Learn more</a>
-    </p>
-    <button id="cookie-accept" class="cookie-accept-btn">Got It</button>
+  <div class="cookie-notice" id="cookie-notice" hidden>
+    <p>We use essential cookies to ensure our website functions properly. No tracking or advertising cookies are used. <a href="privacy-policy.html">Learn more</a></p>
+    <button class="btn btn--ghost btn--sm" data-cookie-accept>Got It</button>
   </div>
 
+  <script src="assets/js/main.js" defer></script>
 </body>
 </html>

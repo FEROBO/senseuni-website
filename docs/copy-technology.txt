@@ -1,0 +1,183 @@
+﻿Technology — SenseUni
+Home
+AI Smart Cabinet
+Solutions
+Technology
+Case Studies
+Company
+Get a Demo
+Home
+AI Smart Cabinet
+Solutions
+Technology
+Case Studies
+Company
+Get a Demo
+Full-Stack Technology
+Engineered from
+Chip to Cloud.
+Full-stack retail technology. Designed, built, and deployed by one team.
+10+
+Years in Retail Tech
+3
+Core Technology Layers
+99.6%
+AI Recognition Accuracy
+150+
+Patents & Copyrights
+Architecture
+Three Layers. One Architecture.
+Every component — from cabinet hardware to cloud analytics — is designed and built in-house.
+Layer 03
+Cloud Platform & Data
+Remote operations · Analytics · Content delivery
+Proprietary SaaS
+Remote Operations
+Configure, restock, and update any cabinet fleet-wide from a single dashboard.
+Real-Time Inventory
+Shelf-level stock tracking with automatic low-stock alerts and reorder triggers.
+Analytics Dashboard
+Sales velocity, heatmaps, and consumer behavior reports across all locations.
+Content Management
+Push product images, pricing, and promotions to cabinet screens in real time.
+Layer 02
+Computer Vision & AI
+On-device inference · No cloud dependency
+Proprietary Model
+Pure Vision Recognition
+No barcodes, no RFID — products identified by visual appearance alone.
+99.6% Accuracy
+Trained on millions of retail SKUs across varying lighting and orientation.
+Real-Time Processing
+Sub-second inference on embedded hardware — no network latency required.
+Adaptive Learning
+Models continuously improve with new SKU data — zero manual retraining.
+Layer 01
+Intelligent Hardware
+Industrial-grade cabinet · Embedded compute
+Proprietary Design
+Industrial-Grade Build
+Powder-coated steel frame, tempered glass, IP-rated anti-fog coating.
+Precision Climate Control
+±0.5 °C temperature stability for beverages, fresh food, and pharmaceuticals.
+Modular Architecture
+Shelf configs, door types, and screen sizes customized per deployment.
+Plug-and-Play Deployment
+Power-on ready in under 30 minutes — no specialist installation required.
+Intellectual Property
+150+ Patents and Copyrights.
+One Vision.
+A decade of R&D. Every core algorithm, every hardware design, every software system — proprietary and protected.
+0+
+Patents & Software Copyrights
+Registered with China National Intellectual Property Administration and related bodies.
+AI recognition algorithms, hardware systems, cloud architecture
+Proprietary retail OS, analytics engine, device firmware
+No licensed cores. No third-party dependencies on critical systems.
+Computer Vision
+See What Our AI Sees.
+Computer vision that identifies products in milliseconds — without barcodes, RFID tags, or weight sensors.
+LIVE RECOGNITION
+Identified ✓
+Identified ✓
+Identified ✓
+Identified ✓
+Identified ✓
+Identified ✓
+Identified ✓
+Identified ✓
+Identified ✓
+Identified ✓
+Identified ✓
+Identified ✓
+Multi-SKU Recognition
+Hundreds of products simultaneously identified in a single frame.
+Occlusion Handling
+Accurate even when products overlap or are partially hidden from view.
+Rapid Onboarding
+New products trained and deployed to the fleet within hours, not weeks.
+Environment Adaptive
+Consistent recognition across varying lighting conditions and humidity levels.
+99.6%
+Recognition Accuracy
+Verified across 100,000+ real-world transactions
+Hardware
+Built to Last. Built to Scale.
+Industrial-grade retail hardware, engineered for 24/7 unattended operation.
+4G Connectivity
+Always-on data sync. Dual-SIM supported.
+21.5″ HD Touchscreen
+Advertising & promotions (Halo Max model)
+Tempered Glass
+Anti-fog coating. Full-perimeter LED illumination.
+32–68 °F Cooling
+Wind-cooled precision climate. ±0.5 °C stability.
+Universal Payment
+Visa · Mastercard · Apple Pay · Google Pay · NFC
+220–364 lbs
+Powder-coated steel frame. Commercial grade.
+4G Connectivity
+Always-on data sync. Dual-SIM supported.
+21.5″ Touchscreen
+Advertising & promotions (Halo Max model)
+Tempered Glass
+Anti-fog coating. Full-perimeter LED illumination.
+32–68 °F Cooling
+Wind-cooled precision climate. ±0.5 °C stability.
+Universal Payment
+Visa · Mastercard · Apple Pay · Google Pay · NFC
+220–364 lbs
+Powder-coated steel frame. Commercial grade.
+Two models. One platform.
+Halo Mini (508 L)
+and
+Halo Max (608 L)
+share the same
+software, cloud backend, and service network.
+Compare Models →
+Security & Compliance
+Enterprise-Grade. Privacy-First.
+Built for the compliance requirements of large-scale retail deployments.
+Payment Security
+PCI DSS compliant. Visa, Mastercard, Apple Pay, Google Pay, and NFC all natively supported.
+Data Privacy
+No biometric collection. Anonymous transactions. Full operator data ownership and portability.
+Cloud Infrastructure
+AWS hosted. Enterprise SLA with 99.9% uptime. Private on-premise deployment available on request.
+OTA Updates
+Remote firmware and software updates. Zero downtime. Centralized fleet management across all locations.
+Get Started
+See the Technology
+in Action.
+Schedule a technical walkthrough with our engineering team.
+Or download the full hardware specification sheet.
+Schedule a Demo
+Download Spec Sheet
+Building Smarter Retail Networks.
+AI-powered retail infrastructure for global markets.
+Product
+AI Smart Cabinet
+Smart Showcase
+Smart Advertising
+AIoT Platform
+Company
+About SenseUni
+Case Studies
+Technology
+Partners
+Global Presence
+North America
+Europe
+Middle East
+Asia Pacific
+Contact
+General
+hello@senseuni.ai
+Sales
+sales@senseuni.ai
+© 2026 SenseUni. All rights reserved.
+Privacy Policy
+Terms of Service
+We use essential cookies to ensure our website functions properly. No tracking or advertising cookies are used.
+Learn more
+Got It
