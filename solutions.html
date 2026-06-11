@@ -320,24 +320,17 @@
     @keyframes ecoDrawLine { to { stroke-dashoffset: 0; } }
     .eco-line.is-bright { stroke: rgba(94,235,255,0.8) !important; }
 
-    /* Traveling dots */
-    .eco-dot { opacity: 0; offset-rotate: 0deg; }
-    .eco-dot--top    { offset-path: path('M 500,122 L 500,202'); }
-    .eco-dot--right  { offset-path: path('M 724,260 L 550,260'); }
-    .eco-dot--bottom { offset-path: path('M 500,402 L 500,318'); }
-    .eco-dot--left   { offset-path: path('M 276,260 L 450,260'); }
-    .eco-dot.is-flowing { animation: ecoDotFlow 3s linear infinite; }
-    .eco-dot--right  { animation-delay: 0.75s; }
-    .eco-dot--bottom { animation-delay: 1.5s; }
-    .eco-dot--left   { animation-delay: 2.25s; }
-    @keyframes ecoDotFlow {
-      0%   { offset-distance: 0%;   opacity: 0; }
-      8%   { opacity: 1; }
-      92%  { opacity: 1; }
-      100% { offset-distance: 100%; opacity: 0; }
-    }
+    /* Traveling dots — motion lives in SMIL (<animateMotion> + <mpath>)
+       bound to the spoke <path> elements themselves, so dots can never
+       drift off the lines regardless of how the SVG scales. */
+    .eco-dot { pointer-events: none; }
 
     /* Solution nodes */
+    /* Guard: the flywheel section further down reuses the .eco-node class
+       with translateX(-16px)/hover-nudge rules; those must never leak into
+       the hero SVG or the cards drift off the spokes. */
+    .ecosystem-svg .eco-node,
+    .ecosystem-svg .eco-node:hover { transform: none; }
     .eco-node { opacity: 0; cursor: pointer; transition: opacity 0.4s ease; }
     .eco-node.is-visible { opacity: 1; }
     .eco-node.is-dimmed  { opacity: 0.28; }
@@ -1074,25 +1067,29 @@
           <!-- Ambient center glow -->
           <ellipse cx="500" cy="260" rx="145" ry="125" fill="url(#centerAmbient)"/>
 
-          <!-- ── Connection lines (drawn in by JS) ── -->
-          <line class="eco-line eco-line--top"
-                x1="500" y1="202" x2="500" y2="122"
+          <!-- ── Connection lines (paths; d recomputed by JS from real
+                  hex/card geometry on load + resize, seeded as fallback) ── -->
+          <path id="spoke-top" class="eco-line eco-line--top"
+                d="M 500,122 L 500,202" fill="none"
                 stroke="rgba(94,235,255,0.28)" stroke-width="1.5" stroke-linecap="round"/>
-          <line class="eco-line eco-line--right"
-                x1="550" y1="260" x2="724" y2="260"
+          <path id="spoke-right" class="eco-line eco-line--right"
+                d="M 724,260 L 550,260" fill="none"
                 stroke="rgba(94,235,255,0.28)" stroke-width="1.5" stroke-linecap="round"/>
-          <line class="eco-line eco-line--bottom"
-                x1="500" y1="318" x2="500" y2="402"
+          <path id="spoke-bottom" class="eco-line eco-line--bottom"
+                d="M 500,402 L 500,318" fill="none"
                 stroke="rgba(94,235,255,0.28)" stroke-width="1.5" stroke-linecap="round"/>
-          <line class="eco-line eco-line--left"
-                x1="450" y1="260" x2="276" y2="260"
+          <path id="spoke-left" class="eco-line eco-line--left"
+                d="M 276,260 L 450,260" fill="none"
                 stroke="rgba(94,235,255,0.28)" stroke-width="1.5" stroke-linecap="round"/>
 
-          <!-- ── Traveling dots (data flowing toward center) ── -->
-          <circle class="eco-dot eco-dot--top"    r="3" fill="#5EEBFF" filter="url(#dotGlow)"/>
-          <circle class="eco-dot eco-dot--right"  r="3" fill="#5EEBFF" filter="url(#dotGlow)"/>
-          <circle class="eco-dot eco-dot--bottom" r="3" fill="#5EEBFF" filter="url(#dotGlow)"/>
-          <circle class="eco-dot eco-dot--left"   r="3" fill="#5EEBFF" filter="url(#dotGlow)"/>
+          <!-- ── Traveling dots — positioned every frame by sampling the
+                  spoke paths via getPointAtLength (see ecosystem JS), so
+                  dots and lines share one source of truth and can never
+                  drift apart at any viewport size ── -->
+          <circle class="eco-dot eco-dot--top"    data-spoke="spoke-top"    r="3" fill="#5EEBFF" filter="url(#dotGlow)" opacity="0"/>
+          <circle class="eco-dot eco-dot--right"  data-spoke="spoke-right"  r="3" fill="#5EEBFF" filter="url(#dotGlow)" opacity="0"/>
+          <circle class="eco-dot eco-dot--bottom" data-spoke="spoke-bottom" r="3" fill="#5EEBFF" filter="url(#dotGlow)" opacity="0"/>
+          <circle class="eco-dot eco-dot--left"   data-spoke="spoke-left"   r="3" fill="#5EEBFF" filter="url(#dotGlow)" opacity="0"/>
 
           <!-- ── Center hexagon node ── -->
           <g class="eco-center-group">
@@ -1998,14 +1995,70 @@
         var diagram = document.getElementById('ecosystem-diagram');
         if (!diagram) return;
 
+        var svg     = diagram.querySelector('.ecosystem-svg');
         var lines   = diagram.querySelectorAll('.eco-line');
         var nodes   = diagram.querySelectorAll('.eco-node');
         var dots    = diagram.querySelectorAll('.eco-dot');
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var started = false;
+
+        /* Recompute each spoke's d from the REAL rendered geometry of the
+           hex and the four cards: screen coords via getBoundingClientRect,
+           mapped back into viewBox user space through the inverse CTM.
+           One source of truth — the dots ride these same paths via mpath. */
+        function toUserSpace(x, y, ctmInv) {
+          var pt = new DOMPoint(x, y).matrixTransform(ctmInv);
+          return { x: pt.x, y: pt.y };
+        }
+
+        function computeSpokes() {
+          if (!svg || !svg.getScreenCTM) return;
+          var ctm = svg.getScreenCTM();
+          if (!ctm) return;                       // svg hidden (mobile grid)
+          var inv = ctm.inverse();
+
+          var hexEl = diagram.querySelector('.eco-center-group path:not(.eco-pulse)');
+          if (!hexEl) return;
+          var hex = hexEl.getBoundingClientRect();
+          var hexTL = toUserSpace(hex.left,  hex.top,    inv);
+          var hexBR = toUserSpace(hex.right, hex.bottom, inv);
+          var hexC  = { x: (hexTL.x + hexBR.x) / 2, y: (hexTL.y + hexBR.y) / 2 };
+
+          var sides = {
+            top:    function(c) { return 'M ' + c.cx + ',' + c.bottom + ' L ' + hexC.x  + ',' + hexTL.y; },
+            right:  function(c) { return 'M ' + c.left + ',' + c.cy   + ' L ' + hexBR.x + ',' + hexC.y;  },
+            bottom: function(c) { return 'M ' + c.cx + ',' + c.top    + ' L ' + hexC.x  + ',' + hexBR.y; },
+            left:   function(c) { return 'M ' + c.right + ',' + c.cy  + ' L ' + hexTL.x + ',' + hexC.y;  }
+          };
+
+          ['top', 'right', 'bottom', 'left'].forEach(function(key) {
+            var card  = diagram.querySelector('.eco-node--' + key + ' .eco-card');
+            var spoke = diagram.querySelector('#spoke-' + key);
+            if (!card || !spoke) return;
+            var r  = card.getBoundingClientRect();
+            var tl = toUserSpace(r.left,  r.top,    inv);
+            var br = toUserSpace(r.right, r.bottom, inv);
+            var c  = {
+              left: tl.x, right: br.x, top: tl.y, bottom: br.y,
+              cx: (tl.x + br.x) / 2, cy: (tl.y + br.y) / 2
+            };
+            var fmt = function(n) { return Math.round(n * 100) / 100; };
+            var d = sides[key](c).replace(/(-?\d+\.?\d*)/g, function(m) { return fmt(parseFloat(m)); });
+            if (spoke.getAttribute('d') !== d) spoke.setAttribute('d', d);
+          });
+        }
+
+        var resizeTimer = null;
+        window.addEventListener('resize', function() {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(computeSpokes, 150);
+        });
+        computeSpokes();
 
         function startAnimation() {
           if (started) return;
           started = true;
+          computeSpokes();
           // Draw lines with stagger
           lines.forEach(function(line, i) {
             setTimeout(function() { line.classList.add('is-drawn'); }, 350 + i * 120);
@@ -2015,9 +2068,38 @@
             setTimeout(function() { node.classList.add('is-visible'); }, 850 + i * 130);
           });
           // Start dot flow after nodes appear
-          setTimeout(function() {
-            dots.forEach(function(dot) { dot.classList.add('is-flowing'); });
-          }, 1700);
+          if (!reduced) setTimeout(startDotFlow, 1700);
+        }
+
+        /* Dots ride the spoke paths directly: each frame samples the path
+           with getPointAtLength, so position is derived from the line
+           itself — alignment is guaranteed at every size, and resize is
+           picked up automatically on the next frame. Staggered phases
+           (0 / 0.75 / 1.5 / 2.25 s) keep the four dots out of lockstep. */
+        var DOT_DUR = 3000, DOT_STAGGER = 750;
+        var flowT0 = null;
+
+        function startDotFlow() {
+          if (flowT0 !== null) return;
+          flowT0 = performance.now();
+          requestAnimationFrame(dotTick);
+        }
+
+        function dotTick(now) {
+          dots.forEach(function(dot, i) {
+            var spoke = document.getElementById(dot.getAttribute('data-spoke'));
+            if (!spoke) return;
+            var elapsed = now - flowT0 - i * DOT_STAGGER;
+            if (elapsed < 0) { dot.setAttribute('opacity', '0'); return; }
+            var t = (elapsed % DOT_DUR) / DOT_DUR;
+            var p = spoke.getPointAtLength(spoke.getTotalLength() * t);
+            dot.setAttribute('cx', p.x.toFixed(2));
+            dot.setAttribute('cy', p.y.toFixed(2));
+            // fade in over the first 8%, out over the last 8% of the run
+            var o = t < 0.08 ? t / 0.08 : t > 0.92 ? (1 - t) / 0.08 : 1;
+            dot.setAttribute('opacity', o.toFixed(3));
+          });
+          requestAnimationFrame(dotTick);
         }
 
         // Trigger on scroll-into-view
