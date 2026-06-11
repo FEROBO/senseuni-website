@@ -1,0 +1,126 @@
+/* ════════════════════════════════════════════════════════════
+   SENSEUNI — PREMIUM EFFECTS LAYER (additive, zero layout change)
+   Loaded on top of each page's own styles. Desktop pointer-fine
+   effects are gated in effects.js; everything respects
+   prefers-reduced-motion.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── 1 · Cursor aura — soft glow that trails the pointer ────── */
+.fx-aura {
+  position: fixed;
+  top: 0; left: 0;
+  width: 560px; height: 560px;
+  margin: -280px 0 0 -280px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(116, 53, 253, 0.16) 0%,
+    rgba(139, 113, 255, 0.07) 38%,
+    transparent 68%);
+  pointer-events: none;
+  z-index: 1;                 /* above bg glows, below content */
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  will-change: transform;
+}
+.fx-aura.is-on { opacity: 1; }
+
+/* ── 2 · Card spotlight — highlight follows cursor inside card ─ */
+.fx-spot-host { position: relative; }
+.fx-spotlight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.fx-spot-host:hover .fx-spotlight { opacity: 1; }
+.fx-spotlight::before {
+  /* inner light pool */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(380px circle at var(--fx-x, 50%) var(--fx-y, 50%),
+    rgba(139, 113, 255, 0.22) 0%,
+    rgba(116, 53, 253, 0.09) 35%,
+    transparent 64%);
+}
+.fx-spotlight::after {
+  /* tracing border light */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(260px circle at var(--fx-x, 50%) var(--fx-y, 50%),
+    rgba(167, 147, 255, 0.8) 0%,
+    rgba(116, 53, 253, 0.25) 42%,
+    transparent 70%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask-composite: exclude;
+}
+
+/* ── 3 · Magnetic buttons ──────────────────────────────────────
+   Movement uses the standalone `translate` property so it
+   composes with each button's own CSS :hover transform. */
+.fx-magnet { transition: translate 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* ── 4 · Scroll progress bar ───────────────────────────────── */
+.fx-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2.5px;
+  width: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #2C2069, #7435FD 55%, #8B71FF);
+  box-shadow: 0 0 12px rgba(116, 53, 253, 0.55);
+  pointer-events: none;
+  z-index: 2000;              /* above the fixed nav */
+}
+
+/* ── 5 · Gradient-text shimmer on hero headlines ───────────────
+   Pages mark gradient words with various span classes; effects.js
+   tags them with .fx-shimmer. Slow, subtle position drift. */
+@keyframes fxShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+.fx-shimmer {
+  background-size: 200% 200% !important;
+  animation: fxShimmer 7s ease-in-out infinite;
+}
+
+/* ── 6 · Image lift-glare on hover (existing imgs, no layout) ── */
+.fx-glare { position: relative; overflow: hidden; }
+.fx-glare::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -85%;
+  width: 55%; height: 100%;
+  background: linear-gradient(105deg, transparent,
+    rgba(255, 255, 255, 0.10) 45%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0.10) 55%,
+    transparent);
+  transform: skewX(-18deg);
+  pointer-events: none;
+  transition: left 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-glare:hover::after { left: 130%; }
+
+/* ── Reduced motion / touch: kill everything ───────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .fx-aura, .fx-progress { display: none !important; }
+  .fx-magnet { translate: none !important; transition: none !important; }
+  .fx-shimmer { animation: none !important; }
+  .fx-glare::after { display: none !important; }
+}
+@media (pointer: coarse) {
+  .fx-aura { display: none !important; }
+}
