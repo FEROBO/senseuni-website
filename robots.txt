@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /style-guide.html
+Disallow: /components/
+
+Sitemap: https://senseuni-website.pages.dev/sitemap.xml

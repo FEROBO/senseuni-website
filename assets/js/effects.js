@@ -105,8 +105,7 @@
   /* ── Magnetic buttons ────────────────────────────────────────
      Uses the standalone `translate` property so it composes with
      each button's own :hover transform (no style conflicts). */
-  const MAG_RADIUS = 90;   // px around the button that attracts
-  const MAG_PULL   = 0.22; // fraction of cursor offset applied
+  const MAG_PULL = 0.22; // fraction of cursor offset applied
 
   document.querySelectorAll('.btn--primary, .btn--secondary, .final-cta__btn, .back-to-top').forEach(btn => {
     btn.classList.add('fx-magnet');
@@ -118,7 +117,6 @@
     }, { passive: true });
     btn.addEventListener('mouseleave', () => { btn.style.translate = '0px 0px'; });
   });
-  void MAG_RADIUS;
 
   /* ── Image glare on product/case imagery wrappers ─────────── */
   document.querySelectorAll('.prod-card__img-wrap, .patent-item__img, [class*="img-wrap"], [class*="media"]').forEach(el => {

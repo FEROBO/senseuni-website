@@ -8,7 +8,7 @@ Target audience: US/global B2B market. Deploy target: Cloudflare Pages.
 See full brand strategy, IA, and page content in: docs/brand-guide.md
 
 ## Design System
-- Primary bg: #1A1A1C (dark)
+- Primary bg: #14101F (dark)
 - Brand color: #2C2069
 - Accent/CTA: #7435FD
 - Highlight: #8B71FF
